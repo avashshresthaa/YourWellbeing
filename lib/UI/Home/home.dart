@@ -5,7 +5,7 @@ import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import '../../Change Notifier/changenotifier.dart';
-import '../../Constraints/language.dart';
+import '../../Constraints/nplanguage.dart';
 import '../../Extracted Widgets/showdialog.dart';
 
 class MainDashboard extends StatefulWidget {
@@ -16,13 +16,11 @@ class MainDashboard extends StatefulWidget {
 }
 
 class _MainDashboardState extends State<MainDashboard> {
-  late bool englishLanguage = context.watch<DataProvider>().data;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kStyleBackgroundColor,
-      appBar: MainAppBar(englishLanguage ? egHome : npHome),
+      appBar: MainAppBar(context.watch<DataProvider>().data ? 'Home' : nepHome),
       body: const MainContent(),
     );
   }
@@ -50,7 +48,22 @@ String greetingMessage() {
   }
 }
 
+String greetingMessageNP() {
+  var timeNow = DateTime.now().hour;
+
+  if (timeNow <= 11) {
+    return nepGoodM;
+  } else if ((timeNow >= 12) && (timeNow <= 16)) {
+    return nepGoodA;
+  } else if ((timeNow > 16) && (timeNow < 20)) {
+    return nepGoodE;
+  } else {
+    return nepGoodN;
+  }
+}
+
 String greetingText = greetingMessage();
+String greetingTextNP = greetingMessageNP();
 
 class _MainContentState extends State<MainContent> {
   final urlImages = [
@@ -58,6 +71,8 @@ class _MainContentState extends State<MainContent> {
     'assets/Slider/tbbanner.png'
   ];
   final adImages = ['assets/Slider/adphoto.png'];
+
+  late bool englishLanguage = context.watch<DataProvider>().data;
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +113,7 @@ class _MainContentState extends State<MainContent> {
         Padding(
           padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
           child: Text(
-            "$greetingText, User",
+            englishLanguage ? "$greetingText, User" : "$greetingTextNP, User",
             style: kStyleHomeTitle,
           ),
         ),

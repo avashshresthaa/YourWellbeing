@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
+import 'package:yourwellbeing/UI/Change%20Language/change_language.dart';
+import 'package:yourwellbeing/UI/Change%20Purpose/change_purpose.dart';
 
 import '../../Extracted Widgets/showdialog.dart';
 import '../Emergency Contacts/emergency.dart';
 import '../Notification/notification.dart';
-import '../Select Language/select_language.dart';
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
@@ -50,7 +51,11 @@ class _SettingsContentState extends State<SettingsContent> {
               ),
               itemDivider(),
               SettingsItems(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return ChangePurpose();
+                  }));
+                },
                 image: 'assets/purpose.png',
                 label: 'Change Purpose',
                 containerDesignType: 'both',
@@ -59,7 +64,7 @@ class _SettingsContentState extends State<SettingsContent> {
               SettingsItems(
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return SelectLanguage();
+                    return ChangeLanguage();
                   }));
                 },
                 image: 'assets/language.png',
@@ -92,7 +97,9 @@ class _SettingsContentState extends State<SettingsContent> {
               ),
               itemDivider(),
               SettingsItems(
-                onTap: () {},
+                onTap: () {
+                  showWaitDialog(context);
+                },
                 image: 'assets/menu.png',
                 label: 'Update Content',
                 containerDesignType: 'both',

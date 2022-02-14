@@ -59,7 +59,7 @@ class ArrowButton extends StatelessWidget {
         boxShadow: [
           boxShadow,
         ],
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(8),
       ),
       width: double.infinity,
       child: ElevatedButton(
@@ -79,7 +79,7 @@ class ArrowButton extends StatelessWidget {
               children: [
                 Image.asset(
                   arrow,
-                  width: 28,
+                  width: 24,
                 ),
               ],
             )
@@ -89,7 +89,7 @@ class ArrowButton extends StatelessWidget {
             backgroundColor: MaterialStateProperty.all(color),
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(24)))),
+                    borderRadius: BorderRadius.circular(8)))),
       ),
     );
   }
@@ -109,21 +109,31 @@ class LangButton extends StatelessWidget {
     return GestureDetector(
       onTap: onPress,
       child: Container(
-        width: double.infinity,
-        margin: EdgeInsets.symmetric(horizontal: 60),
+        margin: const EdgeInsets.symmetric(horizontal: 40),
         decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(18),
-            border: Border.all(
-              color: Colors.grey,
-              width: 0.6,
-            )),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              blurRadius: 1.0, // soften the shadow
+              offset: const Offset(
+                1.0, // Move to right 10  horizontally
+                1.0, // Move to bottom 10 Vertically
+              ),
+            ),
+          ],
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: Colors.grey,
+            width: 0.9,
+          ),
+        ),
         child: Center(
             child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
             label,
-            //style: kStyleSelect,
+            style: kStyleHomeTitle,
           ),
         )),
       ),

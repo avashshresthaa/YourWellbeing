@@ -5,35 +5,25 @@ import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/UI/Login/login.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-/*void showCustomDialog(BuildContext context) => showDialog(
-      barrierDismissible: false,
+Future<void> showWaitDialog(BuildContext context) => showDialog(
       context: context,
-      builder: (BuildContext context) {
-        Future.delayed(
-          Duration(seconds: 5),
-          () {
-            Navigator.of(context).pop(true);
-            print("failed");
-          },
-        );
-        return AlertDialog(
-          title: Text('Loading...'),
-          content: Row(
-            children: [
-              CircularProgressIndicator(
-                color: Colors.blue,
-              ),
-              SizedBox(
-                width: 12,
-              ),
-              Expanded(
-                child: Text('The app is loading.'),
-              )
-            ],
+      barrierDismissible: true,
+      builder: (BuildContext context) => AlertDialog(
+        title: Center(
+          child: Text(
+            'Please Wait...',
+            style: kStyleHomeTitle.copyWith(
+                fontWeight: FontWeight.w700, fontSize: 12.sp),
           ),
-        );
-      },
-    );*/
+        ),
+        content: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            CircularProgressIndicator.adaptive(),
+          ],
+        ),
+      ),
+    );
 
 Future<void> showBackDialog(BuildContext context) => showDialog(
       barrierColor: Colors.green.withOpacity(0.24),
@@ -173,30 +163,29 @@ Future<void> showFeedbackDialog(BuildContext context) => showDialog(
         children: <Widget>[
           Container(
               width: MediaQuery.of(context).size.width - 40,
-              height: 190,
+              height: MediaQuery.of(context).size.height * 0.29,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8), color: Colors.white),
-              padding: const EdgeInsets.fromLTRB(20, 20, 16, 0),
+              padding: const EdgeInsets.fromLTRB(20, 20, 16, 8),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "How would you rate your experience with Aqua World?",
+                        "How would you rate your experience with Your Wellbeing?",
                         style: kStyleShowDialog.copyWith(
-                            fontWeight: FontWeight.w700),
+                            fontSize: 13.sp, fontWeight: FontWeight.w700),
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 10),
                     ],
                   ),
-                  SizedBox(height: 16.sp),
+                  SizedBox(height: 10.sp),
                   Center(
                     child: RatingBar.builder(
-                      initialRating: 3,
+                      initialRating: 0,
                       minRating: 1,
                       direction: Axis.horizontal,
                       allowHalfRating: true,
@@ -219,7 +208,7 @@ Future<void> showFeedbackDialog(BuildContext context) => showDialog(
                       },
                       child: Text(
                         'Rate',
-                        style: TextStyle(color: Colors.green),
+                        style: TextStyle(color: Colors.green, fontSize: 13.sp),
                       ),
                     ),
                   ),
@@ -241,17 +230,18 @@ Future<void> showReviewSubmittedDialog(BuildContext context) => showDialog(
         children: <Widget>[
           Container(
               width: MediaQuery.of(context).size.width - 40,
+              height: MediaQuery.of(context).size.height * 0.29,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8), color: Colors.white),
-              padding: const EdgeInsets.fromLTRB(20, 20, 16, 0),
+              padding: const EdgeInsets.fromLTRB(20, 20, 16, 8),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Image.asset(
                     'assets/reviewsubmitted.png',
-                    height: 64,
+                    height: 45,
                   ),
                   SizedBox(height: 10.sp),
                   Text(
@@ -271,7 +261,7 @@ Future<void> showReviewSubmittedDialog(BuildContext context) => showDialog(
                     },
                     child: Text(
                       'Ok',
-                      style: TextStyle(color: Colors.green),
+                      style: TextStyle(color: Colors.green, fontSize: 13.sp),
                     ),
                   ),
                 ],
