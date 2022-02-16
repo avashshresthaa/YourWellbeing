@@ -7,14 +7,14 @@ import '../Chat/chat.dart';
 import '../Settings/settings.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
-class BottomNavigation extends StatefulWidget {
-  const BottomNavigation({Key? key}) : super(key: key);
+class BottomNavigationPage extends StatefulWidget {
+  const BottomNavigationPage({Key? key}) : super(key: key);
 
   @override
-  _BottomNavigationState createState() => _BottomNavigationState();
+  _BottomNavigationPageState createState() => _BottomNavigationPageState();
 }
 
-class _BottomNavigationState extends State<BottomNavigation> {
+class _BottomNavigationPageState extends State<BottomNavigationPage> {
   int _currentIndex = 0;
 
   final _children = [

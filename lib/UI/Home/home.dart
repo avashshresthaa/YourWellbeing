@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:provider/src/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import '../../Change Notifier/changenotifier.dart';
+import 'package:yourwellbeing/Utils/user_prefrences.dart';
 import '../../Constraints/nplanguage.dart';
 import '../../Extracted Widgets/showdialog.dart';
+
+var language;
 
 class MainDashboard extends StatefulWidget {
   const MainDashboard({Key? key}) : super(key: key);
@@ -17,10 +18,17 @@ class MainDashboard extends StatefulWidget {
 
 class _MainDashboardState extends State<MainDashboard> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    language = UserSimplePreferences.getLanguage() ?? true;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kStyleBackgroundColor,
-      appBar: MainAppBar(context.watch<DataProvider>().data ? 'Home' : nepHome),
+      appBar: MainAppBar(language ? 'Home' : nepHome),
       body: const MainContent(),
     );
   }
@@ -72,8 +80,6 @@ class _MainContentState extends State<MainContent> {
   ];
   final adImages = ['assets/Slider/adphoto.png'];
 
-  late bool englishLanguage = context.watch<DataProvider>().data;
-
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -113,7 +119,7 @@ class _MainContentState extends State<MainContent> {
         Padding(
           padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
           child: Text(
-            englishLanguage ? "$greetingText, User" : "$greetingTextNP, User",
+            language ? "$greetingText, User" : "$greetingTextNP, User",
             style: kStyleHomeTitle,
           ),
         ),

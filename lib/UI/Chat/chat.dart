@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
+import 'package:yourwellbeing/Utils/user_prefrences.dart';
 import '../Login/loginpermission.dart';
 
 class Chat extends StatefulWidget {
@@ -11,12 +12,23 @@ class Chat extends StatefulWidget {
 }
 
 class _ChatState extends State<Chat> {
+  var loginData;
+
+  @override
+  void initState() {
+    //sharedPreferenceLogin();
+    // TODO: implement initState
+    super.initState();
+    loginData = UserSimplePreferences.getLogin() ?? 'guest';
+    print(loginData);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kStyleBackgroundColor,
       appBar: MainAppBar('Chat'),
-      body: const ChatContent(),
+      body: loginData == 'guest' ? const SignUpContent() : const ChatContent(),
     );
   }
 }
@@ -32,9 +44,7 @@ class _ChatContentState extends State<ChatContent> {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      children: [
-        SignUpContent(),
-      ],
+      children: [],
     );
   }
 }

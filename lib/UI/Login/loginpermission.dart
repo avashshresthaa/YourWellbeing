@@ -55,21 +55,19 @@ class _SignUpContentState extends State<SignUpContent> {
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 28.0),
-          child: GestureDetector(
-            onTap: () {
+          child: ArrowButton(
+            text: Text(
+              'Already a customer? Sign In',
+              textAlign: TextAlign.center,
+              style: kStyleButtonContent.copyWith(color: Colors.white),
+            ),
+            onPress: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
                 return const LoginPage();
               }));
             },
-            child: ArrowButton(
-              text: Text(
-                'Already a customer? Sign In',
-                textAlign: TextAlign.center,
-                style: kStyleButtonContent.copyWith(color: Colors.white),
-              ),
-              color: Colors.green,
-              arrow: 'assets/whitebuttonarrow.png',
-            ),
+            color: Colors.green,
+            arrow: 'assets/whitebuttonarrow.png',
           ),
         ),
         const SizedBox(
@@ -77,21 +75,19 @@ class _SignUpContentState extends State<SignUpContent> {
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 28.0),
-          child: GestureDetector(
-            onTap: () {
+          child: ArrowButton(
+            text: Text(
+              'New to Your Wellbeing? Sign up',
+              textAlign: TextAlign.center,
+              style: kStyleButtonContent.copyWith(color: Colors.black),
+            ),
+            onPress: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
                 return const SignupPage();
               }));
             },
-            child: ArrowButton(
-              text: Text(
-                'New to Your Wellbeing? Sign up',
-                textAlign: TextAlign.center,
-                style: kStyleButtonContent.copyWith(color: Colors.black),
-              ),
-              color: Colors.white,
-              arrow: 'assets/forwardarrow.png',
-            ),
+            color: Colors.white,
+            arrow: 'assets/forwardarrow.png',
           ),
         ),
       ],

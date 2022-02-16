@@ -1,12 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:provider/src/provider.dart';
 import 'package:sizer/sizer.dart';
-import 'package:yourwellbeing/Change%20Notifier/changenotifier.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
-import 'package:yourwellbeing/UI/BottomNavigation/bottom_navigation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:yourwellbeing/UI/BottomNavigation/bottom_navigation.dart';
+import 'package:yourwellbeing/UI/Change%20Purpose/change_purpose.dart';
 import 'package:yourwellbeing/UI/Login/login.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -18,42 +17,82 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   @override
+  var loginSharedPreference;
+  var purposeSharedPreference;
+
   void initState() {
     // TODO: implement initState
     super.initState();
-/*    sharedPreferenceLanguage().whenComplete(
+    sharedPreferencePurpose();
+    sharedPreferenceLogin();
+/*    sharedPreferenceLogin().whenComplete(
       () async {
         Timer(
           const Duration(seconds: 3),
           () {
-            Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => const LoginPage()),
+            purposeSharedPreference = Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                    builder: (context) => loginSharedPreference == null
+                        ? LoginPage()
+                        : (purposeSharedPreference == null
+                            ? ChangePurpose()
+                            : (purposeSharedPreference == 'covid'
+                                ? BottomNavigationPage()
+                                : purposeSharedPreference == 'influenza'
+                                    ? BottomNavigationPage()
+                                    : ChangePurpose()))),
                 (Route<dynamic> route) => false);
           },
         );
+        print(loginSharedPreference);
       },
     );*/
-    sharedPreferenceLanguage();
     Timer(
       const Duration(seconds: 3),
       () {
+/*        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+                builder: (context) => loginSharedPreference == null
+                    ? LoginPage()
+                    : (purposeSharedPreference == null
+                        ? ChangePurpose()
+                        : (purposeSharedPreference == 'covid'
+                            ? BottomNavigationPage()
+                            : purposeSharedPreference == 'influenza'
+                                ? BottomNavigationPage()
+                                : ChangePurpose()))),
+            (Route<dynamic> route) => false);*/
         Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => const LoginPage()),
+            MaterialPageRoute(
+                builder: (context) => (purposeSharedPreference == null
+                    ? ChangePurpose()
+                    : (purposeSharedPreference == 'covid'
+                        ? BottomNavigationPage()
+                        : purposeSharedPreference == 'influenza'
+                            ? BottomNavigationPage()
+                            : ChangePurpose()))),
             (Route<dynamic> route) => false);
       },
     );
   }
 
-  var languageSharedPreference;
-  sharedPreferenceLanguage() async {
+  sharedPreferencePurpose() async {
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
-    var obtainedLanguage = sharedPreferences.getBool('languageData');
-    if (obtainedLanguage != null) {
-      context.read<DataProvider>().changeString(obtainedLanguage);
-    }
+    var obtainedPurpose = sharedPreferences.getString('choosePreference');
     setState(() {
-      languageSharedPreference = obtainedLanguage;
+      purposeSharedPreference = obtainedPurpose;
+      print(purposeSharedPreference);
+    });
+  }
+
+  Future sharedPreferenceLogin() async {
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    var obtainedLogin = sharedPreferences.getString('login');
+
+    setState(() {
+      loginSharedPreference = obtainedLogin;
     });
   }
 

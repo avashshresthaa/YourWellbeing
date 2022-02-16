@@ -6,6 +6,8 @@ import 'package:yourwellbeing/Change%20Notifier/changenotifier.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:yourwellbeing/UI/BottomNavigation/bottom_navigation.dart';
+import 'package:yourwellbeing/Utils/user_prefrences.dart';
 import '../../Extracted Widgets/buttons.dart';
 
 class ChangePurpose extends StatefulWidget {
@@ -14,11 +16,31 @@ class ChangePurpose extends StatefulWidget {
 }
 
 class _ChangePurposeState extends State<ChangePurpose> {
+  var purpose;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    purpose = UserSimplePreferences.getPurpose();
+    print(purpose);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: ProfileAppBar(title: 'Change Purpose'),
+      appBar: purpose == null
+          ? AppBar(
+              backgroundColor: Colors.white,
+              title: Text(
+                'Select Your Purpose',
+                style: kStyleAppBar,
+              ),
+              centerTitle: true,
+              automaticallyImplyLeading: false,
+            )
+          : ProfileAppBar(title: 'Change Purpose'),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -55,13 +77,36 @@ class _ChangePurposeState extends State<ChangePurpose> {
           Column(
             children: [
               LangButton(
-                () async {},
+                () async {
+                  SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  prefs.setString('choosePreference', 'covid');
+
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                      /*            settings: RouteSettings(name: '/1'),*/
+                      builder: (context) => BottomNavigationPage(),
+                    ),
+                    ModalRoute.withName('/'),
+                  );
+                },
                 'Covid-19',
               ),
               const SizedBox(
                 height: 16,
               ),
-              LangButton(() async {}, 'Influenza'),
+              LangButton(() async {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                prefs.setString('choosePreference', 'influenza');
+
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(
+                    /*            settings: RouteSettings(name: '/1'),*/
+                    builder: (context) => BottomNavigationPage(),
+                  ),
+                  ModalRoute.withName('/'),
+                );
+              }, 'Influenza'),
             ],
           ),
         ],

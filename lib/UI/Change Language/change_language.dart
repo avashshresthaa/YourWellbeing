@@ -1,11 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/src/provider.dart';
 import 'package:sizer/sizer.dart';
-import 'package:yourwellbeing/Change%20Notifier/changenotifier.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:yourwellbeing/Utils/user_prefrences.dart';
 import '../../Extracted Widgets/buttons.dart';
 
 class ChangeLanguage extends StatefulWidget {
@@ -14,7 +12,15 @@ class ChangeLanguage extends StatefulWidget {
 }
 
 class _ChangeLanguageState extends State<ChangeLanguage> {
-  bool lang = true;
+  var lang;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    lang = UserSimplePreferences.getLanguage() ?? true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,13 +64,10 @@ class _ChangeLanguageState extends State<ChangeLanguage> {
             children: [
               LangButton(
                 () async {
-                  setState(() {
+                  /*               setState(() {
                     lang = !lang;
-                  });
-                  SharedPreferences prefs =
-                      await SharedPreferences.getInstance();
-                  prefs.setBool('languageData', true);
-                  context.read<DataProvider>().changeString(true);
+                  });*/
+                  UserSimplePreferences.setLanguage(true);
                   Navigator.pop(context);
                 },
                 'English',
@@ -73,15 +76,11 @@ class _ChangeLanguageState extends State<ChangeLanguage> {
                 height: 16,
               ),
               LangButton(() async {
-                setState(() {
+/*                setState(() {
                   lang = !lang;
-                });
+                });*/
                 //SharedPreferences used for saving the data in the local cache
-                SharedPreferences prefs = await SharedPreferences.getInstance();
-                prefs.setBool('languageData', false);
-
-                //Provider package used to read and hold the data
-                context.read<DataProvider>().changeString(false);
+                UserSimplePreferences.setLanguage(false);
                 Navigator.pop(context);
               }, 'नेपाली'),
             ],

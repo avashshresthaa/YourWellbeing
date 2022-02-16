@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
+import 'package:yourwellbeing/Extracted%20Widgets/containlist.dart';
+import 'package:yourwellbeing/Extracted%20Widgets/snackbar.dart';
 import 'package:yourwellbeing/UI/Change%20Language/change_language.dart';
 import 'package:yourwellbeing/UI/Change%20Purpose/change_purpose.dart';
+import 'package:yourwellbeing/UI/Profile/profile.dart';
 
 import '../../Extracted Widgets/showdialog.dart';
 import '../Emergency Contacts/emergency.dart';
@@ -43,14 +47,18 @@ class _SettingsContentState extends State<SettingsContent> {
           padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
           child: Column(
             children: [
-              SettingsItems(
-                onTap: () {},
+              ContentItems(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return const Profile();
+                  }));
+                },
                 image: 'assets/profile.png',
                 label: 'Profile',
                 containerDesignType: 'top',
               ),
               itemDivider(),
-              SettingsItems(
+              ContentItems(
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return ChangePurpose();
@@ -61,7 +69,7 @@ class _SettingsContentState extends State<SettingsContent> {
                 containerDesignType: 'both',
               ),
               itemDivider(),
-              SettingsItems(
+              ContentItems(
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return ChangeLanguage();
@@ -74,7 +82,7 @@ class _SettingsContentState extends State<SettingsContent> {
               const SizedBox(
                 height: 16,
               ),
-              SettingsItems(
+              ContentItems(
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return const NotificationPage();
@@ -85,7 +93,7 @@ class _SettingsContentState extends State<SettingsContent> {
                 containerDesignType: 'top',
               ),
               itemDivider(),
-              SettingsItems(
+              ContentItems(
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return const EmergencyPage();
@@ -96,7 +104,7 @@ class _SettingsContentState extends State<SettingsContent> {
                 containerDesignType: 'both',
               ),
               itemDivider(),
-              SettingsItems(
+              ContentItems(
                 onTap: () {
                   showWaitDialog(context);
                 },
@@ -105,7 +113,7 @@ class _SettingsContentState extends State<SettingsContent> {
                 containerDesignType: 'both',
               ),
               itemDivider(),
-              SettingsItems(
+              ContentItems(
                 onTap: () {
                   showFeedbackDialog(context);
                 },
@@ -113,87 +121,27 @@ class _SettingsContentState extends State<SettingsContent> {
                 label: 'Rate Us',
                 containerDesignType: 'bottom',
               ),
+              /*      ContentItems(
+                onTap: () async {
+                  SharedPreferences pref =
+                      await SharedPreferences.getInstance();
+                  pref.remove('login');
+                  showSnackBar(
+                    context,
+                    "Successful",
+                    Colors.green,
+                    Icons.info,
+                    "Your notification has been set for ",
+                  );
+                },
+                image: 'assets/menu.png',
+                label: 'Log out',
+                containerDesignType: 'bottom',
+              ),*/
             ],
           ),
         ),
       ],
-    );
-  }
-
-  Widget itemDivider() {
-    return const SizedBox(
-      width: double.infinity,
-      height: 0,
-      child: Divider(
-        color: Color(0xffD8DDE0),
-        thickness: 1,
-      ),
-    );
-  }
-}
-
-class SettingsItems extends StatelessWidget {
-  SettingsItems(
-      {Key? key,
-      required this.image,
-      required this.label,
-      required this.containerDesignType,
-      required this.onTap})
-      : super(key: key);
-
-  final image;
-  final label;
-  final containerDesignType;
-  final onTap;
-
-  final kRadius = Radius.circular(8.0);
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            containerDesignType == "bottom" ? boxShadow : const BoxShadow(),
-          ],
-          borderRadius: containerDesignType == "top"
-              ? BorderRadius.only(topLeft: kRadius, topRight: kRadius)
-              : containerDesignType == "bottom"
-                  ? BorderRadius.only(bottomLeft: kRadius, bottomRight: kRadius)
-                  : containerDesignType == "both"
-                      ? const BorderRadius.all(Radius.circular(0.0))
-                      : const BorderRadius.all(Radius.circular(0.0)),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  SizedBox(height: 22, width: 22, child: Image.asset(image)),
-                  const SizedBox(
-                    width: 18,
-                  ),
-                  Text(
-                    label,
-                    style: kStyleButtonContent.copyWith(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 12.sp,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                  height: 22,
-                  width: 22,
-                  child: Image.asset('assets/forwardarrow.png'))
-            ],
-          ),
-        ),
-      ),
     );
   }
 }
