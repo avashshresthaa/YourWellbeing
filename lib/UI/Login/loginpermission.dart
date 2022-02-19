@@ -38,7 +38,7 @@ class _SignUpContentState extends State<SignUpContent> {
         Padding(
           padding: const EdgeInsets.only(left: 81.0, bottom: 16),
           child: contentText(
-            'View your appointment list',
+            'Book your appointment',
           ),
         ),
         Padding(
@@ -50,7 +50,7 @@ class _SignUpContentState extends State<SignUpContent> {
         Padding(
           padding: const EdgeInsets.only(left: 81.0, bottom: 36),
           child: contentText(
-            'Track your details',
+            'View your appointment details',
           ),
         ),
         Padding(

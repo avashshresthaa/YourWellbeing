@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
@@ -31,7 +30,7 @@ class _ChangeLanguageState extends State<ChangeLanguage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            lang ? 'Pick Your Language' : 'स्वागत छ',
+            'Pick Your Language',
             style: kStyleHomeTitle.copyWith(
               fontSize: 18.sp,
             ),
@@ -40,7 +39,7 @@ class _ChangeLanguageState extends State<ChangeLanguage> {
             height: 40,
           ),
           Text(
-            'Welcome, User',
+            lang ? 'Welcome, User' : 'स्वागत छ',
             style: kStyleHomeTitle.copyWith(
               fontSize: 14.sp,
             ),
@@ -64,9 +63,6 @@ class _ChangeLanguageState extends State<ChangeLanguage> {
             children: [
               LangButton(
                 () async {
-                  /*               setState(() {
-                    lang = !lang;
-                  });*/
                   UserSimplePreferences.setLanguage(true);
                   Navigator.pop(context);
                 },
@@ -76,10 +72,6 @@ class _ChangeLanguageState extends State<ChangeLanguage> {
                 height: 16,
               ),
               LangButton(() async {
-/*                setState(() {
-                  lang = !lang;
-                });*/
-                //SharedPreferences used for saving the data in the local cache
                 UserSimplePreferences.setLanguage(false);
                 Navigator.pop(context);
               }, 'नेपाली'),

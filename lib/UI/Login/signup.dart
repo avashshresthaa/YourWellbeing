@@ -1,10 +1,13 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/buttons.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/customtextfield.dart';
+import 'package:yourwellbeing/Extracted%20Widgets/showdialog.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/snackbar.dart';
+import 'package:yourwellbeing/Services/authentication.dart';
+import 'package:yourwellbeing/UI/BottomNavigation/bottom_navigation.dart';
 import 'package:yourwellbeing/UI/Login/login.dart';
 
 class SignupPage extends StatefulWidget {
@@ -17,8 +20,9 @@ class SignupPage extends StatefulWidget {
 class _SignupPageState extends State<SignupPage> {
   bool isHiddenPassword = true;
   bool isConfirmHiddenPassword = true;
-  bool isChecked = false;
   ConnectivityResult result = ConnectivityResult.none;
+
+  AuthMethods authMethods = AuthMethods();
 
   void _togglePasswordView() {
     setState(() {
@@ -41,52 +45,73 @@ class _SignupPageState extends State<SignupPage> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  SignMeUP() {
+    if (_formKey.currentState!.validate()) {
+      final name = nameController.text;
+      final email = emailController.text;
+      final password = passwordController.text;
+      final confirmPassword = confirmPasswordController.text;
+      showWaitDialog(context);
+      authMethods.signUpWithEmailAndPassword(email, password).then(
+        (value) {
+          Navigator.pop(context);
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BottomNavigationPage(),
+              ));
+        },
+      );
+    } else {
+      return print("Unsuccessful");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: SingleChildScrollView(
-          child: Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 100.0, horizontal: 40),
-            child: Center(
-              child: Column(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 100.0, horizontal: 40),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  Image.asset(
+                    'assets/logo.png',
+                    width: 120,
+                  ),
+                  const SizedBox(
+                    height: 32.00,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: const [
+                        Text(
+                          'Sign up to continue',
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            fontFamily: 'NutinoSansReg',
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.green,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 5.0,
+                  ),
                   Form(
                     key: _formKey,
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.asset(
-                          'assets/logo.png',
-                          width: 120,
-                        ),
-                        const SizedBox(
-                          height: 32.00,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: const [
-                              Text(
-                                'Sign up to continue',
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                  fontFamily: 'NutinoSansReg',
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.green,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 5.0,
-                        ),
                         CustomTextFormField(
                           'Username',
                           Icons.person,
@@ -183,7 +208,7 @@ class _SignupPageState extends State<SignupPage> {
                             if (value.length < 8) {
                               return "Your password must be at least 8 character";
                             }
-                            if (!value.contains(RegExp(r"[a-z]"))) {
+                            /*           if (!value.contains(RegExp(r"[a-z]"))) {
                               return "Your password must have a letter";
                             }
                             if (!value.contains(RegExp(r"[A-Z]"))) {
@@ -195,7 +220,7 @@ class _SignupPageState extends State<SignupPage> {
                             if (!value
                                 .contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
                               return "Your password should contain one special character";
-                            }
+                            }*/
                             return null;
                           },
                         ),
@@ -269,80 +294,63 @@ class _SignupPageState extends State<SignupPage> {
                             return null;
                           },
                         ),
-                        const SizedBox(
-                          height: 32.0,
-                        ),
-                        LoginButton('Sign Up', () async {
-                          result = await Connectivity().checkConnectivity();
-                          if (result == ConnectivityResult.mobile ||
-                              result == ConnectivityResult.wifi) {
-                            if (_formKey.currentState!.validate()) {
-                              final name = nameController.text;
-                              final email = emailController.text;
-                              final password = passwordController.text;
-                              final confirmPassword =
-                                  confirmPasswordController.text;
-                            } else {
-                              /*   showSnackBar(
-                                context,
-                                "Attention",
-                                Colors.red,
-                                Icons.info,
-                                "Unsuccessful.",
-                              );*/
-                              return print("Unsuccessful");
-                            }
-                          } else {
-                            showSnackBar(
-                              context,
-                              "Attention",
-                              Colors.blue,
-                              Icons.info,
-                              "You must be connected to the internet.",
-                            );
-                          }
-                        }),
-                        const SizedBox(
-                          height: 20.0,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Don’t have an account?  ',
-                              style: TextStyle(
-                                fontFamily: 'NutinoSansReg',
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                                color: Color(0xff333333),
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).pushAndRemoveUntil(
-                                    MaterialPageRoute(
-                                      builder: (context) => LoginPage(),
-                                    ),
-                                    (route) => route.isFirst);
-                              },
-                              child: Text(
-                                'Log In',
-                                style: TextStyle(
-                                  fontFamily: 'NutinoSansReg',
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.green,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
                       ],
                     ),
                   ),
+                  const SizedBox(
+                    height: 32.0,
+                  ),
+                  LoginButton('Sign Up', () async {
+                    result = await Connectivity().checkConnectivity();
+                    if (result == ConnectivityResult.mobile ||
+                        result == ConnectivityResult.wifi) {
+                      SignMeUP();
+                    } else {
+                      showSnackBar(
+                        context,
+                        "Attention",
+                        Colors.blue,
+                        Icons.info,
+                        "You must be connected to the internet.",
+                      );
+                    }
+                  }),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Don’t have an account?  ',
+                        style: kStyleHomeTitle.copyWith(
+                          fontSize: 11.sp,
+                          color: kStyleGrey333,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                builder: (context) => LoginPage(),
+                              ),
+                              (route) => route.isFirst);
+                        },
+                        child: Text(
+                          'Log In',
+                          style: kStyleHomeTitle.copyWith(
+                            fontSize: 11.sp,
+                            color: Colors.green,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
-            ),
+            ],
           ),
         ),
       ),

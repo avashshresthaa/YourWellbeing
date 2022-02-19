@@ -101,7 +101,10 @@ class _MainContentState extends State<MainContent> {
               const SizedBox(height: 16),
               adContents(),
               const SizedBox(height: 24),
-              const Text('Products We Offer'),
+              Text(
+                'About Covid',
+                style: kStyleHomeTitle.copyWith(fontSize: 14.sp),
+              ),
               const SizedBox(height: 16),
               const ProductsContent(),
               const ProductsContent(),
@@ -277,33 +280,30 @@ class ProductsContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {},
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 16.0),
-        child: Container(
-          height: 104,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8),
-            boxShadow: [
-              boxShadow,
-            ],
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      Expanded(
-                        child: Text('3'),
-                      ),
-                    ],
-                  ),
-                ),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 16.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8.sp),
+          color: Colors.white,
+          boxShadow: [
+            boxShadow,
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(8.sp),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8.sp),
+            ),
+            width: MediaQuery.of(context).size.width,
+            //margin: const EdgeInsets.symmetric(horizontal: 0),
+            child: AspectRatio(
+              aspectRatio: 8 / 4,
+              child: Image.asset(
+                'assets/aboutcovid.png',
+                fit: BoxFit.fill,
               ),
-            ],
+            ),
           ),
         ),
       ),

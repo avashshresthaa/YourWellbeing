@@ -64,17 +64,6 @@ class _ProfileContentState extends State<ProfileContent> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        //Profile Picture
-/*                    Image.asset(
-                          'assets/Profile/profileimg.png',
-                          height: 75,
-                          width: 75,
-                          fit: BoxFit.cover,
-                        ),
-                        const SizedBox(
-                          width: 16,
-                        ),*/
-                        //Profile Details
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -110,14 +99,14 @@ class _ProfileContentState extends State<ProfileContent> {
                     ContentItems(
                       onTap: () {},
                       image: 'assets/Profile/menu.png',
-                      label: 'My Orders List',
+                      label: 'My Appointment List',
                       containerDesignType: 'top',
                     ),
                     itemDivider(),
                     ContentItems(
                       onTap: () {},
                       image: 'assets/Profile/shipment.png',
-                      label: 'Shipments',
+                      label: 'Emergency Contacts',
                       containerDesignType: 'both',
                     ),
                     itemDivider(),

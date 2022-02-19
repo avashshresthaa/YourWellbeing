@@ -5,10 +5,12 @@ import 'Change Notifier/changenotifier.dart';
 import 'package:sizer/sizer.dart';
 import 'package:provider/provider.dart';
 import 'Utils/user_prefrences.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await UserSimplePreferences.init();
+  await Firebase.initializeApp();
   runApp(const YourWellBeing());
 }
 
@@ -31,6 +33,7 @@ class YourWellBeing extends StatelessWidget {
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
+              //scaffoldBackgroundColor: kStyleBackgroundColor,
               primarySwatch: Colors.green,
             ),
             initialRoute: '/',

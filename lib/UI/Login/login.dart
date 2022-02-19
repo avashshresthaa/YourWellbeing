@@ -2,13 +2,13 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sizer/sizer.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/buttons.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/customtextfield.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/snackbar.dart';
 import 'package:yourwellbeing/UI/BottomNavigation/bottom_navigation.dart';
 import 'package:yourwellbeing/UI/Login/signup.dart';
-import 'package:yourwellbeing/UI/Login/test.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -76,14 +76,11 @@ class _LoginPageState extends State<LoginPage> {
                       padding: const EdgeInsets.only(left: 8.0),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        children: const [
+                        children: [
                           Text(
                             'Log in to continue',
                             textAlign: TextAlign.start,
-                            style: TextStyle(
-                              fontFamily: 'NutinoSansReg',
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
+                            style: kStyleHomeTitle.copyWith(
                               color: Colors.green,
                             ),
                           ),
@@ -107,12 +104,12 @@ class _LoginPageState extends State<LoginPage> {
                                 boxShadow: [boxShadow]),
                             child: TabBar(
                                 isScrollable: true,
-                                unselectedLabelStyle: TabText,
+                                unselectedLabelStyle: kStyleHomeTitle,
                                 indicator: BoxDecoration(
                                     color: Colors.green,
                                     borderRadius: BorderRadius.circular(4)),
                                 labelColor: Colors.white,
-                                labelStyle: TabText,
+                                labelStyle: kStyleHomeTitle,
                                 unselectedLabelColor: kStyleMainGrey,
                                 // Tabbar tabs
                                 tabs: [
@@ -143,6 +140,21 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  logMeIN() async {
+    if (_formKey.currentState!.validate()) {
+      final email = emailController.text;
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => const BottomNavigationPage(),
+          ),
+          (route) => route.isFirst);
+      SharedPreferences pref = await SharedPreferences.getInstance();
+      pref.setString('login', email);
+    } else {
+      return print("Unsuccessful");
+    }
   }
 
   Widget userLoginForm() {
@@ -240,13 +252,12 @@ class _LoginPageState extends State<LoginPage> {
                                     return ForgetPassword();
                                   }));*/
                 },
-                child: const Text(
+                child: Text(
                   'Forgot Password?',
-                  style: TextStyle(
-                    fontFamily: 'NutinoSansReg',
-                    fontSize: 12,
+                  style: kStyleHomeTitle.copyWith(
+                    fontSize: 10.sp,
+                    color: kStyleGrey333,
                     fontWeight: FontWeight.w400,
-                    color: Color(0xff333333),
                   ),
                 ),
               ),
@@ -259,18 +270,7 @@ class _LoginPageState extends State<LoginPage> {
             result = await Connectivity().checkConnectivity();
             if (result == ConnectivityResult.mobile ||
                 result == ConnectivityResult.wifi) {
-              if (_formKey.currentState!.validate()) {
-                final email = emailController.text;
-                Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(
-                      builder: (context) => const BottomNavigationPage(),
-                    ),
-                    (route) => route.isFirst);
-                SharedPreferences pref = await SharedPreferences.getInstance();
-                pref.setString('login', email);
-              } else {
-                return print("Unsuccessful");
-              }
+              logMeIN();
             } else {
               showSnackBar(
                 context,
@@ -287,13 +287,12 @@ class _LoginPageState extends State<LoginPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
+              Text(
                 'Don’t have an account?  ',
-                style: TextStyle(
-                  fontFamily: 'NutinoSansReg',
-                  fontSize: 14,
+                style: kStyleHomeTitle.copyWith(
+                  fontSize: 11.sp,
+                  color: kStyleGrey333,
                   fontWeight: FontWeight.w400,
-                  color: Color(0xff333333),
                 ),
               ),
               GestureDetector(
@@ -304,13 +303,12 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       (route) => route.isFirst);
                 },
-                child: const Text(
+                child: Text(
                   'Sign Up',
-                  style: TextStyle(
-                    fontFamily: 'NutinoSansReg',
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
+                  style: kStyleHomeTitle.copyWith(
+                    fontSize: 11.sp,
                     color: Colors.green,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
               ),
@@ -329,13 +327,11 @@ class _LoginPageState extends State<LoginPage> {
               SharedPreferences pref = await SharedPreferences.getInstance();
               pref.setString('login', 'guest');
             },
-            child: const Text(
+            child: Text(
               'View as guest',
               textAlign: TextAlign.start,
-              style: TextStyle(
-                fontFamily: 'NutinoSansReg',
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
+              style: kStyleHomeTitle.copyWith(
+                fontSize: 12.sp,
                 color: Colors.green,
               ),
             ),
@@ -483,6 +479,27 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class TabBarTabs extends StatelessWidget {
+  String text;
+
+  TabBarTabs({required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 120,
+      child: Padding(
+        padding: EdgeInsets.only(left: 8, right: 8.0),
+        child: Center(
+          child: Text(
+            text,
+          ),
+        ),
       ),
     );
   }
