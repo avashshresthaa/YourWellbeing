@@ -1,14 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/buttons.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/customtextfield.dart';
+import 'package:yourwellbeing/Extracted%20Widgets/showdialog.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/snackbar.dart';
+import 'package:yourwellbeing/Services/authentication.dart';
+import 'package:yourwellbeing/Services/database.dart';
 import 'package:yourwellbeing/UI/BottomNavigation/bottom_navigation.dart';
 import 'package:yourwellbeing/UI/Login/signup.dart';
+import 'package:yourwellbeing/Utils/user_prefrences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -49,6 +53,11 @@ class _LoginPageState extends State<LoginPage> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _docformKey = GlobalKey<FormState>();
+
+  AuthMethods authMethods = AuthMethods();
+  DatabaseMethods databaseMethods = DatabaseMethods();
+
+  QuerySnapshot? snapshotUserInfo;
 
   @override
   Widget build(BuildContext context) {
@@ -145,11 +154,29 @@ class _LoginPageState extends State<LoginPage> {
   logMeIN() async {
     if (_formKey.currentState!.validate()) {
       final email = emailController.text;
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (context) => const BottomNavigationPage(),
-          ),
-          (route) => route.isFirst);
+      final password = passwordController.text;
+
+      UserSimplePreferences.saveUserEmail(email);
+
+      showWaitDialog(context);
+      databaseMethods.getUserByEmail(email).then((val) {
+        snapshotUserInfo = val;
+        UserSimplePreferences.saveUserName(
+            snapshotUserInfo?.docs[0].get("name"));
+      });
+
+      authMethods.signInWithEmailAndPassword(email, password).then((value) {
+        if (value != null) {
+          UserSimplePreferences.saveUserLoggedIn(true);
+          Navigator.pop(context);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BottomNavigationPage(),
+            ),
+          );
+        }
+      });
       SharedPreferences pref = await SharedPreferences.getInstance();
       pref.setString('login', email);
     } else {

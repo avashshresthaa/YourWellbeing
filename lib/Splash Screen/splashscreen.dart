@@ -4,9 +4,10 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:sizer/sizer.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:yourwellbeing/Services/constants.dart';
 import 'package:yourwellbeing/UI/BottomNavigation/bottom_navigation.dart';
 import 'package:yourwellbeing/UI/Change%20Purpose/change_purpose.dart';
-import 'package:yourwellbeing/UI/Login/login.dart';
+import 'package:yourwellbeing/Utils/user_prefrences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -25,6 +26,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     sharedPreferencePurpose();
     sharedPreferenceLogin();
+/*    getUserInfo();*/
 /*    sharedPreferenceLogin().whenComplete(
       () async {
         Timer(

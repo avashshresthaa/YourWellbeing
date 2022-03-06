@@ -7,8 +7,9 @@ import 'package:yourwellbeing/Extracted%20Widgets/customtextfield.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/showdialog.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/snackbar.dart';
 import 'package:yourwellbeing/Services/authentication.dart';
-import 'package:yourwellbeing/UI/BottomNavigation/bottom_navigation.dart';
+import 'package:yourwellbeing/Services/database.dart';
 import 'package:yourwellbeing/UI/Login/login.dart';
+import 'package:yourwellbeing/Utils/user_prefrences.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
@@ -23,6 +24,7 @@ class _SignupPageState extends State<SignupPage> {
   ConnectivityResult result = ConnectivityResult.none;
 
   AuthMethods authMethods = AuthMethods();
+  DatabaseMethods databaseMethods = DatabaseMethods();
 
   void _togglePasswordView() {
     setState(() {
@@ -45,21 +47,32 @@ class _SignupPageState extends State<SignupPage> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  SignMeUP() {
+  signMeUp() {
     if (_formKey.currentState!.validate()) {
       final name = nameController.text;
       final email = emailController.text;
       final password = passwordController.text;
       final confirmPassword = confirmPasswordController.text;
+      Map<String, String> userInfoMap = {
+        "name": name,
+        "email": email,
+      };
+
+      UserSimplePreferences.saveUserEmail(email);
+      UserSimplePreferences.saveUserName(name);
+
       showWaitDialog(context);
       authMethods.signUpWithEmailAndPassword(email, password).then(
         (value) {
+          databaseMethods.uploadUserInfo(userInfoMap);
+          UserSimplePreferences.saveUserLoggedIn(true);
           Navigator.pop(context);
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => BottomNavigationPage(),
-              ));
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => LoginPage(),
+            ),
+          );
         },
       );
     } else {
@@ -304,7 +317,7 @@ class _SignupPageState extends State<SignupPage> {
                     result = await Connectivity().checkConnectivity();
                     if (result == ConnectivityResult.mobile ||
                         result == ConnectivityResult.wifi) {
-                      SignMeUP();
+                      signMeUp();
                     } else {
                       showSnackBar(
                         context,

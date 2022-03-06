@@ -8,6 +8,9 @@ class UserSimplePreferences {
   static const _keyTime = 'time';
   static const _keyPurpose = 'choosePreference';
   static const _keyLanguage = 'languageData';
+  static const _userLoggedInKey = 'isLoggedIn';
+  static const _userNameKey = 'usernameKey';
+  static const _userEmailKey = 'userEmailKey';
 
   static Future init() async =>
       _preferences = await SharedPreferences.getInstance();
@@ -35,4 +38,21 @@ class UserSimplePreferences {
   static bool? getLanguage() => _preferences?.getBool(_keyLanguage);
 
   static String? getPurpose() => _preferences?.getString(_keyPurpose);
+
+  //Saving the data to sharedPreference
+  static Future<void> saveUserLoggedIn(bool isUserLoggedIn) async =>
+      await _preferences?.setBool(_userLoggedInKey, isUserLoggedIn);
+
+  static Future<void> saveUserName(String userName) async =>
+      await _preferences?.setString(_userNameKey, userName);
+
+  static Future<void> saveUserEmail(String userEmail) async =>
+      await _preferences?.setString(_userEmailKey, userEmail);
+
+  //Getting data from sharedPreference
+  static bool? getUserLoggedIn() => _preferences?.getBool(_userLoggedInKey);
+
+  static String? getUserName() => _preferences?.getString(_userNameKey);
+
+  static String? getUserEmail() => _preferences?.getString(_userEmailKey);
 }

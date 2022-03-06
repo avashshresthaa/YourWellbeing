@@ -5,6 +5,7 @@ import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/buttons.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/containlist.dart';
+import 'package:yourwellbeing/Services/authentication.dart';
 import 'package:yourwellbeing/UI/Login/login.dart';
 import 'package:yourwellbeing/UI/Login/loginpermission.dart';
 import 'package:yourwellbeing/Utils/user_prefrences.dart';
@@ -46,6 +47,8 @@ class ProfileContent extends StatefulWidget {
 }
 
 class _ProfileContentState extends State<ProfileContent> {
+  AuthMethods authMethods = AuthMethods();
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -68,7 +71,7 @@ class _ProfileContentState extends State<ProfileContent> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Jane Doe',
+                              'Avash Shrestha',
                               style: kStyleHomeTitle.copyWith(
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.w700,
@@ -78,7 +81,7 @@ class _ProfileContentState extends State<ProfileContent> {
                               height: 4,
                             ),
                             Text(
-                              'No. 123, Sub Street',
+                              'Nayabazar',
                               style: kStyleButtonContent,
                             ),
                             const SizedBox(
@@ -98,21 +101,21 @@ class _ProfileContentState extends State<ProfileContent> {
                   children: [
                     ContentItems(
                       onTap: () {},
-                      image: 'assets/Profile/menu.png',
+                      image: 'assets/menu.png',
                       label: 'My Appointment List',
                       containerDesignType: 'top',
                     ),
                     itemDivider(),
                     ContentItems(
                       onTap: () {},
-                      image: 'assets/Profile/shipment.png',
+                      image: 'assets/menu.png',
                       label: 'Emergency Contacts',
                       containerDesignType: 'both',
                     ),
                     itemDivider(),
                     ContentItems(
                         onTap: () {},
-                        image: 'assets/Profile/invfrens.png',
+                        image: 'assets/menu.png',
                         label: 'Invite Friends',
                         containerDesignType: 'bottom'),
                   ],
@@ -129,6 +132,7 @@ class _ProfileContentState extends State<ProfileContent> {
                   ),
                   color: Color(0xffFF3D3D),
                   onPress: () async {
+                    authMethods.signOut();
                     SharedPreferences pref =
                         await SharedPreferences.getInstance();
                     pref.remove('login');
@@ -137,7 +141,7 @@ class _ProfileContentState extends State<ProfileContent> {
                             builder: (context) => const LoginPage()),
                         (Route<dynamic> route) => false);
                   },
-                  arrow: 'assets/forwardarrow.png',
+                  arrow: 'assets/redarrow.png',
                 ),
               ),
             ],
