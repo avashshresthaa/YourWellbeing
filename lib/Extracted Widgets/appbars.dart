@@ -57,3 +57,39 @@ class ProfileAppBar extends StatelessWidget with PreferredSizeWidget {
   // TODO: implement preferredSize
   Size get preferredSize => const Size.fromHeight(55);
 }
+
+class SChatAppBar extends StatelessWidget with PreferredSizeWidget {
+  final String title;
+  final onTap;
+
+  SChatAppBar({required this.title, this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      backgroundColor: Colors.white,
+      title: Text(
+        title,
+        style: kStyleAppBar,
+      ),
+      centerTitle: true,
+      automaticallyImplyLeading: false,
+      actions: [
+        GestureDetector(
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: Icon(
+              Icons.search,
+              color: Colors.green,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  // TODO: implement preferredSize
+  Size get preferredSize => const Size.fromHeight(55);
+}

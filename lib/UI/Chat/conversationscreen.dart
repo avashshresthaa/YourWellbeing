@@ -75,18 +75,18 @@ class _ConversationScreenState extends State<ConversationScreen> {
     var titleName = getName.toString().toTitleCase();
 
     return Scaffold(
-      appBar: MainAppBar(titleName),
+      appBar: ProfileAppBar(title: titleName),
       body: Container(
         child: Stack(
           children: [
             Padding(
-              padding: const EdgeInsets.only(bottom: 50.0),
+              padding: const EdgeInsets.only(bottom: 60.0),
               child: ChatMessageList(),
             ),
             Container(
               alignment: Alignment.bottomCenter,
               child: ChatField(
-                hintText: 'Message...',
+                hintText: 'Write you message',
                 controller: messageController,
                 onTap: () {
                   sendMessage();
@@ -109,24 +109,24 @@ class MessageTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(
-        left: isSendByMe ? MediaQuery.of(context).size.width * 0.5 : 24,
-        right: isSendByMe ? 24 : MediaQuery.of(context).size.width * 0.5,
+        left: isSendByMe ? MediaQuery.of(context).size.width * 0.5 : 16,
+        right: isSendByMe ? 16 : MediaQuery.of(context).size.width * 0.5,
       ),
       margin: EdgeInsets.symmetric(vertical: 8),
       width: MediaQuery.of(context).size.width,
       alignment: isSendByMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
-        padding: EdgeInsets.symmetric(
+        padding: const EdgeInsets.symmetric(
           horizontal: 14,
           vertical: 14,
         ),
         decoration: BoxDecoration(
           borderRadius: isSendByMe
-              ? BorderRadius.only(
+              ? const BorderRadius.only(
                   topLeft: Radius.circular(23),
                   topRight: Radius.circular(23),
                   bottomLeft: Radius.circular(23))
-              : BorderRadius.only(
+              : const BorderRadius.only(
                   topLeft: Radius.circular(23),
                   topRight: Radius.circular(23),
                   bottomRight: Radius.circular(23)),

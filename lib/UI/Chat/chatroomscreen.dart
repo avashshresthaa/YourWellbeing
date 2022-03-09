@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 import 'package:yourwellbeing/Change%20Notifier/changenotifier.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
@@ -35,7 +36,16 @@ class _ChatState extends State<Chat> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kStyleBackgroundColor,
-      appBar: MainAppBar('Chat'),
+      appBar: SChatAppBar(
+        title: 'Chat',
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SearchScreen(),
+              ));
+        },
+      ),
       body: loginData == 'guest' ? const SignUpContent() : const ChatRoom(),
     );
   }
@@ -73,7 +83,23 @@ class _ChatRoomState extends State<ChatRoom> {
                       snapshot.data?.docs[index].get("chatroomId"));
                 },
               )
-            : CircularProgressIndicator();
+            : SizedBox(
+                height: MediaQuery.of(context).size.height / 1.3,
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator.adaptive(),
+                      SizedBox(height: 12),
+                      Text(
+                        'Please wait...',
+                        style: kStyleHomeTitle.copyWith(
+                            color: kStyleGrey333, fontSize: 10.sp),
+                      ),
+                    ],
+                  ),
+                ),
+              );
       },
     );
   }
@@ -97,24 +123,10 @@ class _ChatRoomState extends State<ChatRoom> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: kStyleBackgroundColor,
       body: Column(
         children: [
           chatRoomList(),
-          SizedBox(
-            height: 40,
-          ),
-          Container(
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SearchScreen(),
-                    ));
-              },
-              child: Text('Search'),
-            ),
-          ),
         ],
       ),
     );
@@ -137,25 +149,59 @@ class ChatRoomsTile extends StatelessWidget {
               builder: (context) => ConversationScreen(chatRoomId)),
         );
       },
-      child: Container(
-        margin: EdgeInsets.only(bottom: 8),
-        color: Colors.green,
-        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-        child: Row(
-          children: [
-            Container(
-              width: 40,
-              height: 40,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                  color: Colors.blue, borderRadius: BorderRadius.circular(40)),
-              child: Text("${userName?.substring(0, 1).toUpperCase()}"),
-            ),
-            SizedBox(
-              width: 8,
-            ),
-            Text(userName!),
-          ],
+      child: Padding(
+        padding: const EdgeInsets.only(left: 16.0, right: 16, top: 14),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8.sp),
+            color: Colors.white,
+            boxShadow: [
+              boxShadow,
+            ],
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          child: Row(
+            children: [
+              Container(
+                width: 40,
+                height: 40,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                    color: Colors.green,
+                    borderRadius: BorderRadius.circular(40)),
+                child: Text(
+                  "${userName?.substring(0, 1).toUpperCase()}",
+                  style: kStyleHomeTitle.copyWith(
+                    color: Colors.white,
+                    fontSize: 12.sp,
+                  ),
+                ),
+              ),
+              const SizedBox(
+                width: 16,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    userName!,
+                    style: kStyleHomeTitle.copyWith(
+                      color: kStyleGrey333,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(
+                    "Tap to chat here",
+                    style: kStyleHomeTitle.copyWith(
+                      color: kStyleGrey333,
+                      fontSize: 11.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

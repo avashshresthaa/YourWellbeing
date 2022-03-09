@@ -62,9 +62,9 @@ class _NotificationContentState extends State<NotificationContent> {
     );
     _configureTimeZone();
 
-    ktitle = UserSimplePreferences.getTitle() ?? 'No title has been set';
-    kbody = UserSimplePreferences.getBody() ?? 'No Body has been set';
-    ktime = UserSimplePreferences.getTime() ?? 'No Time has been set';
+    ktitle = UserSimplePreferences.getTitle() ?? eTitle;
+    kbody = UserSimplePreferences.getBody() ?? eBody;
+    ktime = UserSimplePreferences.getTime() ?? eTime;
   }
 
   static tz.TZDateTime _scheduleDaily(int hour, int minutes) {

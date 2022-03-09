@@ -16,7 +16,7 @@ var kStyleTextField = TextStyle(
 );
 
 const kBorder = BorderSide(
-  width: 1,
+  width: 1.5,
   color: Colors.green,
 );
 

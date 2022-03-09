@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:sizer/sizer.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 
 class CustomTextFormField extends StatelessWidget {
@@ -131,44 +132,41 @@ class ChatField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      autocorrect: false,
-      keyboardType: TextInputType.visiblePassword,
-      style: const TextStyle(
-        fontFamily: 'NutinoSansReg',
-        fontSize: 14,
-        fontWeight: FontWeight.w400,
-        color: Color(0xff777777),
-      ),
-      decoration: InputDecoration(
-        suffixIcon: GestureDetector(
-          onTap: onTap,
-          child: Icon(
-            Icons.arrow_forward_ios,
+    return SizedBox(
+      height: 55,
+      child: TextFormField(
+        controller: controller,
+        autocorrect: false,
+        keyboardType: TextInputType.visiblePassword,
+        style: TextStyle(
+          fontFamily: 'NutinoSansReg',
+          fontSize: 12.sp,
+          fontWeight: FontWeight.w400,
+          color: Color(0xff777777),
+        ),
+        decoration: InputDecoration(
+          suffixIcon: GestureDetector(
+            onTap: onTap,
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Image.asset(
+                'assets/chatsend.png',
+                width: 24,
+              ),
+            ),
           ),
-        ),
-        fillColor: Colors.white,
-        border: InputBorder.none,
-        filled: true,
-        focusedBorder: OutlineInputBorder(
-          borderSide: kBorder,
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: kBorder,
-        ),
-        errorBorder: OutlineInputBorder(
-          borderSide: const BorderSide(
-            width: 1,
-            color: Colors.red,
+          fillColor: Colors.white,
+          border: InputBorder.none,
+          filled: true,
+          focusedBorder: OutlineInputBorder(
+            borderSide: kBorder,
           ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: kBorder,
+          ),
+          hintText: hintText,
+          hintStyle: kStyleTextField,
         ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderSide: kBorder,
-        ),
-        hintText: hintText,
-        hintStyle: kStyleTextField,
-        contentPadding: const EdgeInsets.fromLTRB(8, 8, 16, 8),
       ),
     );
   }

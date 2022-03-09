@@ -19,7 +19,6 @@ class _AppointmentState extends State<Appointment> {
     // TODO: implement initState
     super.initState();
     loginData = UserSimplePreferences.getLogin() ?? 'guest';
-    print(loginData);
   }
 
   @override

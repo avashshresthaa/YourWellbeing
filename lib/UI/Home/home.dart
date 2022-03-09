@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
+import 'package:yourwellbeing/Constraints/uppercase.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:yourwellbeing/Services/constants.dart';
@@ -84,6 +85,7 @@ class _MainContentState extends State<MainContent> {
     'assets/Slider/tbbanner.png'
   ];
   final adImages = ['assets/Slider/adphoto.png'];
+  var titleName = username.toString().toTitleCase();
 
   @override
   Widget build(BuildContext context) {
@@ -128,8 +130,8 @@ class _MainContentState extends State<MainContent> {
           padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
           child: Text(
             language
-                ? "$greetingText, $username"
-                : "$greetingTextNP, $username",
+                ? "$greetingText, $titleName"
+                : "$greetingTextNP, $titleName",
             style: kStyleHomeTitle,
           ),
         ),
