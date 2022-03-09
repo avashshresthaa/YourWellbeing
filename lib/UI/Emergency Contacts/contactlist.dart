@@ -1,3 +1,4 @@
+/*
 class ContactModel {
   static final contacts = [
     Contacts(
@@ -45,3 +46,4 @@ class Contacts {
 
   Contacts({this.location, this.name, this.number});
 }
+*/

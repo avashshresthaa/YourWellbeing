@@ -17,6 +17,8 @@ class Profile extends StatefulWidget {
   _ProfileState createState() => _ProfileState();
 }
 
+var username;
+
 class _ProfileState extends State<Profile> {
   var loginData;
 
@@ -24,6 +26,8 @@ class _ProfileState extends State<Profile> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    username = UserSimplePreferences.getUserName() ?? "User";
+
     loginData = UserSimplePreferences.getLogin() ?? 'guest';
   }
 
@@ -71,7 +75,7 @@ class _ProfileContentState extends State<ProfileContent> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Avash Shrestha',
+                              username,
                               style: kStyleHomeTitle.copyWith(
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.w700,
@@ -136,6 +140,7 @@ class _ProfileContentState extends State<ProfileContent> {
                     SharedPreferences pref =
                         await SharedPreferences.getInstance();
                     pref.remove('login');
+                    pref.remove("usernameKey");
                     Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
                             builder: (context) => const LoginPage()),

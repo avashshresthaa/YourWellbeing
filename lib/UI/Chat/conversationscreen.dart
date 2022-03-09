@@ -1,9 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:sizer/sizer.dart';
+import 'package:yourwellbeing/Change%20Notifier/changenotifier.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
+import 'package:yourwellbeing/Extracted%20Widgets/customtextfield.dart';
 import 'package:yourwellbeing/Services/constants.dart';
 import 'package:yourwellbeing/Services/database.dart';
+import 'package:yourwellbeing/Constraints/uppercase.dart';
 
 class ConversationScreen extends StatefulWidget {
   final chatRoomId;
@@ -27,6 +32,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(
+                reverse: true,
                 itemCount: snapshot.data?.docs.length,
                 itemBuilder: (context, index) {
                   return MessageTile(
@@ -65,41 +71,26 @@ class _ConversationScreenState extends State<ConversationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var getName = Provider.of<DataProvider>(context, listen: false).otherName;
+    var titleName = getName.toString().toTitleCase();
+
     return Scaffold(
-      appBar: MainAppBar('Chat Screen'),
+      appBar: MainAppBar(titleName),
       body: Container(
         child: Stack(
           children: [
-            ChatMessageList(),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 50.0),
+              child: ChatMessageList(),
+            ),
             Container(
               alignment: Alignment.bottomCenter,
-              child: Container(
-                color: Colors.white,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 16,
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: messageController,
-                        style: kStyleHomeTitle,
-                        decoration: InputDecoration(
-                          hintText: 'Message...',
-                          hintStyle: kStyleHomeTitle,
-                          border: InputBorder.none,
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        sendMessage();
-                      },
-                      child: Icon(Icons.arrow_forward_ios),
-                    ),
-                  ],
-                ),
+              child: ChatField(
+                hintText: 'Message...',
+                controller: messageController,
+                onTap: () {
+                  sendMessage();
+                },
               ),
             ),
           ],
@@ -118,16 +109,16 @@ class MessageTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(
-        left: isSendByMe ? 0 : 24,
-        right: isSendByMe ? 24 : 0,
+        left: isSendByMe ? MediaQuery.of(context).size.width * 0.5 : 24,
+        right: isSendByMe ? 24 : MediaQuery.of(context).size.width * 0.5,
       ),
       margin: EdgeInsets.symmetric(vertical: 8),
       width: MediaQuery.of(context).size.width,
       alignment: isSendByMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
         padding: EdgeInsets.symmetric(
-          horizontal: 24,
-          vertical: 16,
+          horizontal: 14,
+          vertical: 14,
         ),
         decoration: BoxDecoration(
           borderRadius: isSendByMe
@@ -147,7 +138,14 @@ class MessageTile extends StatelessWidget {
                       Colors.grey.shade400,
                     ]),
         ),
-        child: Text(message),
+        child: Text(
+          message,
+          style: kStyleHomeTitle.copyWith(
+            color: Colors.white,
+            fontSize: 12.sp,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
       ),
     );
   }

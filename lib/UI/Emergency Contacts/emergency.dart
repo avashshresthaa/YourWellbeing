@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
+import 'package:yourwellbeing/APIModels/getContacts.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:yourwellbeing/Network/NetworkHelper.dart';
 import 'contactlist.dart';
 
 class EmergencyPage extends StatefulWidget {
@@ -31,25 +33,53 @@ class EmergencyContent extends StatefulWidget {
 }
 
 class _EmergencyContentState extends State<EmergencyContent> {
+  NetworkHelper networkHelper = NetworkHelper();
+  Future<Contacts>? _contacts;
+
+  Future<Contacts>? getContactsLists() async {
+    var data = await networkHelper.getContactsData();
+    return data;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _contacts = getContactsLists();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      padding: const EdgeInsets.only(top: 20, left: 16, right: 16, bottom: 6),
-      itemCount: ContactModel.contacts.length,
-      itemBuilder: (context, index) {
-        return ContactContents(
-          item: ContactModel.contacts[index],
-        );
-      },
-    );
+    return FutureBuilder<Contacts>(
+        future: _contacts,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              padding: const EdgeInsets.only(
+                  top: 20, left: 16, right: 16, bottom: 6),
+              itemCount: snapshot.data?.data?.length,
+              itemBuilder: (context, index) {
+                var count = snapshot.data?.data![index];
+                return ContactContents(
+                  location: count?.location,
+                  name: count?.name,
+                  number: count?.number,
+                );
+              },
+            );
+          } else {
+            return Container();
+          }
+        });
   }
 }
 
 class ContactContents extends StatelessWidget {
-  final Contacts item;
+  final location;
+  final name;
+  final number;
 
-  const ContactContents({Key? key, required this.item}) : super(key: key);
-
+  ContactContents({this.location, this.name, this.number});
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -96,7 +126,7 @@ class ContactContents extends StatelessWidget {
                           size: 20,
                         ),
                         Text(
-                          item.location,
+                          location,
                           style: kStyleHomeTitle.copyWith(
                               color: kStyleCoolGrey,
                               fontWeight: FontWeight.w600,
@@ -107,7 +137,7 @@ class ContactContents extends StatelessWidget {
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.6,
                       child: Text(
-                        item.name,
+                        name,
                         style: kStyleHomeTitle.copyWith(
                             color: Colors.green,
                             fontWeight: FontWeight.w600,
@@ -115,7 +145,7 @@ class ContactContents extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      item.number,
+                      number,
                       style: kStyleHomeTitle.copyWith(
                           fontWeight: FontWeight.w400, fontSize: 10.sp),
                     ),
@@ -127,7 +157,7 @@ class ContactContents extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () async {
-                    launch('tel://${item.number}');
+                    launch('tel://${number}');
                   },
                   child: const Icon(
                     Icons.phone_outlined,

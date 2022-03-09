@@ -120,3 +120,56 @@ class NotificationField extends StatelessWidget {
     );
   }
 }
+
+class ChatField extends StatelessWidget {
+  ChatField(
+      {required this.hintText, required this.controller, required this.onTap});
+
+  final onTap;
+  final hintText;
+  final dynamic controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      autocorrect: false,
+      keyboardType: TextInputType.visiblePassword,
+      style: const TextStyle(
+        fontFamily: 'NutinoSansReg',
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+        color: Color(0xff777777),
+      ),
+      decoration: InputDecoration(
+        suffixIcon: GestureDetector(
+          onTap: onTap,
+          child: Icon(
+            Icons.arrow_forward_ios,
+          ),
+        ),
+        fillColor: Colors.white,
+        border: InputBorder.none,
+        filled: true,
+        focusedBorder: OutlineInputBorder(
+          borderSide: kBorder,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: kBorder,
+        ),
+        errorBorder: OutlineInputBorder(
+          borderSide: const BorderSide(
+            width: 1,
+            color: Colors.red,
+          ),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: kBorder,
+        ),
+        hintText: hintText,
+        hintStyle: kStyleTextField,
+        contentPadding: const EdgeInsets.fromLTRB(8, 8, 16, 8),
+      ),
+    );
+  }
+}

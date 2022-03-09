@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:yourwellbeing/Change%20Notifier/changenotifier.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
 import 'package:yourwellbeing/Services/authentication.dart';
@@ -9,6 +10,7 @@ import 'package:yourwellbeing/UI/Chat/conversationscreen.dart';
 import 'package:yourwellbeing/UI/Chat/searchscreen.dart';
 import 'package:yourwellbeing/Utils/user_prefrences.dart';
 import '../Login/loginpermission.dart';
+import 'package:provider/provider.dart';
 
 class Chat extends StatefulWidget {
   const Chat({Key? key}) : super(key: key);
@@ -128,6 +130,7 @@ class ChatRoomsTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        context.read<DataProvider>().getOtherName(userName!);
         Navigator.push(
           context,
           MaterialPageRoute(

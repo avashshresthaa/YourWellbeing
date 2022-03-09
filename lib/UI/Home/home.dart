@@ -1,13 +1,16 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:yourwellbeing/Services/constants.dart';
 import 'package:yourwellbeing/Utils/user_prefrences.dart';
 import '../../Constraints/nplanguage.dart';
 import '../../Extracted Widgets/showdialog.dart';
 
 var language;
+var username;
 
 class MainDashboard extends StatefulWidget {
   const MainDashboard({Key? key}) : super(key: key);
@@ -22,6 +25,8 @@ class _MainDashboardState extends State<MainDashboard> {
     // TODO: implement initState
     super.initState();
     language = UserSimplePreferences.getLanguage() ?? true;
+    username = UserSimplePreferences.getUserName() ?? "User";
+    print(username);
   }
 
   @override
@@ -122,7 +127,9 @@ class _MainContentState extends State<MainContent> {
         Padding(
           padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
           child: Text(
-            language ? "$greetingText, User" : "$greetingTextNP, User",
+            language
+                ? "$greetingText, $username"
+                : "$greetingTextNP, $username",
             style: kStyleHomeTitle,
           ),
         ),

@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
+import 'package:yourwellbeing/Network/NetworkHelper.dart';
 import 'package:yourwellbeing/UI/Login/login.dart';
 import 'package:yourwellbeing/UI/Login/signup.dart';
 import '../../Extracted Widgets/buttons.dart';
@@ -81,7 +82,9 @@ class _SignUpContentState extends State<SignUpContent> {
               textAlign: TextAlign.center,
               style: kStyleButtonContent.copyWith(color: Colors.black),
             ),
-            onPress: () {
+            onPress: () async {
+              NetworkHelper network = NetworkHelper();
+              await network.getContactsData();
               Navigator.push(context, MaterialPageRoute(builder: (context) {
                 return const SignupPage();
               }));
