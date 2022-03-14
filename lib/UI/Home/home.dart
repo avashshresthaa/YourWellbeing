@@ -1,17 +1,23 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:convert';
+import 'package:api_cache_manager/utils/cache_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:sizer/sizer.dart';
+import 'package:yourwellbeing/APIModels/getCovid.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Constraints/uppercase.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:yourwellbeing/Services/constants.dart';
+import 'package:yourwellbeing/Extracted%20Widgets/homecontents.dart';
+import 'package:yourwellbeing/UI/Settings/settings.dart';
 import 'package:yourwellbeing/Utils/user_prefrences.dart';
 import '../../Constraints/nplanguage.dart';
 import '../../Extracted Widgets/showdialog.dart';
 
 var language;
 var username;
+var loginData;
+var purpose;
 
 class MainDashboard extends StatefulWidget {
   const MainDashboard({Key? key}) : super(key: key);
@@ -27,6 +33,9 @@ class _MainDashboardState extends State<MainDashboard> {
     super.initState();
     language = UserSimplePreferences.getLanguage() ?? true;
     username = UserSimplePreferences.getUserName() ?? "User";
+    loginData = UserSimplePreferences.getLogin() ?? 'guest';
+    purpose = UserSimplePreferences.getPurpose();
+    print(purpose);
     print(username);
   }
 
@@ -86,6 +95,27 @@ class _MainContentState extends State<MainContent> {
   ];
   final adImages = ['assets/Slider/adphoto.png'];
   var titleName = username.toString().toTitleCase();
+  var titlePurpose = purpose.toString().toTitleCase();
+
+  Future<Covid>? _covid;
+
+  Future<Covid> getCovidApiData() async {
+    var cacheData = await APICacheManager().getCacheData("covid");
+    var jsonMap = jsonDecode(cacheData.syncData);
+    print("cache: hit");
+    return Covid.fromJson(jsonMap);
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _covid = getCovidApiData();
+  }
+
+  var imagesCovid = [
+    'assets/aboutcovid.png',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -109,12 +139,60 @@ class _MainContentState extends State<MainContent> {
               adContents(),
               const SizedBox(height: 24),
               Text(
-                'About Covid',
-                style: kStyleHomeTitle.copyWith(fontSize: 14.sp),
+                'About $titlePurpose',
+                style: kStyleHomeTitle.copyWith(fontSize: 12.sp),
               ),
               const SizedBox(height: 16),
-              const ProductsContent(),
-              const ProductsContent(),
+              purpose == 'covid'
+                  ? FutureBuilder<Covid>(
+                      future: _covid,
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return Container(
+                            height: 800,
+                            child: Shimmer.fromColors(
+                              direction: ShimmerDirection.ttb,
+                              period: const Duration(milliseconds: 8000),
+                              child: ListView.builder(
+                                  itemCount: 2,
+                                  itemBuilder: (context, index) {
+                                    return Container(
+                                      margin: EdgeInsets.all(16),
+                                      height: 160,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        color: Colors.black,
+                                      ),
+                                    );
+                                  }),
+                              baseColor: Color(0xFFE5E4E2),
+                              highlightColor: Color(0xFFD6D6D6),
+                            ),
+                          );
+                        } else {
+                          return Column(
+                            children: [
+                              ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const ScrollPhysics(),
+                                  scrollDirection: Axis.vertical,
+                                  itemCount:
+                                      snapshot.data!.data!.covidDetails!.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    var textContent = snapshot
+                                        .data!.data!.covidDetails![index];
+                                    return HomeContents(
+                                      text: textContent.content,
+                                      image: imagesCovid[index],
+                                      page: Settings(),
+                                    );
+                                  }),
+                            ],
+                          );
+                        }
+                      })
+                  : Text('Ok'),
             ],
           ),
         ),
@@ -185,7 +263,7 @@ class _MainContentState extends State<MainContent> {
   Widget myAppointment() {
     return GestureDetector(
       onTap: () async {
-        await showLoginDialog(context);
+        await showLoginDialog(context, loginData);
       },
       child: Container(
         height: 55.sp,
@@ -278,7 +356,7 @@ class _MainContentState extends State<MainContent> {
     );
   }
 }
-
+/*
 // Extracted Widget that contains the code for ProductsContent
 class ProductsContent extends StatelessWidget {
   const ProductsContent({
@@ -318,4 +396,4 @@ class ProductsContent extends StatelessWidget {
       ),
     );
   }
-}
+}*/

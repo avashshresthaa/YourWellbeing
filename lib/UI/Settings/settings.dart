@@ -1,17 +1,21 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sizer/sizer.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
+import 'package:yourwellbeing/Constraints/nplanguage.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/containlist.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/snackbar.dart';
+import 'package:yourwellbeing/Network/api_links.dart';
 import 'package:yourwellbeing/UI/Change%20Language/change_language.dart';
 import 'package:yourwellbeing/UI/Change%20Purpose/change_purpose.dart';
 import 'package:yourwellbeing/UI/Profile/profile.dart';
+import 'package:yourwellbeing/Utils/user_prefrences.dart';
 
 import '../../Extracted Widgets/showdialog.dart';
 import '../Emergency Contacts/emergency.dart';
 import '../Notification/notification.dart';
+
+var language;
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
@@ -21,6 +25,13 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    language = UserSimplePreferences.getLanguage() ?? true;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,6 +50,20 @@ class SettingsContent extends StatefulWidget {
 }
 
 class _SettingsContentState extends State<SettingsContent> {
+  Future<bool> update() async {
+    ApiData apiData = ApiData();
+    await apiData.updateContent();
+    showSnackBar(
+      context,
+      "Success",
+      Colors.teal,
+      Icons.check_circle,
+      "Content Downloaded Successfully!",
+    );
+    Navigator.pop(context);
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -105,8 +130,25 @@ class _SettingsContentState extends State<SettingsContent> {
               ),
               itemDivider(),
               ContentItems(
-                onTap: () {
-                  showWaitDialog(context);
+                onTap: () async {
+                  var result = await Connectivity().checkConnectivity();
+                  if (result == ConnectivityResult.mobile ||
+                      result == ConnectivityResult.wifi) {
+                    if (update() == true) {
+                      print("done");
+                    } else {
+                      showWaitDialog(
+                          context, language ? 'Please Wait...' : nepWait);
+                    }
+                  } else {
+                    showSnackBar(
+                      context,
+                      "Attention",
+                      Colors.blue,
+                      Icons.info,
+                      "You must be connected to the internet.",
+                    );
+                  }
                 },
                 image: 'assets/menu.png',
                 label: 'Update Content',

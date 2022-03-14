@@ -2,6 +2,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
+import 'package:yourwellbeing/Constraints/nplanguage.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/buttons.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/customtextfield.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/showdialog.dart';
@@ -19,6 +20,7 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
+  var language;
   bool isHiddenPassword = true;
   bool isConfirmHiddenPassword = true;
   ConnectivityResult result = ConnectivityResult.none;
@@ -61,7 +63,7 @@ class _SignupPageState extends State<SignupPage> {
       UserSimplePreferences.saveUserEmail(email);
       UserSimplePreferences.saveUserName(name);
 
-      showWaitDialog(context);
+      showWaitDialog(context, language ? 'Please Wait...' : nepWait);
       authMethods.signUpWithEmailAndPassword(email, password).then(
         (value) {
           databaseMethods.uploadUserInfo(userInfoMap);
@@ -78,6 +80,13 @@ class _SignupPageState extends State<SignupPage> {
     } else {
       return print("Unsuccessful");
     }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    language = UserSimplePreferences.getLanguage() ?? true;
   }
 
   @override

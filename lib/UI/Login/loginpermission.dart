@@ -83,8 +83,6 @@ class _SignUpContentState extends State<SignUpContent> {
               style: kStyleButtonContent.copyWith(color: Colors.black),
             ),
             onPress: () async {
-              NetworkHelper network = NetworkHelper();
-              await network.getContactsData();
               Navigator.push(context, MaterialPageRoute(builder: (context) {
                 return const SignupPage();
               }));

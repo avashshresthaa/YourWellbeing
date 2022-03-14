@@ -41,6 +41,7 @@ class ProfileAppBar extends StatelessWidget with PreferredSizeWidget {
             'assets/backicon.png',
             width: 11.43,
             height: 20,
+            color: Colors.green,
           ),
         ),
       ),

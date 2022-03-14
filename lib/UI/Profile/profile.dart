@@ -6,6 +6,7 @@ import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/buttons.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/containlist.dart';
 import 'package:yourwellbeing/Services/authentication.dart';
+import 'package:yourwellbeing/UI/Appointment/appointment_list.dart';
 import 'package:yourwellbeing/UI/Emergency%20Contacts/emergency.dart';
 import 'package:yourwellbeing/UI/Login/login.dart';
 import 'package:yourwellbeing/UI/Login/loginpermission.dart';
@@ -144,7 +145,12 @@ class _ProfileContentState extends State<ProfileContent> {
                 child: Column(
                   children: [
                     ContentItems(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return const AppointmentList();
+                        }));
+                      },
                       image: 'assets/menu.png',
                       label: 'My Appointment List',
                       containerDesignType: 'top',

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
+import 'package:yourwellbeing/Constraints/nplanguage.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/buttons.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/customtextfield.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/showdialog.dart';
@@ -13,6 +14,8 @@ import 'package:yourwellbeing/Services/database.dart';
 import 'package:yourwellbeing/UI/BottomNavigation/bottom_navigation.dart';
 import 'package:yourwellbeing/UI/Login/signup.dart';
 import 'package:yourwellbeing/Utils/user_prefrences.dart';
+
+var language;
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -58,6 +61,13 @@ class _LoginPageState extends State<LoginPage> {
   DatabaseMethods databaseMethods = DatabaseMethods();
 
   QuerySnapshot? snapshotUserInfo;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    language = UserSimplePreferences.getLanguage() ?? true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -158,7 +168,7 @@ class _LoginPageState extends State<LoginPage> {
 
       UserSimplePreferences.saveUserEmail(email);
 
-      showWaitDialog(context);
+      showWaitDialog(context, language ? 'Please Wait...' : nepWait);
       databaseMethods.getUserByEmail(email).then((val) {
         snapshotUserInfo = val;
         UserSimplePreferences.saveUserName(

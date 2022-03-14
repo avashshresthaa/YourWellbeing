@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sizer/sizer.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
+import 'package:yourwellbeing/UI/Appointment/appointment_list.dart';
 import 'package:yourwellbeing/UI/Login/login.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-Future<void> showWaitDialog(BuildContext context) => showDialog(
+Future<void> showWaitDialog(BuildContext context, String text) => showDialog(
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) => AlertDialog(
         title: Center(
           child: Text(
-            'Please Wait...',
+            text,
             style: kStyleHomeTitle.copyWith(
                 fontWeight: FontWeight.w700, fontSize: 12.sp),
           ),
@@ -80,7 +81,7 @@ Future<void> showBackDialog(BuildContext context) => showDialog(
       ),
     );
 
-Future<void> showLoginDialog(BuildContext context) => showDialog(
+Future<void> showLoginDialog(BuildContext context, var logindata) => showDialog(
       barrierColor: Colors.green.withOpacity(0.24),
       //barrierDismissible: false,
       context: context,
@@ -127,7 +128,9 @@ Future<void> showLoginDialog(BuildContext context) => showDialog(
                           Navigator.of(context).pop();
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
-                            return const LoginPage();
+                            return logindata == 'guest'
+                                ? LoginPage()
+                                : AppointmentList();
                           }));
                         },
                         child: Text(

@@ -297,7 +297,7 @@ class _NotificationContentState extends State<NotificationContent> {
                               kbody = null;
                               ktime = null;
                             });
-                            await notificationsPlugin.cancelAll();
+                            await notificationsPlugin.cancel(14);
                             await UserSimplePreferences.setTitle(eTitle);
                             await UserSimplePreferences.setBody(eBody);
                             await UserSimplePreferences.setTime(eTime);

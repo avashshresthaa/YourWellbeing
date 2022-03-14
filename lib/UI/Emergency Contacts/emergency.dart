@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:api_cache_manager/utils/cache_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:yourwellbeing/APIModels/getContacts.dart';
@@ -5,7 +7,6 @@ import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yourwellbeing/Network/NetworkHelper.dart';
-import 'contactlist.dart';
 
 class EmergencyPage extends StatefulWidget {
   const EmergencyPage({Key? key}) : super(key: key);
@@ -37,8 +38,10 @@ class _EmergencyContentState extends State<EmergencyContent> {
   Future<Contacts>? _contacts;
 
   Future<Contacts>? getContactsLists() async {
-    var data = await networkHelper.getContactsData();
-    return data;
+    var cacheData = await APICacheManager().getCacheData("contact_numbers");
+    var jsonMap = jsonDecode(cacheData.syncData);
+    print("cache: hit");
+    return Contacts.fromJson(jsonMap);
   }
 
   @override
