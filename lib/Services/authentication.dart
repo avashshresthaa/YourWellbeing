@@ -12,7 +12,10 @@ class AuthMethods {
   }
 
   //Function future function because it might take some time calling the data from firebase
-  Future signInWithEmailAndPassword(String email, String password) async {
+  Future signInWithEmailAndPassword(
+    String email,
+    String password,
+  ) async {
     // To handle exception for crash issue
     try {
       // getting the result of email and password which user has inputted firebase_auth package
@@ -24,6 +27,7 @@ class AuthMethods {
       User? firebaseUser = result.user;
       return _userFromFirebaseUser(firebaseUser!);
     } catch (e) {
+      print('wrong password');
       print(e.toString());
     }
   }

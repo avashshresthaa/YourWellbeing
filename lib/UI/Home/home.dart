@@ -13,6 +13,7 @@ import 'package:yourwellbeing/UI/Settings/settings.dart';
 import 'package:yourwellbeing/Utils/user_prefrences.dart';
 import '../../Constraints/nplanguage.dart';
 import '../../Extracted Widgets/showdialog.dart';
+import 'home_content.dart';
 
 var language;
 var username;
@@ -183,9 +184,18 @@ class _MainContentState extends State<MainContent> {
                                     var textContent = snapshot
                                         .data!.data!.covidDetails![index];
                                     return HomeContents(
-                                      text: textContent.content,
-                                      image: imagesCovid[index],
-                                      page: Settings(),
+                                      text: language
+                                          ? textContent.content
+                                          : textContent.contentNe,
+                                      image: index > imagesCovid.length - 1
+                                          ? 'assets/aboutcovid.png'
+                                          : imagesCovid[index],
+                                      page: AboutPage(
+                                        indexId: index,
+                                        label: language
+                                            ? textContent.content
+                                            : textContent.contentNe,
+                                      ),
                                     );
                                   }),
                             ],

@@ -15,8 +15,6 @@ import 'package:yourwellbeing/UI/BottomNavigation/bottom_navigation.dart';
 import 'package:yourwellbeing/UI/Login/signup.dart';
 import 'package:yourwellbeing/Utils/user_prefrences.dart';
 
-var language;
-
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -27,6 +25,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   //For Password Icon
   bool isHiddenPassword = true;
+  var language;
 
   void _togglePasswordView() {
     setState(() {
@@ -166,29 +165,43 @@ class _LoginPageState extends State<LoginPage> {
       final email = emailController.text;
       final password = passwordController.text;
 
-      UserSimplePreferences.saveUserEmail(email);
-
       showWaitDialog(context, language ? 'Please Wait...' : nepWait);
-      databaseMethods.getUserByEmail(email).then((val) {
-        snapshotUserInfo = val;
-        UserSimplePreferences.saveUserName(
-            snapshotUserInfo?.docs[0].get("name"));
-      });
-
-      authMethods.signInWithEmailAndPassword(email, password).then((value) {
+      authMethods
+          .signInWithEmailAndPassword(
+        email,
+        password,
+      )
+          .then((value) async {
         if (value != null) {
           UserSimplePreferences.saveUserLoggedIn(true);
+          UserSimplePreferences.saveUserEmail(email);
+          await databaseMethods.getUserByEmail(email).then((val) {
+            snapshotUserInfo = val;
+            UserSimplePreferences.saveUserName(
+                snapshotUserInfo?.docs[0].get("name"));
+          });
+          SharedPreferences pref = await SharedPreferences.getInstance();
+          pref.setString('login', email);
           Navigator.pop(context);
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => BottomNavigationPage(),
+              builder: (context) => const BottomNavigationPage(),
             ),
+          );
+        } else {
+          UserSimplePreferences.saveUserLoggedIn(false);
+          FocusScope.of(context).requestFocus(FocusNode());
+          Navigator.pop(context);
+          showSnackBar(
+            context,
+            "Attention",
+            Colors.red,
+            Icons.info,
+            "Invalid Username or Password",
           );
         }
       });
-      SharedPreferences pref = await SharedPreferences.getInstance();
-      pref.setString('login', email);
     } else {
       return print("Unsuccessful");
     }

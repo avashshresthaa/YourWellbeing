@@ -192,6 +192,7 @@ class _ProfileContentState extends State<ProfileContent> {
                         await SharedPreferences.getInstance();
                     pref.remove('login');
                     pref.remove("usernameKey");
+                    pref.remove('userEmailKey');
                     Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
                             builder: (context) => const LoginPage()),
