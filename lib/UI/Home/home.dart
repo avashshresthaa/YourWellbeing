@@ -4,16 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:sizer/sizer.dart';
 import 'package:yourwellbeing/APIModels/getCovid.dart';
+import 'package:yourwellbeing/APIModels/getInfluenza.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Constraints/uppercase.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/homecontents.dart';
-import 'package:yourwellbeing/UI/Settings/settings.dart';
 import 'package:yourwellbeing/Utils/user_prefrences.dart';
 import '../../Constraints/nplanguage.dart';
 import '../../Extracted Widgets/showdialog.dart';
-import 'home_content.dart';
+import 'Covid/home_content.dart';
+import 'Influenza/influenza_content.dart';
 
 var language;
 var username;
@@ -99,6 +100,7 @@ class _MainContentState extends State<MainContent> {
   var titlePurpose = purpose.toString().toTitleCase();
 
   Future<Covid>? _covid;
+  Future<Influenza>? _influenza;
 
   Future<Covid> getCovidApiData() async {
     var cacheData = await APICacheManager().getCacheData("covid");
@@ -107,15 +109,29 @@ class _MainContentState extends State<MainContent> {
     return Covid.fromJson(jsonMap);
   }
 
+  Future<Influenza> getInfluenzaApiData() async {
+    var cacheData = await APICacheManager().getCacheData("influenza");
+    var jsonMap = jsonDecode(cacheData.syncData);
+    print("cache: hit");
+    return Influenza.fromJson(jsonMap);
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _covid = getCovidApiData();
+    _influenza = getInfluenzaApiData();
   }
 
   var imagesCovid = [
     'assets/aboutcovid.png',
+    'assets/faq.png',
+  ];
+
+  var imagesInfluenza = [
+    'assets/aboutinfluenza.png',
+    'assets/faq.png',
   ];
 
   @override
@@ -140,7 +156,7 @@ class _MainContentState extends State<MainContent> {
               adContents(),
               const SizedBox(height: 24),
               Text(
-                'About $titlePurpose',
+                'Learn About $titlePurpose',
                 style: kStyleHomeTitle.copyWith(fontSize: 12.sp),
               ),
               const SizedBox(height: 16),
@@ -202,7 +218,62 @@ class _MainContentState extends State<MainContent> {
                           );
                         }
                       })
-                  : Text('Ok'),
+                  : FutureBuilder<Influenza>(
+                      future: _influenza,
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return Container(
+                            height: 800,
+                            child: Shimmer.fromColors(
+                              direction: ShimmerDirection.ttb,
+                              period: const Duration(milliseconds: 8000),
+                              child: ListView.builder(
+                                  itemCount: 2,
+                                  itemBuilder: (context, index) {
+                                    return Container(
+                                      height: 160,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        color: Colors.black,
+                                      ),
+                                    );
+                                  }),
+                              baseColor: Color(0xFFE5E4E2),
+                              highlightColor: Color(0xFFD6D6D6),
+                            ),
+                          );
+                        } else {
+                          return Column(
+                            children: [
+                              ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const ScrollPhysics(),
+                                  scrollDirection: Axis.vertical,
+                                  itemCount: snapshot
+                                      .data!.data!.influenzaDetails!.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    var textContent = snapshot
+                                        .data!.data!.influenzaDetails![index];
+                                    return HomeContents(
+                                      text: language
+                                          ? textContent.content
+                                          : textContent.contentNe,
+                                      image: index > imagesInfluenza.length - 1
+                                          ? 'assets/aboutinfluenza.png'
+                                          : imagesInfluenza[index],
+                                      page: AboutPageInfluenza(
+                                        indexId: index,
+                                        label: language
+                                            ? textContent.content
+                                            : textContent.contentNe,
+                                      ),
+                                    );
+                                  }),
+                            ],
+                          );
+                        }
+                      }),
             ],
           ),
         ),

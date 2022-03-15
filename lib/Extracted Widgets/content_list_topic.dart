@@ -85,67 +85,76 @@ class _ContentListTopicState extends State<ContentListTopic> {
 
 class ContentList extends StatelessWidget {
   final text;
+  final page;
 
   ContentList({
     this.text,
+    this.page,
   });
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(
-        bottom: 14.0,
-      ),
-      child: Container(
-        height: 40.sp,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(6),
-          boxShadow: [
-            boxShadow,
-          ],
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return page;
+        }));
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(
+          bottom: 14.0,
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Container(
-                  width: 8,
-                  decoration: const BoxDecoration(
-                    color: Colors.green,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(6),
-                      bottomLeft: Radius.circular(6),
+        child: Container(
+          height: 45.sp,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(6),
+            boxShadow: [
+              boxShadow,
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 8,
+                    decoration: const BoxDecoration(
+                      color: Colors.green,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(6),
+                        bottomLeft: Radius.circular(6),
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(
-                  width: 20,
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.6,
-                  child: Text(
-                    text,
-                    style: kStyleHomeTitle.copyWith(
-                        color: Colors.green,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 11.sp),
+                  const SizedBox(
+                    width: 20,
                   ),
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                Image.asset(
-                  'assets/forwardarrow.png',
-                  width: 24,
-                ),
-                const SizedBox(
-                  width: 16,
-                ),
-              ],
-            ),
-          ],
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.6,
+                    child: Text(
+                      text,
+                      style: kStyleHomeTitle.copyWith(
+                          color: Colors.grey.shade700,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 11.sp),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Image.asset(
+                    'assets/forwardarrow.png',
+                    width: 24,
+                  ),
+                  const SizedBox(
+                    width: 16,
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -144,7 +144,7 @@ class ContactContents extends StatelessWidget {
                         style: kStyleHomeTitle.copyWith(
                             color: Colors.green,
                             fontWeight: FontWeight.w600,
-                            fontSize: 11.sp),
+                            fontSize: 10.sp),
                       ),
                     ),
                     Text(

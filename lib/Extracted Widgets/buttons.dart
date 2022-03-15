@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 
 class LoginButton extends StatelessWidget {
@@ -14,7 +15,7 @@ class LoginButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
           padding: EdgeInsets.zero,
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
       child: Ink(
         decoration: BoxDecoration(
           color: Colors.green,
@@ -29,6 +30,45 @@ class LoginButton extends StatelessWidget {
             style: const TextStyle(
               fontFamily: 'NutinoSansReg',
               fontSize: 16,
+              fontWeight: FontWeight.w400,
+              color: Color(0xffFFFFFF),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class PNButton extends StatelessWidget {
+  PNButton({this.text, this.onPress, this.color});
+
+  final text;
+  final onPress;
+  final color;
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: onPress,
+      style: ElevatedButton.styleFrom(
+          padding: EdgeInsets.zero,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+      child: Ink(
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: 40,
+          alignment: Alignment.center,
+          child: Text(
+            text,
+            style: TextStyle(
+              fontFamily: 'NutinoSansReg',
+              fontSize: 12.sp,
               fontWeight: FontWeight.w400,
               color: Color(0xffFFFFFF),
             ),

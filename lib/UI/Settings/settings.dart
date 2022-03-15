@@ -56,9 +56,9 @@ class _SettingsContentState extends State<SettingsContent> {
     showSnackBar(
       context,
       "Success",
-      Colors.teal,
+      Colors.green,
       Icons.check_circle,
-      "Content Downloaded Successfully!",
+      "Content Updated Successfully!",
     );
     Navigator.pop(context);
     return true;

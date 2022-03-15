@@ -3,6 +3,7 @@ import 'package:api_cache_manager/models/cache_db_model.dart';
 import 'package:api_cache_manager/utils/cache_manager.dart';
 import 'package:yourwellbeing/APIModels/getContacts.dart';
 import 'package:yourwellbeing/APIModels/getCovid.dart';
+import 'package:yourwellbeing/APIModels/getInfluenza.dart';
 
 import 'NetworkHelper.dart';
 
@@ -57,9 +58,33 @@ class ApiData {
     }
   }
 
+  Future<Influenza> getApiInfluenzaDetails() async {
+    var isCacheExist = await APICacheManager().isAPICacheKeyExist("influenza");
+    if (!isCacheExist) {
+      var jsonData =
+          await NetworkHelper().getData('$baseUrl/fypapi/public/api/influenza');
+
+      //create database for contact_numbers where json data is stored
+      APICacheDBModel cacheDBModel =
+          new APICacheDBModel(key: "influenza", syncData: jsonData);
+      await APICacheManager().addCacheData(cacheDBModel);
+      var jsonMap = jsonDecode(jsonData);
+      var influenzaModel = Influenza.fromJson(jsonMap);
+      print("url : hit");
+      return influenzaModel;
+      //If the data is already there
+    } else {
+      var cacheData = await APICacheManager().getCacheData("influenza");
+      var jsonMap = jsonDecode(cacheData.syncData);
+      print("cache: hit");
+      return Influenza.fromJson(jsonMap);
+    }
+  }
+
   Future downloadData() async {
     await getApiContactDetails();
     await getApiCovidDetails();
+    await getApiInfluenzaDetails();
   }
 
   Future updateContent() async {

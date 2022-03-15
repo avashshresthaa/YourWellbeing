@@ -1,13 +1,12 @@
 import 'dart:convert';
 import 'package:api_cache_manager/utils/cache_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:yourwellbeing/APIModels/getCovid.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/content_list_topic.dart';
-import 'package:yourwellbeing/UI/Settings/settings.dart';
+import 'home_topic.dart';
 
 class AboutPage extends StatefulWidget {
   AboutPage({this.indexId, this.label});
@@ -83,7 +82,7 @@ class _AboutPageState extends State<AboutPage> {
 
                   return ListView.builder(
                       shrinkWrap: true,
-                      physics: ScrollPhysics(),
+                      physics: const ScrollPhysics(),
                       scrollDirection: Axis.vertical,
                       itemCount: snapshot.data!.data!
                           .covidDetails![widget.indexId].children!.length,
@@ -92,6 +91,12 @@ class _AboutPageState extends State<AboutPage> {
                             .covidDetails![widget.indexId].children![index];
                         return ContentList(
                           text: textLabel.content,
+                          page: HomeTopic(
+                            widget.label,
+                            index,
+                            snapshot.data!.data!.covidDetails![widget.indexId]
+                                .children,
+                          ),
                         );
                       });
                 }),
