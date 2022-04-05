@@ -1,12 +1,14 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
+import 'package:yourwellbeing/APIModels/getRegister.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Constraints/nplanguage.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/buttons.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/customtextfield.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/showdialog.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/snackbar.dart';
+import 'package:yourwellbeing/Network/NetworkHelper.dart';
 import 'package:yourwellbeing/Services/authentication.dart';
 import 'package:yourwellbeing/Services/database.dart';
 import 'package:yourwellbeing/UI/Login/login.dart';
@@ -49,7 +51,7 @@ class _SignupPageState extends State<SignupPage> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  signMeUp() {
+  signMeUp() async {
     if (_formKey.currentState!.validate()) {
       final name = nameController.text;
       final email = emailController.text;
@@ -65,8 +67,13 @@ class _SignupPageState extends State<SignupPage> {
 
       showWaitDialog(context, language ? 'Please Wait...' : nepWait);
       authMethods.signUpWithEmailAndPassword(email, password).then(
-        (value) {
-          databaseMethods.uploadUserInfo(userInfoMap);
+        (value) async {
+          await databaseMethods.uploadUserInfo(userInfoMap);
+          /*      Register? signup = await NetworkHelper().getRegData(
+            name,
+            email,
+            password,
+          );*/
           UserSimplePreferences.saveUserLoggedIn(true);
           Navigator.pop(context);
           Navigator.pushReplacement(

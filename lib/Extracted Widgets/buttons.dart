@@ -23,15 +23,15 @@ class LoginButton extends StatelessWidget {
         ),
         child: Container(
           width: MediaQuery.of(context).size.width,
-          height: 40,
+          height: 50,
           alignment: Alignment.center,
           child: Text(
             text,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'NutinoSansReg',
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-              color: Color(0xffFFFFFF),
+              fontSize: 12.sp,
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
             ),
           ),
         ),
@@ -69,7 +69,7 @@ class PNButton extends StatelessWidget {
             style: TextStyle(
               fontFamily: 'NutinoSansReg',
               fontSize: 12.sp,
-              fontWeight: FontWeight.w400,
+              fontWeight: FontWeight.w600,
               color: Color(0xffFFFFFF),
             ),
           ),
@@ -176,6 +176,45 @@ class LangButton extends StatelessWidget {
             style: kStyleHomeTitle,
           ),
         )),
+      ),
+    );
+  }
+}
+
+class ACButton extends StatelessWidget {
+  ACButton(this.text, this.onPress, this.color);
+
+  final text;
+  final onPress;
+  final color;
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: onPress,
+      style: ElevatedButton.styleFrom(
+          padding: EdgeInsets.zero,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+      child: Ink(
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: 50,
+          alignment: Alignment.center,
+          child: Text(
+            text,
+            style: TextStyle(
+              fontFamily: 'NutinoSansReg',
+              fontSize: 12.sp,
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+            ),
+          ),
+        ),
       ),
     );
   }

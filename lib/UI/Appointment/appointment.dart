@@ -10,6 +10,8 @@ import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:intl/intl.dart';
+import 'package:yourwellbeing/UI/Appointment/appointment_list.dart';
+import 'package:yourwellbeing/UI/Doctor/searchscreen.dart';
 import 'package:yourwellbeing/UI/Login/loginpermission.dart';
 import '../../Extracted Widgets/customtextfield.dart';
 import '../../Extracted Widgets/snackbar.dart';
@@ -36,10 +38,44 @@ class _AppointmentState extends State<Appointment> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kStyleBackgroundColor,
-      appBar: MainAppBar('Appointment'),
+      appBar: SChatAppBar(
+        title: 'Appointment',
+        onTap: () {
+          loginData == 'guest'
+              ? showSnackBar(
+                  context,
+                  "Attention",
+                  Colors.red,
+                  Icons.info,
+                  "Login Required",
+                )
+              : Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SearchScreen(),
+                  ));
+        },
+      ),
       body: loginData == 'guest'
           ? const SignUpContent()
-          : const AppointmentContent(),
+          : const AppointmentDetails(),
+    );
+  }
+}
+
+class AppointmentDetails extends StatelessWidget {
+  const AppointmentDetails({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      padding: EdgeInsets.all(16),
+      children: [
+        Text(
+          "Appointment List",
+          style: kStyleHomeTitle,
+        ),
+      ],
     );
   }
 }

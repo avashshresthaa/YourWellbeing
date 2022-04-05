@@ -6,7 +6,7 @@ import 'package:yourwellbeing/APIModels/getCovid.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/content_list_topic.dart';
-import 'home_topic.dart';
+import 'covid_topic.dart';
 
 class AboutPage extends StatefulWidget {
   AboutPage({this.indexId, this.label});

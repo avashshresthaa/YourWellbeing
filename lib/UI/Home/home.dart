@@ -10,10 +10,11 @@ import 'package:yourwellbeing/Constraints/uppercase.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/homecontents.dart';
+import 'package:yourwellbeing/UI/Doctor/searchscreen.dart';
 import 'package:yourwellbeing/Utils/user_prefrences.dart';
 import '../../Constraints/nplanguage.dart';
 import '../../Extracted Widgets/showdialog.dart';
-import 'Covid/home_content.dart';
+import 'Covid/covid_content.dart';
 import 'Influenza/influenza_content.dart';
 
 var language;
@@ -166,15 +167,16 @@ class _MainContentState extends State<MainContent> {
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
                           return Container(
-                            height: 800,
                             child: Shimmer.fromColors(
                               direction: ShimmerDirection.ttb,
-                              period: const Duration(milliseconds: 8000),
+                              period: const Duration(milliseconds: 2000),
                               child: ListView.builder(
+                                  physics: ScrollPhysics(),
+                                  shrinkWrap: true,
                                   itemCount: 2,
                                   itemBuilder: (context, index) {
                                     return Container(
-                                      margin: EdgeInsets.all(16),
+                                      margin: EdgeInsets.only(bottom: 16),
                                       height: 160,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(12),
@@ -183,7 +185,7 @@ class _MainContentState extends State<MainContent> {
                                     );
                                   }),
                               baseColor: Color(0xFFE5E4E2),
-                              highlightColor: Color(0xFFD6D6D6),
+                              highlightColor: Colors.grey.shade400,
                             ),
                           );
                         } else {
@@ -344,7 +346,13 @@ class _MainContentState extends State<MainContent> {
   Widget myAppointment() {
     return GestureDetector(
       onTap: () async {
-        await showLoginDialog(context, loginData);
+        loginData == 'guest'
+            ? await showLoginDialog(
+                context,
+              )
+            : Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return SearchScreen();
+              }));
       },
       child: Container(
         height: 55.sp,
@@ -375,7 +383,7 @@ class _MainContentState extends State<MainContent> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'My Appointment',
+                          'Book Appointment',
                           style: kStyleHomeTitle.copyWith(
                               color: Colors.green,
                               fontWeight: FontWeight.w600,
@@ -385,7 +393,7 @@ class _MainContentState extends State<MainContent> {
                           height: 3,
                         ),
                         Text(
-                          'View your appointment details.',
+                          'Select your choice of doctor',
                           style: kStyleHomeTitle.copyWith(
                               fontWeight: FontWeight.w400, fontSize: 10.sp),
                         ),

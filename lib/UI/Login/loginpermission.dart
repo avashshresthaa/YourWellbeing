@@ -60,7 +60,10 @@ class _SignUpContentState extends State<SignUpContent> {
             text: Text(
               'Already a customer? Sign In',
               textAlign: TextAlign.center,
-              style: kStyleButtonContent.copyWith(color: Colors.white),
+              style: kStyleButtonContent.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
             ),
             onPress: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -80,7 +83,10 @@ class _SignUpContentState extends State<SignUpContent> {
             text: Text(
               'New to Your Wellbeing? Sign up',
               textAlign: TextAlign.center,
-              style: kStyleButtonContent.copyWith(color: Colors.black),
+              style: kStyleButtonContent.copyWith(
+                color: Colors.black,
+                fontWeight: FontWeight.w600,
+              ),
             ),
             onPress: () async {
               Navigator.push(context, MaterialPageRoute(builder: (context) {

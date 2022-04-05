@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
+import 'package:yourwellbeing/APIModels/getLogout.dart';
+import 'package:yourwellbeing/Change%20Notifier/changenotifier.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/buttons.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/containlist.dart';
+import 'package:yourwellbeing/Extracted%20Widgets/snackbar.dart';
+import 'package:yourwellbeing/Network/NetworkHelper.dart';
 import 'package:yourwellbeing/Services/authentication.dart';
 import 'package:yourwellbeing/UI/Appointment/appointment_list.dart';
 import 'package:yourwellbeing/UI/Emergency%20Contacts/emergency.dart';
@@ -187,12 +192,24 @@ class _ProfileContentState extends State<ProfileContent> {
                   ),
                   color: Color(0xffFF3D3D),
                   onPress: () async {
-                    authMethods.signOut();
+                    await authMethods.signOut();
+                    late var token =
+                        Provider.of<DataProvider>(context, listen: false)
+                            .tokenValue;
+                    Logout logout = await NetworkHelper().getLogoutData(token);
+                    var message = logout.message;
                     SharedPreferences pref =
                         await SharedPreferences.getInstance();
                     pref.remove('login');
                     pref.remove("usernameKey");
                     pref.remove('userEmailKey');
+                    showSnackBar(
+                      context,
+                      "Attention",
+                      Colors.green,
+                      Icons.info,
+                      message!,
+                    );
                     Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
                             builder: (context) => const LoginPage()),

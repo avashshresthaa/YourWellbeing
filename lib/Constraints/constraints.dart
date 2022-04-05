@@ -32,6 +32,13 @@ var kStyleHomeTitle = TextStyle(
   color: kStyleCoolGrey,
 );
 
+var kStyleDoctor = TextStyle(
+  fontFamily: 'NutinoSansReg',
+  fontSize: 12.sp,
+  fontWeight: FontWeight.w600,
+  color: Color(0xFF222B45),
+);
+
 var boxShadow = BoxShadow(
   color: Colors.grey.withOpacity(0.5),
   blurRadius: 2.0, // soften the shadow

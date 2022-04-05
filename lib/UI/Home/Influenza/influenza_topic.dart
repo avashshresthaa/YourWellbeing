@@ -8,6 +8,7 @@ import 'package:yourwellbeing/APIModels/getInfluenza.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/buttons.dart';
+import 'package:yourwellbeing/Extracted%20Widgets/description.dart';
 import 'package:yourwellbeing/Utils/user_prefrences.dart';
 
 class HomeTopicInfluenza extends StatefulWidget {
@@ -176,60 +177,6 @@ class _HomeTopicInfluenzaState extends State<HomeTopicInfluenza> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class DescriptionContent extends StatelessWidget {
-  final topic;
-  final content;
-
-  DescriptionContent({
-    this.topic,
-    this.content,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: Container(
-            width: double.infinity,
-            margin: EdgeInsets.symmetric(vertical: 16),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8),
-              boxShadow: [
-                boxShadow,
-              ],
-            ),
-            padding: const EdgeInsets.symmetric(
-              horizontal: 20,
-              vertical: 20,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  topic,
-                  style: kStyleHomeTitle,
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                Text(
-                  content,
-                  style: kStyleHomeTitle.copyWith(
-                    fontSize: 10.sp,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

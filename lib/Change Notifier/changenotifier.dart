@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 
 class DataProvider extends ChangeNotifier {
   var otherName;
+  late var tokenValue;
 /*  bool data = true;
   var language;
   var login;*/
@@ -16,6 +17,12 @@ class DataProvider extends ChangeNotifier {
 
   void getOtherName(String username) {
     otherName = username;
+    notifyListeners();
+  }
+
+  void token(var token) {
+    tokenValue = token;
+    print("tokenvalue: $tokenValue");
     notifyListeners();
   }
 }

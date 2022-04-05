@@ -3,12 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:sizer/sizer.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/UI/Appointment/appointment_list.dart';
+import 'package:yourwellbeing/UI/Doctor/searchscreen.dart';
 import 'package:yourwellbeing/UI/Login/login.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 Future<void> showWaitDialog(BuildContext context, String text) => showDialog(
       context: context,
-      barrierDismissible: true,
+      barrierDismissible: false,
       builder: (BuildContext context) => AlertDialog(
         title: Center(
           child: Text(
@@ -81,7 +82,10 @@ Future<void> showBackDialog(BuildContext context) => showDialog(
       ),
     );
 
-Future<void> showLoginDialog(BuildContext context, var logindata) => showDialog(
+Future<void> showLoginDialog(
+  BuildContext context,
+) =>
+    showDialog(
       barrierColor: Colors.green.withOpacity(0.24),
       //barrierDismissible: false,
       context: context,
@@ -105,7 +109,7 @@ Future<void> showLoginDialog(BuildContext context, var logindata) => showDialog(
                     children: [
                       FittedBox(
                         child: Text(
-                          "Login Required to view your appointment.",
+                          "Login Required to book appointment.",
                           style: kStyleShowDialog.copyWith(
                               fontWeight: FontWeight.w600),
                         ),
@@ -128,9 +132,7 @@ Future<void> showLoginDialog(BuildContext context, var logindata) => showDialog(
                           Navigator.of(context).pop();
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
-                            return logindata == 'guest'
-                                ? LoginPage()
-                                : AppointmentList();
+                            return LoginPage();
                           }));
                         },
                         child: Text(

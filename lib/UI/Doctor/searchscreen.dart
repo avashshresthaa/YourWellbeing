@@ -1,11 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:yourwellbeing/APIModels/getDoctorInfo.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
+import 'package:yourwellbeing/Extracted%20Widgets/doctorinfo.dart';
+import 'package:yourwellbeing/Network/NetworkHelper.dart';
 import 'package:yourwellbeing/Services/constants.dart';
 import 'package:yourwellbeing/Services/database.dart';
-import 'conversationscreen.dart';
+import '../Chat/conversationscreen.dart';
+import 'doctorprofile.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -15,6 +19,8 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  String query = '';
+
   TextEditingController searchTextEditingController = TextEditingController();
   DatabaseMethods databaseMethods = DatabaseMethods();
 
@@ -68,14 +74,25 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget SearchTile({required String userName, required String userEmail}) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      margin: EdgeInsets.only(
+        top: 16,
+      ),
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [boxShadow],
+        borderRadius: BorderRadius.circular(8),
+      ),
       child: Row(
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(userName),
-              Text(userEmail),
+              Text("Name: $userName"),
+              SizedBox(
+                height: 8,
+              ),
+              Text("Email: $userEmail"),
             ],
           ),
           Spacer(),
@@ -92,7 +109,12 @@ class _SearchScreenState extends State<SearchScreen> {
                 horizontal: 16,
                 vertical: 16,
               ),
-              child: Text("Message"),
+              child: Text(
+                "Message",
+                style: kStyleHomeTitle.copyWith(
+                  color: Colors.white,
+                ),
+              ),
             ),
           ),
         ],
@@ -100,53 +122,98 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
+/*  Future<DoctorInfo>? _doctorInfo;*/
+
+  Future<DoctorInfo>? getDoctorData() async {
+    var data = await NetworkHelper().getDoctorInfoData();
+    return data;
+  }
+
+  List<DoctorInfo> books = [];
+
   @override
   void initState() {
     // TODO: implement initState
     initiateSearch();
+    init();
+/*    _doctorInfo = getDoctorData();*/
     super.initState();
+  }
+
+  Future init() async {
+    final books = await NetworkHelper().getDoctor(query);
+    setState(() {
+      this.books = books;
+    });
+  }
+
+  Future searchBook(String query) async {
+    NetworkHelper networkHelper = NetworkHelper();
+    final books = await networkHelper.getDoctor(query);
+
+    if (!mounted) return;
+
+    setState(() {
+      this.query = query;
+      this.books = books;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MainAppBar('Search'),
-      body: ListView(
-        children: [
-          Column(
-            children: [
-              Container(
-                color: Colors.white,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 16,
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: searchTextEditingController,
-                        style: kStyleHomeTitle,
-                        decoration: InputDecoration(
-                          hintText: 'Search doctor',
-                          hintStyle: kStyleHomeTitle,
-                          border: InputBorder.none,
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
+      appBar: ProfileAppBar(title: 'Doctors'),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            CupertinoSearchTextField(
+              controller: searchTextEditingController,
+              onChanged: (query) {
+                searchBook(query);
+              },
+              /*    onTap: () {
+                */ /*   initiateSearch();*/ /*
+              },*/
+            ),
+            /*  searchList(),*/
+            const SizedBox(
+              height: 8,
+            ),
+            Expanded(
+              child: GridView.builder(
+                  shrinkWrap: true,
+                  itemCount: books.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 8,
+                    mainAxisSpacing: 8,
+                  ),
+                  itemBuilder: (context, index) {
+                    var detail = books[index];
+                    var details = books;
+
+                    var doctorName = detail.name;
+                    var speciality = detail.speciality;
+                    var rating = detail.ratings;
+
+                    return GestureDetector(
                       onTap: () {
-                        initiateSearch();
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return DoctorProfile(index: index, details: details);
+                        }));
                       },
-                      child: Icon(Icons.search),
-                    ),
-                  ],
-                ),
-              ),
-              searchList(),
-            ],
-          )
-        ],
+                      child: DoctorInfoList(
+                        doctorName: doctorName,
+                        speciality: speciality,
+                        rating: rating,
+                      ),
+                    );
+                  }),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,17 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/src/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
+import 'package:yourwellbeing/APIModels/getLogin.dart';
+import 'package:yourwellbeing/Change%20Notifier/changenotifier.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Constraints/nplanguage.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/buttons.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/customtextfield.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/showdialog.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/snackbar.dart';
+import 'package:yourwellbeing/Network/NetworkHelper.dart';
 import 'package:yourwellbeing/Services/authentication.dart';
 import 'package:yourwellbeing/Services/database.dart';
 import 'package:yourwellbeing/UI/BottomNavigation/bottom_navigation.dart';
+import 'package:yourwellbeing/UI/Forget%20Password/forgetpassword.dart';
 import 'package:yourwellbeing/UI/Login/signup.dart';
 import 'package:yourwellbeing/Utils/user_prefrences.dart';
 
@@ -180,6 +185,10 @@ class _LoginPageState extends State<LoginPage> {
             UserSimplePreferences.saveUserName(
                 snapshotUserInfo?.docs[0].get("name"));
           });
+          Login login = await NetworkHelper().getLoginData(email, password);
+          var token = login.token;
+          context.read<DataProvider>().token(token);
+          UserSimplePreferences.setToken(token!);
           SharedPreferences pref = await SharedPreferences.getInstance();
           pref.setString('login', email);
           Navigator.pop(context);
@@ -297,10 +306,9 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               GestureDetector(
                 onTap: () {
-                  /*     Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return ForgetPassword();
-                                  }));*/
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return ForgetPassword();
+                  }));
                 },
                 child: Text(
                   'Forgot Password?',

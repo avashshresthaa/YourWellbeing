@@ -4,11 +4,12 @@ import 'package:sizer/sizer.dart';
 import 'package:yourwellbeing/Change%20Notifier/changenotifier.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
+import 'package:yourwellbeing/Extracted%20Widgets/snackbar.dart';
 import 'package:yourwellbeing/Services/authentication.dart';
 import 'package:yourwellbeing/Services/constants.dart';
 import 'package:yourwellbeing/Services/database.dart';
 import 'package:yourwellbeing/UI/Chat/conversationscreen.dart';
-import 'package:yourwellbeing/UI/Chat/searchscreen.dart';
+import 'package:yourwellbeing/UI/Doctor/searchscreen.dart';
 import 'package:yourwellbeing/Utils/user_prefrences.dart';
 import '../Login/loginpermission.dart';
 import 'package:provider/provider.dart';
@@ -39,11 +40,19 @@ class _ChatState extends State<Chat> {
       appBar: SChatAppBar(
         title: 'Chat',
         onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => SearchScreen(),
-              ));
+          loginData == 'guest'
+              ? showSnackBar(
+                  context,
+                  "Attention",
+                  Colors.red,
+                  Icons.info,
+                  "Login Required",
+                )
+              : Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SearchScreen(),
+                  ));
         },
       ),
       body: loginData == 'guest' ? const SignUpContent() : const ChatRoom(),

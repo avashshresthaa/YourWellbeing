@@ -29,12 +29,12 @@ class ContactModel {
     Contacts(
       location: 'Thapathali, Kathmandu, Nepal',
       name: 'Norvic International Hospital',
-      number: '1-4219686',
+      number: '01-4219686',
     ),
     Contacts(
-      location: 'Lagankhel, Lalitpur, Nepa',
+      location: 'Lagankhel, Lalitpur, Nepal',
       name: 'Patan Hospital',
-      number: '01-5548008',
+        number: '01-5548008',
     ),
   ];
 }

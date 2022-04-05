@@ -104,7 +104,7 @@ class ContentList extends StatelessWidget {
           bottom: 14.0,
         ),
         child: Container(
-          height: 45.sp,
+          height: 55.sp,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(6),

@@ -11,6 +11,7 @@ class UserSimplePreferences {
   static const _userLoggedInKey = 'isLoggedIn';
   static const _userNameKey = 'usernameKey';
   static const _userEmailKey = 'userEmailKey';
+  static const _tokenKey = 'token';
 
   static Future init() async =>
       _preferences = await SharedPreferences.getInstance();
@@ -55,4 +56,11 @@ class UserSimplePreferences {
   static String? getUserName() => _preferences?.getString(_userNameKey);
 
   static String? getUserEmail() => _preferences?.getString(_userEmailKey);
+
+  //Token
+
+  static Future setToken(String token) async =>
+      await _preferences?.setString(_tokenKey, token);
+
+  static String? getToken() => _preferences?.getString(_tokenKey);
 }

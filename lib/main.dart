@@ -33,7 +33,6 @@ class YourWellBeing extends StatelessWidget {
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
-              //scaffoldBackgroundColor: kStyleBackgroundColor,
               primarySwatch: Colors.green,
             ),
             initialRoute: '/',

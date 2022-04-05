@@ -1,7 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:yourwellbeing/APIModels/getContacts.dart';
 import 'package:yourwellbeing/APIModels/getCovid.dart';
+import 'package:yourwellbeing/APIModels/getDoctorInfo.dart';
+import 'package:yourwellbeing/APIModels/getLogin.dart';
+import 'package:yourwellbeing/APIModels/getLogout.dart';
+import 'package:yourwellbeing/APIModels/getRegister.dart';
 
 class NetworkHelper {
   //All downloadable function API call this function
@@ -22,7 +27,7 @@ class NetworkHelper {
   var wifibaseUrl = 'http://192.168.40.182';
   var baseUrl = 'http://10.0.2.2:80';
 
-  Future<Covid> getCovidData() async {
+/*  Future<Covid> getCovidData() async {
     var covidModel;
     http.Response response = await http.get(
       Uri.parse('$baseUrl/fypapi/public/api/covid'),
@@ -36,5 +41,105 @@ class NetworkHelper {
       print(data);
     }
     return covidModel;
+  }*/
+
+  Future<DoctorInfo> getDoctorInfoData() async {
+    var doctorModel;
+    http.Response response = await http.get(
+      Uri.parse('$baseUrl/fypapi/public/api/doctorinfo'),
+    );
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      print('success');
+      var data = response.body;
+      var jsonMap = jsonDecode(data);
+      doctorModel = DoctorInfo.fromJson(jsonMap);
+      print(data);
+    }
+    return doctorModel;
+  }
+
+  Future<List<DoctorInfo>> getDoctor(String query) async {
+    http.Response response = await http.get(
+      Uri.parse('$baseUrl/fypapi/public/api/doctorinfo'),
+    );
+    if (response.statusCode == 200) {
+      final List books = json.decode(response.body);
+      return books.map((json) => DoctorInfo.fromJson(json)).where((book) {
+        final titleLower = book.name!.toLowerCase();
+        final specialLower = book.speciality!.toLowerCase();
+        final searchLower = query.toLowerCase();
+
+        return titleLower.contains(searchLower) ||
+            specialLower.contains(searchLower);
+      }).toList();
+    } else {
+      throw Exception();
+    }
+  }
+
+  Future<Login> getLoginData(
+    String email,
+    String password,
+  ) async {
+    var loginModel;
+    http.Response response = await http.post(
+      Uri.parse('$baseUrl/fypapi/public/api/login'),
+      headers: {HttpHeaders.contentTypeHeader: "application/json"},
+      body: jsonEncode(<dynamic, dynamic>{
+        'email': email,
+        'password': password,
+      }),
+    );
+
+//print(response.statusCode);
+    if (response.statusCode == 200) {
+      var data = response.body;
+      var jsonMap = jsonDecode(data);
+      print("login: $jsonMap");
+      loginModel = Login.fromJson(jsonMap);
+    }
+    return loginModel;
+  }
+
+  Future<Register>? getRegData(
+    String name,
+    String email,
+    String password,
+  ) async {
+    var registerModel;
+    http.Response response = await http.post(
+      Uri.parse('$baseUrl/fypapi/public/api/register'),
+      headers: {HttpHeaders.contentTypeHeader: "application/json"},
+      body: jsonEncode(<dynamic, dynamic>{
+        'name': name,
+        'email': email,
+        'password': password,
+      }),
+    );
+
+//print(response.statusCode);
+    if (response.statusCode == 200) {
+      var data = response.body;
+      var jsonMap = jsonDecode(data);
+      print("Register: $jsonMap");
+      registerModel = Register.fromJson(jsonMap);
+    }
+    return registerModel;
+  }
+
+  Future<Logout> getLogoutData(var token) async {
+    var logoutModel;
+    http.Response response = await http.post(
+        Uri.parse('$baseUrl/fypapi/public/api/logout'),
+        headers: {'Authorization': 'Bearer $token'});
+    if (response.statusCode == 200) {
+      var data = response.body;
+
+      var jsonMap = jsonDecode(data);
+      logoutModel = Logout.fromJson(jsonMap);
+      print(jsonMap);
+    }
+    return logoutModel;
   }
 }

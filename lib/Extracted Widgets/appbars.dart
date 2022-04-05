@@ -80,9 +80,10 @@ class SChatAppBar extends StatelessWidget with PreferredSizeWidget {
           onTap: onTap,
           child: Padding(
             padding: const EdgeInsets.only(right: 16.0),
-            child: Icon(
-              Icons.search,
+            child: Image.asset(
+              "assets/list.png",
               color: Colors.green,
+              width: 24,
             ),
           ),
         ),
