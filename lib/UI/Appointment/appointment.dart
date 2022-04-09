@@ -1,6 +1,10 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:sizer/sizer.dart';
+import 'package:yourwellbeing/APIModels/getAppointments.dart';
+import 'package:yourwellbeing/Change%20Notifier/changenotifier.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/bottomsheet.dart';
@@ -10,6 +14,8 @@ import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:intl/intl.dart';
+import 'package:yourwellbeing/Extracted%20Widgets/description.dart';
+import 'package:yourwellbeing/Network/NetworkHelper.dart';
 import 'package:yourwellbeing/UI/Appointment/appointment_list.dart';
 import 'package:yourwellbeing/UI/Doctor/searchscreen.dart';
 import 'package:yourwellbeing/UI/Login/loginpermission.dart';
@@ -52,33 +58,238 @@ class _AppointmentState extends State<Appointment> {
               : Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => SearchScreen(),
+                    builder: (context) => const SearchScreen(),
                   ));
         },
       ),
       body: loginData == 'guest'
           ? const SignUpContent()
-          : const AppointmentDetails(),
+          : const AppointmentList(),
     );
   }
 }
 
-class AppointmentDetails extends StatelessWidget {
-  const AppointmentDetails({Key? key}) : super(key: key);
+class AppointmentList extends StatefulWidget {
+  const AppointmentList({Key? key}) : super(key: key);
+
+  @override
+  State<AppointmentList> createState() => _AppointmentListState();
+}
+
+class _AppointmentListState extends State<AppointmentList> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    _appointment = getApiData();
+    super.initState();
+  }
+
+  Future<AppointmentDetails?>? _appointment;
+
+  late var token = Provider.of<DataProvider>(context, listen: false).tokenValue;
+
+  Future<AppointmentDetails?>? getApiData() async {
+    try {
+      var posts = await NetworkHelper().getAppointmentDetails(token);
+      return posts;
+    } catch (e) {
+      print('error');
+    }
+  }
+
+  getFormatedDate(_date) {
+    var inputFormat = DateFormat('yyyy-MM-dd HH:mm');
+    var inputDate = inputFormat.parse(_date);
+    var outputFormat = DateFormat('dd/MM/yyyy');
+    return outputFormat.format(inputDate);
+  }
 
   @override
   Widget build(BuildContext context) {
     return ListView(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16.0),
       children: [
         Text(
-          "Appointment List",
+          'My Appointments',
           style: kStyleHomeTitle,
         ),
+        SizedBox(
+          height: 16,
+        ),
+        FutureBuilder<AppointmentDetails?>(
+            future: _appointment,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Container(
+                  height: 800,
+                  child: Shimmer.fromColors(
+                    direction: ShimmerDirection.ttb,
+                    period: const Duration(milliseconds: 8000),
+                    child: ListView.builder(
+                        physics: const ScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: 2,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            height: 120,
+                            margin: const EdgeInsets.only(bottom: 16),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              color: Colors.black,
+                            ),
+                          );
+                        }),
+                    baseColor: const Color(0xFFE5E4E2),
+                    highlightColor: Colors.grey.shade400,
+                  ),
+                );
+              } else {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Today'),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    ListView.builder(
+                        shrinkWrap: true,
+                        physics: const ScrollPhysics(),
+                        scrollDirection: Axis.vertical,
+                        itemCount: snapshot.data!.appointments!.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          var appointment = snapshot.data!.appointments![index];
+                          var doctorName = appointment.doctorName;
+                          var hospitalName = appointment.hospitalName;
+                          var problem = appointment.describeProblem;
+                          var dateTime = appointment.datetime.toString();
+                          var datenow = DateTime.now().toString();
+                          var datenow1 = DateTime.now();
+                          String pp = getFormatedDate(dateTime);
+                          String dd = getFormatedDate(datenow);
+                          DateTime dt1 = DateTime.parse(dateTime);
+                          DateTime dt2 = DateTime.parse(datenow);
+                          print("dateapi: $dt1");
+                          print("dateNow: $dt2");
+                          String formattedDate =
+                              DateFormat('yyyy-MM-dd').format(datenow1);
+                          print("foramtted: $formattedDate");
+                          String formattedDate1 = DateFormat('yyyy-MM-dd')
+                              .format(appointment.datetime!);
+                          print("foramtted: $formattedDate1");
+                          if (formattedDate != formattedDate1 &&
+                              dt2.isAfter(dt1)) {
+                            return appointmentDetail(
+                              doctorName,
+                              hospitalName,
+                              problem,
+                              () {
+                                showModalBottomSheet(
+                                  barrierColor: Colors.green.withOpacity(0.24),
+                                  isScrollControlled: true,
+                                  enableDrag: false,
+                                  backgroundColor: Colors.transparent,
+                                  context: context,
+                                  builder: (context) => SingleChildScrollView(
+                                    child: Container(
+                                      padding: EdgeInsets.only(
+                                          bottom: MediaQuery.of(context)
+                                              .viewInsets
+                                              .bottom),
+                                      child: DeleteBSheet(
+                                        () async {
+                                          setState(() {});
+                                          Navigator.pop(context);
+                                          showSnackBar(
+                                            context,
+                                            "Successful",
+                                            Colors.green,
+                                            Icons.info,
+                                            "Your notification has been deleted.",
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          } else {
+                            return Container();
+                          }
+                        }),
+                    Text('Upcoming'),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    ListView.builder(
+                        shrinkWrap: true,
+                        physics: const ScrollPhysics(),
+                        scrollDirection: Axis.vertical,
+                        itemCount: snapshot.data!.appointments!.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          var appointment = snapshot.data!.appointments![index];
+                          var doctorName = appointment.doctorName;
+                          var hospitalName = appointment.hospitalName;
+                          var problem = appointment.describeProblem;
+                          var dateTime = appointment.datetime.toString();
+                          var datenow = DateTime.now().toString();
+/*                          var datenow1 = DateTime.now();
+                          String pp = getFormatedDate(dateTime);
+                          String dd = getFormatedDate(datenow);*/
+                          DateTime dt1 = DateTime.parse(dateTime);
+                          DateTime dt2 = DateTime.parse(datenow);
+                          print("dateapi: $dt1");
+                          print("dateNow: $dt2");
+
+                          if (dt1.isAfter(dt2)) {
+                            return appointmentDetail(
+                              doctorName,
+                              hospitalName,
+                              problem,
+                              () {
+                                showModalBottomSheet(
+                                  barrierColor: Colors.green.withOpacity(0.24),
+                                  isScrollControlled: true,
+                                  enableDrag: false,
+                                  backgroundColor: Colors.transparent,
+                                  context: context,
+                                  builder: (context) => SingleChildScrollView(
+                                    child: Container(
+                                      padding: EdgeInsets.only(
+                                          bottom: MediaQuery.of(context)
+                                              .viewInsets
+                                              .bottom),
+                                      child: DeleteBSheet(
+                                        () async {
+                                          setState(() {});
+                                          Navigator.pop(context);
+                                          showSnackBar(
+                                            context,
+                                            "Successful",
+                                            Colors.green,
+                                            Icons.info,
+                                            "Your notification has been deleted.",
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          } else {
+                            return Container();
+                          }
+                        }),
+                  ],
+                );
+              }
+            }),
       ],
     );
   }
 }
+/*
 
 class AppointmentContent extends StatefulWidget {
   const AppointmentContent({Key? key}) : super(key: key);
@@ -330,6 +541,7 @@ class _AppointmentContentState extends State<AppointmentContent> {
       ],
     );
   }
+*/
 /*
   Future notificationSelected(String? payload) async {
     showDialog(
@@ -337,7 +549,8 @@ class _AppointmentContentState extends State<AppointmentContent> {
         builder: (context) => AlertDialog(
               content: Text('Clicked'),
             ));
-  }*/
+  }*/ /*
+
 
   _getTimeFromUser({required bool isStartTime}) async {
     var pickedTime = await _showTimePicker();
@@ -361,3 +574,4 @@ class _AppointmentContentState extends State<AppointmentContent> {
         ));
   }
 }
+*/

@@ -17,13 +17,14 @@ class DeleteBSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      //margin: EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: Color(0xffFFFFFF),
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(16.0),
-          topRight: Radius.circular(16.0),
-        ),
-      ),
+          color: Color(0xffFFFFFF),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(16.0),
+            topRight: Radius.circular(16.0),
+          ),
+          boxShadow: [boxShadow]),
       child: SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,

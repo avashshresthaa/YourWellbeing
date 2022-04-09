@@ -178,7 +178,7 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
             /*  searchList(),*/
             const SizedBox(
-              height: 8,
+              height: 16,
             ),
             Expanded(
               child: GridView.builder(

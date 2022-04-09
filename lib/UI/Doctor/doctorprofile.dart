@@ -6,6 +6,7 @@ import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/buttons.dart';
 import 'package:yourwellbeing/Services/constants.dart';
 import 'package:yourwellbeing/Services/database.dart';
+import 'package:yourwellbeing/UI/Appointment/bookappointment.dart';
 import 'package:yourwellbeing/UI/Chat/conversationscreen.dart';
 import 'package:yourwellbeing/UI/Doctor/searchscreen.dart';
 
@@ -168,7 +169,13 @@ class _DoctorProfileState extends State<DoctorProfile> {
                   Expanded(
                     child: ACButton(
                       'Book Appointment',
-                      () {},
+                      () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => BookAppointment()),
+                        );
+                      },
                       Colors.green,
                     ),
                   ),

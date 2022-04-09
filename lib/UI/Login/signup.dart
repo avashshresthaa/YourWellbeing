@@ -53,6 +53,7 @@ class _SignupPageState extends State<SignupPage> {
 
   signMeUp() async {
     if (_formKey.currentState!.validate()) {
+      showWaitDialog(context, language ? 'Please Wait...' : nepWait);
       final name = nameController.text;
       final email = emailController.text;
       final password = passwordController.text;
@@ -65,7 +66,6 @@ class _SignupPageState extends State<SignupPage> {
       UserSimplePreferences.saveUserEmail(email);
       UserSimplePreferences.saveUserName(name);
 
-      showWaitDialog(context, language ? 'Please Wait...' : nepWait);
       authMethods.signUpWithEmailAndPassword(email, password).then(
         (value) async {
           await databaseMethods.uploadUserInfo(userInfoMap);
@@ -79,7 +79,7 @@ class _SignupPageState extends State<SignupPage> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => LoginPage(),
+              builder: (context) => const LoginPage(),
             ),
           );
         },

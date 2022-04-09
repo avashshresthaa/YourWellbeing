@@ -79,6 +79,40 @@ class PNButton extends StatelessWidget {
   }
 }
 
+//Button for going next in appointment
+class AppointmentButton extends StatelessWidget {
+  const AppointmentButton({required this.text, this.onPress});
+
+  final text;
+  final onPress;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        height: 49,
+        child: ElevatedButton(
+          onPressed: onPress,
+          child: Text(
+            text,
+            style: TextStyle(
+              fontFamily: 'NutinoSansReg',
+              fontSize: 12.sp,
+              color: Colors.white,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(Colors.green),
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4)))),
+        ),
+      ),
+    );
+  }
+}
+
 class ArrowButton extends StatelessWidget {
   const ArrowButton(
       {required this.text,

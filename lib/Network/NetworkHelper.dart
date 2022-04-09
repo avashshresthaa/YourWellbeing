@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:yourwellbeing/APIModels/createAppointment.dart';
+import 'package:yourwellbeing/APIModels/getAppointments.dart';
 import 'package:yourwellbeing/APIModels/getContacts.dart';
 import 'package:yourwellbeing/APIModels/getCovid.dart';
 import 'package:yourwellbeing/APIModels/getDoctorInfo.dart';
@@ -141,5 +143,68 @@ class NetworkHelper {
       print(jsonMap);
     }
     return logoutModel;
+  }
+
+  Future<CreateAppointment>? createAppointment(
+    String name,
+    String age,
+    String gender,
+    String phone,
+    String datetime,
+    String doctorName,
+    String hospitalName,
+    String describeProblem,
+    String optional1,
+    var token,
+  ) async {
+    var createModel;
+    http.Response response = await http.post(
+      Uri.parse('$baseUrl/fypapi/public/api/appointment/add'),
+      headers: {
+        HttpHeaders.contentTypeHeader: "application/json",
+        'Authorization': 'Bearer $token'
+      },
+      body: jsonEncode(<String, dynamic>{
+        'name': name,
+        'age': age,
+        'gender': gender,
+        'phone': phone,
+        'datetime': datetime,
+        'doctorName': doctorName,
+        'hospitalName': hospitalName,
+        'describeProblem': describeProblem,
+        'optional1': optional1,
+      }),
+    );
+    print(response.statusCode);
+    print("not ok");
+
+    if (response.statusCode == 200) {
+      var data = response.body;
+      var jsonMap = jsonDecode(data);
+      print("Register: $jsonMap");
+      createModel = CreateAppointment.fromJson(jsonMap);
+    }
+    return createModel;
+  }
+
+  Future<AppointmentDetails>? getAppointmentDetails(var token) async {
+    var doctorModel;
+    http.Response response = await http.get(
+      Uri.parse('$baseUrl/fypapi/public/api/appointments'),
+      headers: {
+        HttpHeaders.contentTypeHeader: "application/json",
+        'Authorization': 'Bearer $token'
+      },
+    );
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      print('success');
+      var data = response.body;
+      var jsonMap = jsonDecode(data);
+      doctorModel = AppointmentDetails.fromJson(jsonMap);
+      print(data);
+    }
+    return doctorModel;
   }
 }

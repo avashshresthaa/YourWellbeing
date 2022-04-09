@@ -383,7 +383,7 @@ class _MainContentState extends State<MainContent> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Book Appointment',
+                          'View Doctors',
                           style: kStyleHomeTitle.copyWith(
                               color: Colors.green,
                               fontWeight: FontWeight.w600,
@@ -393,7 +393,7 @@ class _MainContentState extends State<MainContent> {
                           height: 3,
                         ),
                         Text(
-                          'Select your choice of doctor',
+                          'Chat/Book appointment with the doctors.',
                           style: kStyleHomeTitle.copyWith(
                               fontWeight: FontWeight.w400, fontSize: 10.sp),
                         ),
