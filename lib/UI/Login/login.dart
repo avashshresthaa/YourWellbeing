@@ -550,13 +550,10 @@ class TabBarTabs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 120,
-      child: Padding(
-        padding: EdgeInsets.only(left: 8, right: 8.0),
-        child: Center(
-          child: Text(
-            text,
-          ),
+      width: MediaQuery.of(context).size.width * 0.32,
+      child: Center(
+        child: Text(
+          text,
         ),
       ),
     );

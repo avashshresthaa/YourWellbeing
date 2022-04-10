@@ -18,6 +18,7 @@ import 'package:yourwellbeing/Extracted%20Widgets/description.dart';
 import 'package:yourwellbeing/Network/NetworkHelper.dart';
 import 'package:yourwellbeing/UI/Appointment/appointment_list.dart';
 import 'package:yourwellbeing/UI/Doctor/searchscreen.dart';
+import 'package:yourwellbeing/UI/Login/login.dart';
 import 'package:yourwellbeing/UI/Login/loginpermission.dart';
 import '../../Extracted Widgets/customtextfield.dart';
 import '../../Extracted Widgets/snackbar.dart';
@@ -80,8 +81,13 @@ class _AppointmentListState extends State<AppointmentList> {
   @override
   void initState() {
     // TODO: implement initState
+    getInitialData();
     _appointment = getApiData();
     super.initState();
+  }
+
+  getInitialData() async {
+    await getCurrentDate();
   }
 
   Future<AppointmentDetails?>? _appointment;
@@ -97,198 +103,374 @@ class _AppointmentListState extends State<AppointmentList> {
     }
   }
 
-  getFormatedDate(_date) {
-    var inputFormat = DateFormat('yyyy-MM-dd HH:mm');
-    var inputDate = inputFormat.parse(_date);
-    var outputFormat = DateFormat('dd/MM/yyyy');
-    return outputFormat.format(inputDate);
+  var dateToday = '';
+  var dateTomorrow = '';
+
+  getCurrentDate() {
+    var date = DateTime.now();
+    var newDate = DateTime(date.year, date.month, date.day + 1);
+    convertDateToMonth(date, newDate);
+  }
+
+  convertDateToMonth(DateTime formattedDate, DateTime formattedDatePlus1) {
+    var formattedDateConverted = DateFormat.yMMMMd().format(formattedDate);
+    var formattedDatePlus1Converted =
+        DateFormat.yMMMMd().format(formattedDatePlus1);
+
+    setState(() {
+      dateToday = formattedDateConverted.toString();
+      dateTomorrow = formattedDatePlus1Converted.toString();
+    });
+    print(dateToday + dateTomorrow);
   }
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.all(16.0),
-      children: [
-        Text(
-          'My Appointments',
-          style: kStyleHomeTitle,
-        ),
-        SizedBox(
-          height: 16,
-        ),
-        FutureBuilder<AppointmentDetails?>(
-            future: _appointment,
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return Container(
-                  height: 800,
-                  child: Shimmer.fromColors(
-                    direction: ShimmerDirection.ttb,
-                    period: const Duration(milliseconds: 8000),
-                    child: ListView.builder(
-                        physics: const ScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: 2,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            height: 120,
-                            margin: const EdgeInsets.only(bottom: 16),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              color: Colors.black,
-                            ),
-                          );
-                        }),
-                    baseColor: const Color(0xFFE5E4E2),
-                    highlightColor: Colors.grey.shade400,
-                  ),
-                );
-              } else {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Today'),
-                    SizedBox(
-                      height: 8,
-                    ),
-                    ListView.builder(
-                        shrinkWrap: true,
-                        physics: const ScrollPhysics(),
-                        scrollDirection: Axis.vertical,
-                        itemCount: snapshot.data!.appointments!.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          var appointment = snapshot.data!.appointments![index];
-                          var doctorName = appointment.doctorName;
-                          var hospitalName = appointment.hospitalName;
-                          var problem = appointment.describeProblem;
-                          var dateTime = appointment.datetime.toString();
-                          var datenow = DateTime.now().toString();
-                          var datenow1 = DateTime.now();
-                          String pp = getFormatedDate(dateTime);
-                          String dd = getFormatedDate(datenow);
-                          DateTime dt1 = DateTime.parse(dateTime);
-                          DateTime dt2 = DateTime.parse(datenow);
-                          print("dateapi: $dt1");
-                          print("dateNow: $dt2");
-                          String formattedDate =
-                              DateFormat('yyyy-MM-dd').format(datenow1);
-                          print("foramtted: $formattedDate");
-                          String formattedDate1 = DateFormat('yyyy-MM-dd')
-                              .format(appointment.datetime!);
-                          print("foramtted: $formattedDate1");
-                          if (formattedDate != formattedDate1 &&
-                              dt2.isAfter(dt1)) {
-                            return appointmentDetail(
-                              doctorName,
-                              hospitalName,
-                              problem,
-                              () {
-                                showModalBottomSheet(
-                                  barrierColor: Colors.green.withOpacity(0.24),
-                                  isScrollControlled: true,
-                                  enableDrag: false,
-                                  backgroundColor: Colors.transparent,
-                                  context: context,
-                                  builder: (context) => SingleChildScrollView(
-                                    child: Container(
-                                      padding: EdgeInsets.only(
-                                          bottom: MediaQuery.of(context)
-                                              .viewInsets
-                                              .bottom),
-                                      child: DeleteBSheet(
-                                        () async {
-                                          setState(() {});
-                                          Navigator.pop(context);
-                                          showSnackBar(
-                                            context,
-                                            "Successful",
-                                            Colors.green,
-                                            Icons.info,
-                                            "Your notification has been deleted.",
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
+    return DefaultTabController(
+      length: 2,
+      child: ListView(
+        padding: const EdgeInsets.all(16.0),
+        children: [
+          Text(
+            'My Appointments',
+            style: kStyleHomeTitle,
+          ),
+          const SizedBox(
+            height: 16,
+          ),
+          FutureBuilder<AppointmentDetails?>(
+              future: _appointment,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Container(
+                    height: 800,
+                    child: Shimmer.fromColors(
+                      direction: ShimmerDirection.ttb,
+                      period: const Duration(milliseconds: 8000),
+                      child: ListView.builder(
+                          physics: const ScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: 2,
+                          itemBuilder: (context, index) {
+                            return Container(
+                              height: 120,
+                              margin: const EdgeInsets.only(bottom: 16),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                color: Colors.black,
+                              ),
                             );
-                          } else {
-                            return Container();
-                          }
-                        }),
-                    Text('Upcoming'),
-                    SizedBox(
-                      height: 8,
+                          }),
+                      baseColor: const Color(0xFFE5E4E2),
+                      highlightColor: Colors.grey.shade400,
                     ),
-                    ListView.builder(
-                        shrinkWrap: true,
-                        physics: const ScrollPhysics(),
-                        scrollDirection: Axis.vertical,
-                        itemCount: snapshot.data!.appointments!.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          var appointment = snapshot.data!.appointments![index];
-                          var doctorName = appointment.doctorName;
-                          var hospitalName = appointment.hospitalName;
-                          var problem = appointment.describeProblem;
-                          var dateTime = appointment.datetime.toString();
-                          var datenow = DateTime.now().toString();
-/*                          var datenow1 = DateTime.now();
-                          String pp = getFormatedDate(dateTime);
-                          String dd = getFormatedDate(datenow);*/
-                          DateTime dt1 = DateTime.parse(dateTime);
-                          DateTime dt2 = DateTime.parse(datenow);
-                          print("dateapi: $dt1");
-                          print("dateNow: $dt2");
+                  );
+                } else {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Align(
+                        alignment: Alignment.topCenter,
+                        child: Container(
+                          height: 40,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(
+                                4,
+                              ),
+                              boxShadow: [boxShadow]),
+                          child: TabBar(
+                              isScrollable: true,
+                              unselectedLabelStyle: kStyleHomeTitle,
+                              indicator: BoxDecoration(
+                                  color: Colors.green,
+                                  borderRadius: BorderRadius.circular(4)),
+                              labelColor: Colors.white,
+                              labelStyle: kStyleHomeTitle,
+                              unselectedLabelColor: kStyleMainGrey,
+                              // Tabbar tabs
+                              tabs: [
+                                AppointmentTabs(
+                                  text: 'Upcoming',
+                                ),
+                                AppointmentTabs(text: 'Past')
+                              ]),
+                        ),
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height,
+                        child: TabBarView(children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(
+                                height: 16,
+                              ),
+                              // Today's Appointment Details
+                              Text(
+                                'Today, $dateToday',
+                                style: kStyleHomeTitle.copyWith(
+                                  color: kStyleGrey777,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              ListView.builder(
+                                padding: EdgeInsets.zero,
+                                shrinkWrap: true,
+                                physics: const ScrollPhysics(),
+                                scrollDirection: Axis.vertical,
+                                itemCount: snapshot.data!.appointments!.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  var appointment =
+                                      snapshot.data!.appointments![index];
+                                  var doctorName = appointment.doctorName;
+                                  var hospitalName = appointment.hospitalName;
+                                  var problem = appointment.describeProblem;
+                                  var dateTime = appointment.datetime!;
+                                  var datenow1 = DateTime.now();
+                                  String formattedDate =
+                                      DateFormat('yyyy-MM-dd').format(datenow1);
+                                  print("foramtted: $formattedDate");
+                                  String formattedDate1 =
+                                      DateFormat('yyyy-MM-dd').format(dateTime);
+                                  print("foramtted: $formattedDate1");
+                                  String formattedTime =
+                                      DateFormat('HH:mm').format(dateTime);
 
-                          if (dt1.isAfter(dt2)) {
-                            return appointmentDetail(
-                              doctorName,
-                              hospitalName,
-                              problem,
-                              () {
-                                showModalBottomSheet(
-                                  barrierColor: Colors.green.withOpacity(0.24),
-                                  isScrollControlled: true,
-                                  enableDrag: false,
-                                  backgroundColor: Colors.transparent,
-                                  context: context,
-                                  builder: (context) => SingleChildScrollView(
-                                    child: Container(
-                                      padding: EdgeInsets.only(
-                                          bottom: MediaQuery.of(context)
-                                              .viewInsets
-                                              .bottom),
-                                      child: DeleteBSheet(
-                                        () async {
-                                          setState(() {});
-                                          Navigator.pop(context);
-                                          showSnackBar(
-                                            context,
-                                            "Successful",
-                                            Colors.green,
-                                            Icons.info,
-                                            "Your notification has been deleted.",
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
-                          } else {
-                            return Container();
-                          }
-                        }),
-                  ],
-                );
-              }
-            }),
-      ],
+                                  var time1 =
+                                      dateTime.add(const Duration(hours: 1));
+                                  String formattedTime1 =
+                                      DateFormat('HH:mm a').format(time1);
+                                  if (formattedDate == formattedDate1) {
+                                    return AppointmentTile(
+                                      doctorName: doctorName,
+                                      time: formattedTime +
+                                          " - " +
+                                          formattedTime1,
+                                      hospital: hospitalName,
+                                    );
+                                  } else {
+                                    return Container();
+                                  }
+                                },
+                              ),
+                              // Tomorrow's Appointment Details
+
+                              Text(
+                                'Tomorrow, $dateTomorrow',
+                                style: kStyleHomeTitle.copyWith(
+                                  color: kStyleGrey777,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              ListView.builder(
+                                  padding: EdgeInsets.zero,
+                                  shrinkWrap: true,
+                                  physics: const ScrollPhysics(),
+                                  scrollDirection: Axis.vertical,
+                                  itemCount:
+                                      snapshot.data!.appointments!.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    var appointment =
+                                        snapshot.data!.appointments![index];
+                                    var doctorName = appointment.doctorName;
+                                    var hospitalName = appointment.hospitalName;
+                                    var problem = appointment.describeProblem;
+
+                                    var date1Time = appointment.datetime!;
+                                    var datenow1 = DateTime.now();
+
+                                    var date1 =
+                                        datenow1.add(const Duration(days: 1));
+                                    String formattedDate =
+                                        DateFormat('yyyy-MM-dd').format(date1);
+                                    String formattedDate1 =
+                                        DateFormat('yyyy-MM-dd')
+                                            .format(date1Time);
+
+                                    String formattedTime = DateFormat('HH:mm')
+                                        .format(appointment.datetime!);
+
+                                    var time1 = appointment.datetime
+                                        ?.add(const Duration(hours: 1));
+                                    String formattedTime1 =
+                                        DateFormat('HH:mm a').format(time1!);
+
+                                    if (formattedDate == formattedDate1) {
+                                      return AppointmentTile(
+                                        doctorName: doctorName,
+                                        time: formattedTime +
+                                            " - " +
+                                            formattedTime1,
+                                        hospital: hospitalName,
+                                      );
+                                    } else {
+                                      return Container();
+                                    }
+                                  }),
+
+                              // Upcoming's Appointment Details
+                              Text(
+                                'Upcoming',
+                                style: kStyleHomeTitle.copyWith(
+                                  color: kStyleGrey777,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              ListView.builder(
+                                  padding: EdgeInsets.zero,
+                                  shrinkWrap: true,
+                                  physics: const ScrollPhysics(),
+                                  scrollDirection: Axis.vertical,
+                                  itemCount:
+                                      snapshot.data!.appointments!.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    var appointment =
+                                        snapshot.data!.appointments![index];
+                                    var doctorName = appointment.doctorName;
+                                    var hospitalName = appointment.hospitalName;
+                                    var problem = appointment.describeProblem;
+                                    var dateTime =
+                                        appointment.datetime.toString();
+                                    var datenow = DateTime.now().toString();
+                                    DateTime dt1 = DateTime.parse(dateTime);
+                                    DateTime dt2 = DateTime.parse(datenow);
+
+                                    var datenow1 = DateTime.now();
+                                    var date1 =
+                                        datenow1.add(const Duration(days: 1));
+                                    String formattedDate =
+                                        DateFormat('yyyy-MM-dd').format(date1);
+                                    String formattedDate1 =
+                                        DateFormat('yyyy-MM-dd')
+                                            .format(appointment.datetime!);
+
+                                    String formattedTime = DateFormat('HH:mm')
+                                        .format(appointment.datetime!);
+
+                                    var time1 = appointment.datetime
+                                        ?.add(const Duration(hours: 1));
+                                    String formattedTime1 =
+                                        DateFormat('HH:mm a').format(time1!);
+
+                                    if (formattedDate != formattedDate1 &&
+                                        dt1.isAfter(dt2)) {
+                                      return AppointmentTile(
+                                        doctorName: doctorName,
+                                        time: formattedTime +
+                                            " - " +
+                                            formattedTime1,
+                                        hospital: hospitalName,
+                                      );
+                                    } else {
+                                      return Container();
+                                    }
+                                  }),
+                            ],
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(
+                                height: 16,
+                              ),
+                              Text(
+                                'Past History',
+                                style: kStyleHomeTitle.copyWith(
+                                  color: kStyleGrey777,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              ListView.builder(
+                                  padding: EdgeInsets.zero,
+                                  shrinkWrap: true,
+                                  physics: const ScrollPhysics(),
+                                  scrollDirection: Axis.vertical,
+                                  itemCount:
+                                      snapshot.data!.appointments!.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    var appointment =
+                                        snapshot.data!.appointments![index];
+                                    var doctorName = appointment.doctorName;
+                                    var hospitalName = appointment.hospitalName;
+                                    var problem = appointment.describeProblem;
+                                    var dateTime =
+                                        appointment.datetime.toString();
+                                    var datenow = DateTime.now().toString();
+
+                                    DateTime dt1 = DateTime.parse(dateTime);
+                                    DateTime dt2 = DateTime.parse(datenow);
+                                    var datenow1 = DateTime.now();
+                                    String formattedDate =
+                                        DateFormat('yyyy-MM-dd')
+                                            .format(datenow1);
+                                    String formattedDate1 =
+                                        DateFormat('yyyy-MM-dd')
+                                            .format(appointment.datetime!);
+                                    String formattedTime = DateFormat('HH:mm')
+                                        .format(appointment.datetime!);
+
+                                    var time1 = appointment.datetime
+                                        ?.add(const Duration(hours: 1));
+                                    String formattedTime1 =
+                                        DateFormat('HH:mm a').format(time1!);
+
+                                    if (formattedDate != formattedDate1 &&
+                                        dt2.isAfter(dt1)) {
+                                      return AppointmentTile(
+                                        doctorName: doctorName,
+                                        time: formattedTime +
+                                            " - " +
+                                            formattedTime1,
+                                        hospital: hospitalName,
+                                      );
+                                    } else {
+                                      return Container();
+                                    }
+                                  }),
+                            ],
+                          ),
+                        ]),
+                      ),
+                    ],
+                  );
+                }
+              }),
+        ],
+      ),
     );
   }
 }
+
+class AppointmentTabs extends StatelessWidget {
+  String text;
+
+  AppointmentTabs({required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.37,
+      child: Center(
+        child: Text(
+          text,
+        ),
+      ),
+    );
+  }
+}
+
 /*
 
 class AppointmentContent extends StatefulWidget {

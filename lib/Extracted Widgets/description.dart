@@ -57,109 +57,76 @@ class DescriptionContent extends StatelessWidget {
   }
 }
 
-Widget appointmentDetail(
-    String? title, String? body, String? time, final onPress) {
-  return Container(
-    margin: const EdgeInsets.only(bottom: 8.0),
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(8.sp),
-      color: Colors.white,
-      boxShadow: [boxShadow],
-    ),
-    child: ClipRRect(
-      borderRadius: BorderRadius.circular(8.sp),
-      child: Padding(
-        padding: const EdgeInsets.only(
-          left: 16.0,
-          top: 16.0,
-          right: 16.0,
-          bottom: 16.0,
+class AppointmentTile extends StatelessWidget {
+  final String? doctorName;
+  final String time;
+  final String? hospital;
+  AppointmentTile(
+      {this.doctorName, required this.time, required this.hospital});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {},
+      child: Container(
+        margin: EdgeInsets.only(bottom: 16),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8.sp),
+          color: Colors.white,
+          boxShadow: [
+            boxShadow,
+          ],
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        child: Row(
           children: [
-            Row(
-              //crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: 'Doctor Name: ',
-                          style: kStyleHomeTitle.copyWith(
-                            fontSize: 12.sp,
-                          ),
-                        ),
-                        TextSpan(
-                          text: title,
-                          style: kStyleHomeTitle.copyWith(
-                            fontSize: 12.sp,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+            Container(
+              width: 60,
+              height: 60,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  color: Colors.green, borderRadius: BorderRadius.circular(40)),
+              child: Text(
+                "${doctorName?.substring(0, 1).toUpperCase()}",
+                style: kStyleHomeTitle.copyWith(
+                  color: Colors.white,
+                  fontSize: 12.sp,
                 ),
-                GestureDetector(
-                  onTap: onPress,
-                  child: Image.asset(
-                    'assets/circledelete.png',
-                    color: Colors.red,
-                    width: 26,
-                  ),
-                ),
-              ],
+              ),
             ),
             const SizedBox(
-              height: 4,
+              width: 20,
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: 'Hospital Name: ',
-                        style: kStyleHomeTitle.copyWith(
-                          fontSize: 12.sp,
-                        ),
-                      ),
-                      TextSpan(
-                        text: body,
-                        style: kStyleHomeTitle.copyWith(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 12.sp,
-                          height: 1.5,
-                          color: kStyleCoolGrey,
-                        ),
-                      ),
-                    ],
+                Text(
+                  'Dr. $doctorName',
+                  style: kStyleHomeTitle.copyWith(
+                    color: kStyleGrey333,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-                const SizedBox(
-                  height: 8,
+                SizedBox(
+                  height: 6,
                 ),
-                RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: 'Description Problem: ',
-                        style: kStyleHomeTitle.copyWith(
-                          fontSize: 12.sp,
-                        ),
-                      ),
-                      TextSpan(
-                        text: time,
-                        style: kStyleHomeTitle.copyWith(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 12.sp,
-                          height: 1.5,
-                          color: kStyleCoolGrey,
-                        ),
-                      ),
-                    ],
+                Text(
+                  hospital ?? "No Hospital Found",
+                  style: kStyleHomeTitle.copyWith(
+                    color: kStyleGrey333,
+                    fontSize: 11.sp,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(
+                  height: 6,
+                ),
+                Text(
+                  time,
+                  style: kStyleHomeTitle.copyWith(
+                    color: kStyleGrey333,
+                    fontSize: 11.sp,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ],
@@ -167,6 +134,6 @@ Widget appointmentDetail(
           ],
         ),
       ),
-    ),
-  );
+    );
+  }
 }

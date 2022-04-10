@@ -133,8 +133,16 @@ class _ChatRoomState extends State<ChatRoom> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kStyleBackgroundColor,
-      body: Column(
+      body: ListView(
+        padding: EdgeInsets.all(16),
         children: [
+          Text(
+            'My Chats',
+            style: kStyleHomeTitle,
+          ),
+          const SizedBox(
+            height: 16,
+          ),
           chatRoomList(),
         ],
       ),
@@ -158,59 +166,55 @@ class ChatRoomsTile extends StatelessWidget {
               builder: (context) => ConversationScreen(chatRoomId)),
         );
       },
-      child: Padding(
-        padding: const EdgeInsets.only(left: 16.0, right: 16, top: 14),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8.sp),
-            color: Colors.white,
-            boxShadow: [
-              boxShadow,
-            ],
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-          child: Row(
-            children: [
-              Container(
-                width: 40,
-                height: 40,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                    color: Colors.green,
-                    borderRadius: BorderRadius.circular(40)),
-                child: Text(
-                  "${userName?.substring(0, 1).toUpperCase()}",
-                  style: kStyleHomeTitle.copyWith(
-                    color: Colors.white,
-                    fontSize: 12.sp,
-                  ),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8.sp),
+          color: Colors.white,
+          boxShadow: [
+            boxShadow,
+          ],
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        child: Row(
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  color: Colors.green, borderRadius: BorderRadius.circular(40)),
+              child: Text(
+                "${userName?.substring(0, 1).toUpperCase()}",
+                style: kStyleHomeTitle.copyWith(
+                  color: Colors.white,
+                  fontSize: 12.sp,
                 ),
               ),
-              const SizedBox(
-                width: 16,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    userName!,
-                    style: kStyleHomeTitle.copyWith(
-                      color: kStyleGrey333,
-                      fontWeight: FontWeight.w600,
-                    ),
+            ),
+            const SizedBox(
+              width: 16,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  userName!,
+                  style: kStyleHomeTitle.copyWith(
+                    color: kStyleGrey333,
+                    fontWeight: FontWeight.w600,
                   ),
-                  Text(
-                    "Tap to chat here",
-                    style: kStyleHomeTitle.copyWith(
-                      color: kStyleGrey333,
-                      fontSize: 11.sp,
-                      fontWeight: FontWeight.w500,
-                    ),
+                ),
+                Text(
+                  "Tap to chat here",
+                  style: kStyleHomeTitle.copyWith(
+                    color: kStyleGrey333,
+                    fontSize: 11.sp,
+                    fontWeight: FontWeight.w500,
                   ),
-                ],
-              ),
-            ],
-          ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
