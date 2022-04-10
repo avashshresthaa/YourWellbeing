@@ -17,6 +17,7 @@ dependencies:
   http: ^0.13.3
   api_cache_manager: ^1.0.1
   shimmer: ^2.0.0
+  timeago: ^3.1.0
   carousel_slider: ^4.0.0
   connectivity_plus: ^2.0.3
   curved_navigation_bar: ^1.0.2

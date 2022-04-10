@@ -162,6 +162,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: kStyleBackgroundColor,
       appBar: ProfileAppBar(title: 'Doctors'),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
