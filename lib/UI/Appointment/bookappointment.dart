@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:sizer/sizer.dart';
 import 'package:yourwellbeing/Change%20Notifier/changenotifier.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/buttons.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/customtextfield.dart';
+import 'package:yourwellbeing/Extracted%20Widgets/snackbar.dart';
 import 'package:yourwellbeing/Network/NetworkHelper.dart';
 import 'package:yourwellbeing/UI/BottomNavigation/bottom_navigation.dart';
-
-import 'appointment.dart';
 
 class BookAppointment extends StatefulWidget {
   const BookAppointment({Key? key}) : super(key: key);
@@ -36,16 +36,28 @@ class _BookAppointmentState extends State<BookAppointment> {
   var picked;
   var datechosem;
 
+  List _selectedPaymentT = [];
+  List images = [
+    'assets/cash.png',
+    'assets/esewa.png',
+  ];
+  List nameList = [
+    'Cash',
+    'Esewa',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: ProfileAppBar(
+      appBar: AppointmentAppBar(
         title: 'Book Appointment',
+        tap: true,
       ),
       body: Theme(
         data: Theme.of(context)
-            .copyWith(colorScheme: ColorScheme.light(primary: Colors.green)),
+            .copyWith(colorScheme: ColorScheme.light(primary: kStyleBlue)),
         child: Stepper(
+          physics: ScrollPhysics(),
           type: StepperType.horizontal,
           steps: getSteps(),
           currentStep: currentStep,
@@ -64,7 +76,7 @@ class _BookAppointmentState extends State<BookAppointment> {
                 "doctorName",
                 "hospitalName",
                 problem.text,
-                'test',
+                _selectedPaymentT.contains(0) == true ? 'Cash ' : "Esewa",
                 token,
               );
               //Sending data to server Create Appointmento
@@ -74,6 +86,13 @@ class _BookAppointmentState extends State<BookAppointment> {
                 MaterialPageRoute(
                   builder: (context) => const BottomNavigationPage(),
                 ),
+              );
+              showSnackBar(
+                context,
+                "Attention",
+                Colors.green,
+                Icons.info,
+                "Appointment created sucessfully",
               );
             } else {
               setState(() {
@@ -300,20 +319,79 @@ class _BookAppointmentState extends State<BookAppointment> {
           )),
       Step(
           isActive: currentStep >= 2,
-          title: Text('Complete'),
+          title: Text('Payment'),
           content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              RecheckResult(title: 'Name', name: name.text),
-              RecheckResult(title: 'Address', name: address.text),
-              RecheckResult(title: 'Age', name: age.text),
-              RecheckResult(title: 'Phone', name: phone.text),
-              RecheckResult(title: 'Email', name: email.text),
-              RecheckResult(title: 'Date', name: selectDate.text),
-              RecheckResult(title: 'Time', name: selectTime.text),
-              RecheckResult(title: 'Problem', name: problem.text),
+              Text(
+                'Booking Details',
+                style: kStyleHomeTitle,
+              ),
               SizedBox(
-                height: 50,
-              )
+                height: 8,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [boxShadow],
+                ),
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    RecheckResult(title: 'Name', name: name.text),
+                    RecheckResult(title: 'Address', name: address.text),
+                    RecheckResult(title: 'Age', name: age.text),
+                    RecheckResult(title: 'Phone', name: phone.text),
+                    RecheckResult(title: 'Email', name: email.text),
+                    RecheckResult(title: 'Date', name: selectDate.text),
+                    RecheckResult(title: 'Time', name: selectTime.text),
+                    RecheckResult(title: 'Problem', name: problem.text),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              Text(
+                'Payment Option',
+                style: kStyleHomeTitle,
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.20,
+                child: ListView.builder(
+                    padding: EdgeInsets.zero,
+                    itemCount: 2,
+                    itemBuilder: (context, i) {
+                      final _isSelected = _selectedPaymentT.contains(i);
+                      var _isSelectedPay = nameList[i];
+                      return PaymentOptions(
+                        icon: images[i],
+                        name: nameList[i],
+                        onTap: () {
+                          setState(
+                            () {
+                              if (_isSelected) {
+                                _selectedPaymentT.remove(i);
+                              } else if (_selectedPaymentT.isNotEmpty) {
+                                _selectedPaymentT.clear();
+                                _selectedPaymentT.add(i);
+                              } else {
+                                _selectedPaymentT.add(i);
+                              }
+                            },
+                          );
+
+                          if (_selectedPaymentT.contains(1)) {
+                            //_initPayment(_isSelectedPay);
+                          }
+                        },
+                        isSelected: _isSelected,
+                      );
+                    }),
+              ),
+              SizedBox(
+                height: 16,
+              ),
             ],
           )),
     ];
@@ -364,6 +442,61 @@ class _BookAppointmentState extends State<BookAppointment> {
   }
 }
 
+class PaymentOptions extends StatelessWidget {
+  PaymentOptions(
+      {required this.icon,
+      required this.name,
+      required this.onTap,
+      required this.isSelected});
+
+  final icon;
+  final name;
+  final onTap;
+  final isSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 8),
+        padding: EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(4),
+          boxShadow: [boxShadow],
+        ),
+        child: Row(
+          children: [
+            Image.asset(
+              icon,
+              height: 23,
+            ),
+            SizedBox(
+              width: 12,
+            ),
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    name,
+                    style: kStyleHomeTitle,
+                  ),
+                  Icon(
+                    isSelected ? Icons.check_circle : Icons.circle,
+                    color: isSelected ? kStyleBlue : Color(0xFFA3A3A3),
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class RecheckResult extends StatelessWidget {
   RecheckResult({this.name, this.title});
   final title;
@@ -371,20 +504,28 @@ class RecheckResult extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Text(
-          '$title: ',
-          style: kStyleHomeTitle,
-        ),
-        SizedBox(
-          height: 20,
-        ),
-        Text(
-          '$name',
-          style: kStyleHomeTitle.copyWith(fontSize: 14),
-        ),
-      ],
+    return Container(
+      margin: EdgeInsets.only(
+        bottom: 8,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            '$title: ',
+            style: kStyleHomeTitle.copyWith(
+              fontSize: 12.sp,
+            ),
+          ),
+          Text(
+            '$name',
+            style: kStyleHomeTitle.copyWith(
+              fontSize: 10.sp,
+              color: kStyleGrey777,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

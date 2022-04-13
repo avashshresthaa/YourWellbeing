@@ -95,3 +95,43 @@ class SChatAppBar extends StatelessWidget with PreferredSizeWidget {
   // TODO: implement preferredSize
   Size get preferredSize => const Size.fromHeight(55);
 }
+
+class AppointmentAppBar extends StatelessWidget with PreferredSizeWidget {
+  final String title;
+  final bool tap;
+
+  AppointmentAppBar({required this.title, required this.tap});
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      backgroundColor: Colors.white,
+      leading: tap == true
+          ? Padding(
+              padding: const EdgeInsets.symmetric(vertical: 18.0),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Image.asset(
+                  'assets/backicon.png',
+                  width: 11.43,
+                  height: 20,
+                  color: kStyleBlue,
+                ),
+              ),
+            )
+          : Container(),
+      title: Text(
+        title,
+        style: kStyleAppBar.copyWith(color: kStyleBlue),
+      ),
+      centerTitle: true,
+      automaticallyImplyLeading: false,
+    );
+  }
+
+  @override
+  // TODO: implement preferredSize
+  Size get preferredSize => const Size.fromHeight(55);
+}

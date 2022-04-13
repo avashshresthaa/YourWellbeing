@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sizer/sizer.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
-import 'package:yourwellbeing/UI/Appointment/appointment_list.dart';
+import 'package:yourwellbeing/UI/Appointment/applist.dart';
 import 'package:yourwellbeing/UI/Doctor/searchscreen.dart';
 import 'package:yourwellbeing/UI/Login/login.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';

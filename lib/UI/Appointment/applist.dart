@@ -1,3 +1,4 @@
+/*
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:sizer/sizer.dart';
@@ -73,9 +74,11 @@ class _AppointmentListContentState extends State<AppointmentListContent> {
                 child: DeleteBSheet(
                   () async {
                     setState(() {
-                      /*         ktitle = null;
+                      */
+/*         ktitle = null;
                       kbody = null;
-                      ktime = null;*/
+                      ktime = null;*/ /*
+
                     });
                     await notificationsPlugin.cancel(2);
                     await UserSimplePreferences.setTitle(eTitle);
@@ -216,3 +219,4 @@ Widget alarmDetail(String? title, String? body, String? time, final onPress) {
     ),
   );
 }
+*/

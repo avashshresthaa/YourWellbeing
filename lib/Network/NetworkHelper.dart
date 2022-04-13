@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:yourwellbeing/APIModels/createAppointment.dart';
+import 'package:yourwellbeing/APIModels/deleteAppointment.dart';
 import 'package:yourwellbeing/APIModels/getAppointments.dart';
 import 'package:yourwellbeing/APIModels/getContacts.dart';
 import 'package:yourwellbeing/APIModels/getCovid.dart';
@@ -17,6 +18,7 @@ class NetworkHelper {
       http.Response response = await http.get(Uri.parse(url), headers: {
         /*'Bearer 6033fee8-fd94-11eb-9a03-0242ac130003'*/
       });
+      print(response.statusCode);
       if (response.statusCode == 200) {
         var data = response.body;
 
@@ -154,7 +156,7 @@ class NetworkHelper {
     String doctorName,
     String hospitalName,
     String describeProblem,
-    String optional1,
+    String payment,
     var token,
   ) async {
     var createModel;
@@ -173,7 +175,7 @@ class NetworkHelper {
         'doctorName': doctorName,
         'hospitalName': hospitalName,
         'describeProblem': describeProblem,
-        'optional1': optional1,
+        'payment': payment,
       }),
     );
     print(response.statusCode);
@@ -206,5 +208,24 @@ class NetworkHelper {
       print(data);
     }
     return doctorModel;
+  }
+
+  Future<DeleteData?> deleteAppointmentData(String url, var token) async {
+    var deleteModel;
+
+    try {
+      http.Response response = await http.delete(Uri.parse(url), headers: {
+        HttpHeaders.contentTypeHeader: "application/json",
+        'Authorization': 'Bearer $token'
+      });
+      if (response.statusCode == 200) {
+        var data = response.body;
+
+        var jsonMap = jsonDecode(data);
+        deleteModel = DeleteData.fromJson(jsonMap);
+        print(data);
+      }
+      return deleteModel;
+    } catch (e) {}
   }
 }

@@ -40,6 +40,42 @@ class LoginButton extends StatelessWidget {
   }
 }
 
+/*class WhiteButton extends StatelessWidget {
+  WhiteButton(this.text, this.onPress);
+
+  final text;
+  final onPress;
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: onPress,
+      style: ElevatedButton.styleFrom(
+          padding: EdgeInsets.zero,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
+      child: Ink(
+        decoration: BoxDecoration(
+            color: Colors.white, borderRadius: BorderRadius.circular(24)),
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: 40,
+          alignment: Alignment.center,
+          child: Text(
+            text,
+            style: TextStyle(
+              fontFamily: 'NutinoSansReg',
+              fontSize: 16,
+              fontWeight: FontWeight.w400,
+              color: Color(0xff333333),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}*/
+
 class PNButton extends StatelessWidget {
   PNButton({this.text, this.onPress, this.color});
 
@@ -103,7 +139,7 @@ class AppointmentButton extends StatelessWidget {
             ),
           ),
           style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Colors.green),
+              backgroundColor: MaterialStateProperty.all(kStyleBlue),
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(4)))),

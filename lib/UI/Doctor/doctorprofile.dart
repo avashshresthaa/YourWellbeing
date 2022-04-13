@@ -176,7 +176,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
                               builder: (context) => BookAppointment()),
                         );
                       },
-                      Colors.green,
+                      kStyleBlue,
                     ),
                   ),
                   SizedBox(
@@ -189,7 +189,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
                         createChatRoomAndStartConversation(
                             userName: widget.details[widget.index].name);
                       },
-                      Colors.blue,
+                      Colors.green,
                     ),
                   ),
                 ],

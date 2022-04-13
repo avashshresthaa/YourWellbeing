@@ -8,6 +8,8 @@ const kStyleCoolGrey = Color(0xFF252627);
 const kStyleBackgroundColor = Color(0xffF1F7FA);
 const kStyleGrey333 = Color(0xff333333);
 const kStyleGrey777 = Color(0xff777777);
+const kStyleNavy = Color(0xFF324F81);
+const kStyleBlue = Color(0xFF00A6FB);
 
 var kStyleTextField = TextStyle(
   fontFamily: 'NutinoSansReg',

@@ -61,13 +61,17 @@ class AppointmentTile extends StatelessWidget {
   final String? doctorName;
   final String time;
   final String? hospital;
+  final onTap;
   AppointmentTile(
-      {this.doctorName, required this.time, required this.hospital});
+      {this.doctorName,
+      required this.time,
+      required this.hospital,
+      this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: onTap,
       child: Container(
         margin: EdgeInsets.only(bottom: 16),
         decoration: BoxDecoration(
@@ -85,7 +89,7 @@ class AppointmentTile extends StatelessWidget {
               height: 60,
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                  color: Colors.green, borderRadius: BorderRadius.circular(40)),
+                  color: kStyleBlue, borderRadius: BorderRadius.circular(40)),
               child: Text(
                 "${doctorName?.substring(0, 1).toUpperCase()}",
                 style: kStyleHomeTitle.copyWith(

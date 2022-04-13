@@ -40,7 +40,7 @@ class Appointment {
     this.doctorName,
     this.hospitalName,
     this.describeProblem,
-    this.optional1,
+    this.payment,
     this.userId,
     this.createdAt,
     this.updatedAt,
@@ -55,7 +55,7 @@ class Appointment {
   String? doctorName;
   String? hospitalName;
   String? describeProblem;
-  String? optional1;
+  String? payment;
   int? userId;
   DateTime? createdAt;
   DateTime? updatedAt;
@@ -70,7 +70,7 @@ class Appointment {
         doctorName: json["doctorName"],
         hospitalName: json["hospitalName"],
         describeProblem: json["describeProblem"],
-        optional1: json["optional1"],
+        payment: json["payment"],
         userId: json["user_id"],
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
@@ -86,7 +86,7 @@ class Appointment {
         "doctorName": doctorName,
         "hospitalName": hospitalName,
         "describeProblem": describeProblem,
-        "optional1": optional1,
+        "payment": payment,
         "user_id": userId,
         "created_at": createdAt!.toIso8601String(),
         "updated_at": updatedAt!.toIso8601String(),
