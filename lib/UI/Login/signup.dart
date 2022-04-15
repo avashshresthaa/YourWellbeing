@@ -63,25 +63,37 @@ class _SignupPageState extends State<SignupPage> {
         "email": email,
       };
 
-      UserSimplePreferences.saveUserEmail(email);
-      UserSimplePreferences.saveUserName(name);
-
       authMethods.signUpWithEmailAndPassword(email, password).then(
         (value) async {
-          await databaseMethods.uploadUserInfo(userInfoMap);
-          /*      Register? signup = await NetworkHelper().getRegData(
-            name,
-            email,
-            password,
-          );*/
-          UserSimplePreferences.saveUserLoggedIn(true);
-          Navigator.pop(context);
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const LoginPage(),
-            ),
-          );
+          if (value != null) {
+            await databaseMethods.uploadUserInfo(userInfoMap);
+            Register signup = await NetworkHelper().getRegData(
+              name,
+              email,
+              password,
+            );
+            UserSimplePreferences.saveUserEmail(email);
+            UserSimplePreferences.saveUserName(name);
+            UserSimplePreferences.saveUserLoggedIn(true);
+            Navigator.pop(context);
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const LoginPage(),
+              ),
+            );
+          } else {
+            UserSimplePreferences.saveUserLoggedIn(false);
+            FocusScope.of(context).requestFocus(FocusNode());
+            Navigator.pop(context);
+            showSnackBar(
+              context,
+              "Attention",
+              Colors.red,
+              Icons.info,
+              "Email has already been taken.",
+            );
+          }
         },
       );
     } else {

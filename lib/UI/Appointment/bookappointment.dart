@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -57,6 +58,8 @@ class _BookAppointmentState extends State<BookAppointment> {
 
   var language;
 
+  var result;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -82,166 +85,178 @@ class _BookAppointmentState extends State<BookAppointment> {
           onStepContinue: () async {
             final isLastStep = currentStep == getSteps().length - 1;
             if (isLastStep) {
-              print(datechosem);
-              if (name.text.isNotEmpty &&
-                  age.text.isNotEmpty &&
-                  phone.text.isNotEmpty &&
-                  problem.text.isNotEmpty &&
-                  selectDate.text.isNotEmpty &&
-                  selectTime.text.isNotEmpty &&
-                  _value != 0 &&
-                  currentType != 'Select Hospital' &&
-                  _selectedPaymentT.isNotEmpty) {
-                showDialog(
-                  barrierColor: Colors.blueAccent.withOpacity(0.3),
-                  barrierDismissible: false,
-                  context: context,
-                  builder: (_) => Stack(
-                    clipBehavior: Clip.none,
-                    alignment: Alignment.center,
-                    children: <Widget>[
-                      FittedBox(
-                        child: Container(
-                          width: MediaQuery.of(context).size.width - 40,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            color: Colors.white,
-                          ),
-                          padding: EdgeInsets.fromLTRB(24, 16, 24, 24),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              AspectRatio(
-                                aspectRatio: 12 / 4,
-                                child: Image.asset(
-                                  'assets/bookap.png',
-                                ),
-                              ),
-                              Text(
-                                "Attention",
-                                style: kStyleHomeTitle.copyWith(
-                                    fontSize: 20,
-                                    decoration: TextDecoration.none),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                "Are you sure you want to book your appointment?",
-                                textAlign: TextAlign.center,
-                                style: kStyleHomeTitle.copyWith(
-                                    fontWeight: FontWeight.w400,
-                                    decoration: TextDecoration.none),
-                              ),
-                              const SizedBox(height: 28),
-                              blueButton(
-                                Text(
-                                  'Yes',
-                                  style: kStyleHomeTitle.copyWith(
-                                      decoration: TextDecoration.none,
-                                      color: Colors.white),
-                                ),
-                                () async {
-                                  late var token = Provider.of<DataProvider>(
-                                          context,
-                                          listen: false)
-                                      .tokenValue;
-                                  Navigator.pop(context);
-                                  showWaitDialog(context,
-                                      language ? 'Please Wait...' : nepWait);
+              result = await Connectivity().checkConnectivity();
 
-                                  CreateAppointment? appointment =
-                                      await NetworkHelper().createAppointment(
-                                    name.text,
-                                    age.text,
-                                    gender ?? 'No gender selected',
-                                    phone.text,
-                                    datechosem.toString() +
-                                        " " +
-                                        selectTime.text,
-                                    widget.doctorName,
-                                    hospital ?? 'No hospital selected',
-                                    problem.text,
-                                    _selectedPaymentT.contains(0) == true
-                                        ? 'Cash '
-                                        : "Esewa",
-                                    token,
-                                  );
-                                  //Sending data to server Create Appointmento
-                                  print('api called');
-                                  if (appointment!.message !=
-                                      "Appointment already exist") {
-                                    Future.delayed(
-                                      const Duration(
-                                          seconds:
-                                              2), //If there are server error or internet error till 15 sec it will ask to retry
-                                      () {
-                                        Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                const BottomNavigationPage(),
-                                          ),
-                                        );
-                                        showSnackBar(
-                                          context,
-                                          "Attention",
-                                          Colors.green,
-                                          Icons.info,
-                                          "Appointment created successfully",
-                                        );
-                                      },
+              if (result == ConnectivityResult.mobile ||
+                  result == ConnectivityResult.wifi) {
+                if (name.text.isNotEmpty &&
+                    age.text.isNotEmpty &&
+                    phone.text.isNotEmpty &&
+                    problem.text.isNotEmpty &&
+                    selectDate.text.isNotEmpty &&
+                    selectTime.text.isNotEmpty &&
+                    _value != 0 &&
+                    currentType != 'Select Hospital' &&
+                    _selectedPaymentT.isNotEmpty) {
+                  showDialog(
+                    barrierColor: Colors.blueAccent.withOpacity(0.3),
+                    barrierDismissible: false,
+                    context: context,
+                    builder: (_) => Stack(
+                      clipBehavior: Clip.none,
+                      alignment: Alignment.center,
+                      children: <Widget>[
+                        FittedBox(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width - 40,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: Colors.white,
+                            ),
+                            padding: EdgeInsets.fromLTRB(24, 16, 24, 24),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                AspectRatio(
+                                  aspectRatio: 12 / 4,
+                                  child: Image.asset(
+                                    'assets/bookap.png',
+                                  ),
+                                ),
+                                Text(
+                                  "Attention",
+                                  style: kStyleHomeTitle.copyWith(
+                                      fontSize: 20,
+                                      decoration: TextDecoration.none),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  "Are you sure you want to book your appointment?",
+                                  textAlign: TextAlign.center,
+                                  style: kStyleHomeTitle.copyWith(
+                                      fontWeight: FontWeight.w400,
+                                      decoration: TextDecoration.none),
+                                ),
+                                const SizedBox(height: 28),
+                                blueButton(
+                                  Text(
+                                    'Yes',
+                                    style: kStyleHomeTitle.copyWith(
+                                        decoration: TextDecoration.none,
+                                        color: Colors.white),
+                                  ),
+                                  () async {
+                                    late var token = Provider.of<DataProvider>(
+                                            context,
+                                            listen: false)
+                                        .tokenValue;
+                                    Navigator.pop(context);
+                                    showWaitDialog(context,
+                                        language ? 'Please Wait...' : nepWait);
+
+                                    CreateAppointment? appointment =
+                                        await NetworkHelper().createAppointment(
+                                      name.text,
+                                      age.text,
+                                      gender ?? 'No gender selected',
+                                      phone.text,
+                                      datechosem.toString() +
+                                          " " +
+                                          selectTime.text,
+                                      widget.doctorName,
+                                      hospital ?? 'No hospital selected',
+                                      problem.text,
+                                      _selectedPaymentT.contains(0) == true
+                                          ? 'Cash '
+                                          : "Esewa",
+                                      token,
                                     );
-                                  } else {
-                                    Future.delayed(
-                                      const Duration(
-                                          seconds:
-                                              2), //If there are server error or internet error till 15 sec it will ask to retry
-                                      () {
-                                        FocusScope.of(context)
-                                            .requestFocus(FocusNode());
-                                        Navigator.pop(context);
-                                        showSnackBar(
-                                          context,
-                                          "Attention",
-                                          Colors.red,
-                                          Icons.info,
-                                          "Appointment already exist",
-                                        );
-                                      },
-                                    );
-                                  }
-                                },
-                              ),
-                              const SizedBox(height: 14),
-                              whiteButton('No', () {
-                                FocusScope.of(context)
-                                    .requestFocus(FocusNode());
-                                Navigator.pop(context);
-                              }),
-                            ],
+                                    //Sending data to server Create Appointmento
+                                    print('api called');
+                                    if (appointment!.message !=
+                                        "Appointment already exist") {
+                                      Future.delayed(
+                                        const Duration(
+                                            seconds:
+                                                2), //If there are server error or internet error till 15 sec it will ask to retry
+                                        () {
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const BottomNavigationPage(),
+                                            ),
+                                          );
+                                          showSnackBar(
+                                            context,
+                                            "Attention",
+                                            Colors.green,
+                                            Icons.info,
+                                            "Appointment created successfully",
+                                          );
+                                        },
+                                      );
+                                    } else {
+                                      Future.delayed(
+                                        const Duration(
+                                            seconds:
+                                                2), //If there are server error or internet error till 15 sec it will ask to retry
+                                        () {
+                                          FocusScope.of(context)
+                                              .requestFocus(FocusNode());
+                                          Navigator.pop(context);
+                                          showSnackBar(
+                                            context,
+                                            "Attention",
+                                            Colors.red,
+                                            Icons.info,
+                                            "Appointment already exist",
+                                          );
+                                        },
+                                      );
+                                    }
+                                  },
+                                ),
+                                const SizedBox(height: 14),
+                                whiteButton('No', () {
+                                  FocusScope.of(context)
+                                      .requestFocus(FocusNode());
+                                  Navigator.pop(context);
+                                }),
+                              ],
+                            ),
                           ),
-                        ),
-                      )
-                    ],
-                  ),
-                );
-              } else {
-                print('failed');
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: const Text("Alert"),
-                      content: const Text("Please fill up all the fields"),
-                      actions: [
-                        TextButton(
-                          child: const Text("OK"),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
                         )
                       ],
-                    );
-                  },
+                    ),
+                  );
+                } else {
+                  print('failed');
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text("Alert"),
+                        content: const Text("Please fill up all the fields"),
+                        actions: [
+                          TextButton(
+                            child: const Text("OK"),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          )
+                        ],
+                      );
+                    },
+                  );
+                }
+              } else {
+                showSnackBar(
+                  context,
+                  "Attention",
+                  Colors.blue,
+                  Icons.info,
+                  "You must be connected to the internet.",
                 );
               }
             } else {

@@ -107,7 +107,7 @@ class NetworkHelper {
     return loginModel;
   }
 
-  Future<Register>? getRegData(
+  Future<Register> getRegData(
     String name,
     String email,
     String password,
@@ -116,15 +116,20 @@ class NetworkHelper {
     http.Response response = await http.post(
       Uri.parse('$baseUrl/fypapi/public/api/register'),
       headers: {HttpHeaders.contentTypeHeader: "application/json"},
-      body: jsonEncode(<dynamic, dynamic>{
+      body: jsonEncode(<String, String>{
         'name': name,
         'email': email,
         'password': password,
       }),
     );
 
-//print(response.statusCode);
+    print(response.statusCode);
     if (response.statusCode == 200) {
+      var data = response.body;
+      var jsonMap = jsonDecode(data);
+      print("Register: $jsonMap");
+      registerModel = Register.fromJson(jsonMap);
+    } else if (response.statusCode == 201) {
       var data = response.body;
       var jsonMap = jsonDecode(data);
       print("Register: $jsonMap");
