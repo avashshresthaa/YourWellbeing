@@ -62,11 +62,13 @@ class AppointmentTile extends StatelessWidget {
   final String time;
   final String? hospital;
   final onTap;
+  final bool isDoctor;
   AppointmentTile(
       {this.doctorName,
       required this.time,
       required this.hospital,
-      this.onTap});
+      this.onTap,
+      required this.isDoctor});
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +107,7 @@ class AppointmentTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Dr. $doctorName',
+                  isDoctor ? 'Dr. $doctorName' : '$doctorName',
                   style: kStyleHomeTitle.copyWith(
                     color: kStyleGrey333,
                     fontWeight: FontWeight.w600,

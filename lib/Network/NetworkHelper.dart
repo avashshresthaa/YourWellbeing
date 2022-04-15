@@ -6,6 +6,7 @@ import 'package:yourwellbeing/APIModels/deleteAppointment.dart';
 import 'package:yourwellbeing/APIModels/getAppointments.dart';
 import 'package:yourwellbeing/APIModels/getContacts.dart';
 import 'package:yourwellbeing/APIModels/getCovid.dart';
+import 'package:yourwellbeing/APIModels/getDoctorAppointments.dart';
 import 'package:yourwellbeing/APIModels/getDoctorInfo.dart';
 import 'package:yourwellbeing/APIModels/getLogin.dart';
 import 'package:yourwellbeing/APIModels/getLogout.dart';
@@ -227,5 +228,26 @@ class NetworkHelper {
       }
       return deleteModel;
     } catch (e) {}
+  }
+
+  Future<AppointmentDoctorDetails>? getDoctorAppointmentDetails(
+      var token) async {
+    var doctorModel;
+    http.Response response = await http.get(
+      Uri.parse('$baseUrl/fypapi/public/api/doctorappointments'),
+      headers: {
+        HttpHeaders.contentTypeHeader: "application/json",
+        'Authorization': 'Bearer $token'
+      },
+    );
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      print('success');
+      var data = response.body;
+      var jsonMap = jsonDecode(data);
+      doctorModel = AppointmentDoctorDetails.fromJson(jsonMap);
+      print(data);
+    }
+    return doctorModel;
   }
 }

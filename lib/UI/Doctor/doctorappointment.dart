@@ -4,118 +4,32 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:sizer/sizer.dart';
 import 'package:yourwellbeing/APIModels/getAppointments.dart';
+import 'package:yourwellbeing/APIModels/getDoctorAppointments.dart';
 import 'package:yourwellbeing/Change%20Notifier/changenotifier.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
 import 'package:intl/intl.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/description.dart';
 import 'package:yourwellbeing/Network/NetworkHelper.dart';
-import 'package:yourwellbeing/UI/Doctor/doctorappointment.dart';
-import 'package:yourwellbeing/UI/Doctor/searchscreen.dart';
-import 'package:yourwellbeing/UI/Login/loginpermission.dart';
-import '../../Utils/user_prefrences.dart';
-import 'appointment_content.dart';
+import 'package:yourwellbeing/UI/Appointment/appointment.dart';
+import 'package:yourwellbeing/UI/Appointment/appointment_content.dart';
 
-class Appointment extends StatefulWidget {
-  const Appointment({Key? key}) : super(key: key);
-
-  @override
-  _AppointmentState createState() => _AppointmentState();
-}
-
-class _AppointmentState extends State<Appointment> {
-  var loginData;
-  var userData;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    loginData = UserSimplePreferences.getLogin() ?? 'guest';
-    userData = UserSimplePreferences.getUserLogin() ?? 'guest';
-    print(userData);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppointmentAppBar(
-        title: 'Appointment',
-        tap: false,
-      ),
-      body: userData == 'guest'
-          ? const SignUpContent()
-          : userData == 'user'
-              ? const AppointmentHome()
-              : const AppointmentHomeDoc(),
-    );
-  }
-}
-
-class AppointmentHome extends StatelessWidget {
-  const AppointmentHome({Key? key}) : super(key: key);
+class AppointmentHomeDoc extends StatelessWidget {
+  const AppointmentHomeDoc({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListView(
       children: [
-        GestureDetector(
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const SearchScreen(),
-                ));
-          },
-          child: Padding(
-            padding: const EdgeInsets.only(
-                top: 20.0, left: 16.0, right: 16.0, bottom: 27.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: Colors.blue.shade200),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 5.0, vertical: 16.0),
-                          child: Text('Create a new appointment',
-                              textAlign: TextAlign.center,
-                              style: kStyleHomeTitle.copyWith(
-                                color: Colors.white,
-                                fontSize: 13.sp,
-                              )),
-                        ),
-                        Center(
-                            child: AspectRatio(
-                          aspectRatio: 12 / 6,
-                          child: Image.asset(
-                            'assets/create.png',
-                            height: 225,
-                            width: 252,
-                          ),
-                        )),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+        const SizedBox(
+          height: 20,
         ),
         GestureDetector(
           onTap: () {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const AppointmentList(),
+                  builder: (context) => const AppointmentListDoc(),
                 ));
           },
           child: Padding(
@@ -147,7 +61,7 @@ class AppointmentHome extends StatelessWidget {
                             'assets/bookap.png',
                           ),
                         )),
-                        SizedBox(
+                        const SizedBox(
                           height: 30,
                         ),
                       ],
@@ -163,19 +77,19 @@ class AppointmentHome extends StatelessWidget {
   }
 }
 
-class AppointmentList extends StatefulWidget {
-  const AppointmentList({Key? key}) : super(key: key);
+class AppointmentListDoc extends StatefulWidget {
+  const AppointmentListDoc({Key? key}) : super(key: key);
 
   @override
-  State<AppointmentList> createState() => _AppointmentListState();
+  State<AppointmentListDoc> createState() => _AppointmentListDocState();
 }
 
-class _AppointmentListState extends State<AppointmentList> {
+class _AppointmentListDocState extends State<AppointmentListDoc> {
   @override
   void initState() {
     // TODO: implement initState
     getInitialData();
-    _appointment = getApiData();
+    _doctorappointment = getApiData();
     super.initState();
   }
 
@@ -183,13 +97,13 @@ class _AppointmentListState extends State<AppointmentList> {
     await getCurrentDate();
   }
 
-  Future<AppointmentDetails?>? _appointment;
+  Future<AppointmentDoctorDetails?>? _doctorappointment;
 
   late var token = Provider.of<DataProvider>(context, listen: false).tokenValue;
 
-  Future<AppointmentDetails?>? getApiData() async {
+  Future<AppointmentDoctorDetails?>? getApiData() async {
     try {
-      var posts = await NetworkHelper().getAppointmentDetails(token);
+      var posts = await NetworkHelper().getDoctorAppointmentDetails(token);
       return posts;
     } catch (e) {
       print('error');
@@ -261,8 +175,8 @@ class _AppointmentListState extends State<AppointmentList> {
         child: ListView(
           padding: const EdgeInsets.all(16.0),
           children: [
-            FutureBuilder<AppointmentDetails?>(
-                future: _appointment,
+            FutureBuilder<AppointmentDoctorDetails?>(
+                future: _doctorappointment,
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     return Container(
@@ -388,18 +302,19 @@ class _AppointmentListState extends State<AppointmentList> {
                                           if (formattedDate == formattedDate1) {
                                             return GestureDetector(
                                               child: AppointmentTile(
-                                                doctorName: doctorName,
+                                                doctorName: appointment.name,
                                                 time: formattedTime +
                                                     " - " +
                                                     formattedTime1,
                                                 hospital: hospitalName,
-                                                isDoctor: true,
+                                                isDoctor: false,
                                                 onTap: () {
                                                   Navigator.push(context,
                                                       MaterialPageRoute(
                                                           builder: (context) {
                                                     return AppointmentContent(
-                                                      doctorName: doctorName,
+                                                      doctorName:
+                                                          appointment.name,
                                                       time: formattedTime +
                                                           " - " +
                                                           formattedTime1,
@@ -411,8 +326,10 @@ class _AppointmentListState extends State<AppointmentList> {
                                                       phone: appointment.phone,
                                                       fee: appointment.payment,
                                                       id: appointment.id,
-                                                      isDoctor: true,
-                                                      isCancel: true,
+                                                      description: appointment
+                                                          .describeProblem,
+                                                      isDoctor: false,
+                                                      isCancel: false,
                                                     );
                                                   }));
                                                 },
@@ -485,18 +402,19 @@ class _AppointmentListState extends State<AppointmentList> {
 
                                           if (formattedDate == formattedDate1) {
                                             return AppointmentTile(
-                                              doctorName: doctorName,
+                                              doctorName: appointment.name,
                                               time: formattedTime +
                                                   " - " +
                                                   formattedTime1,
                                               hospital: hospitalName,
-                                              isDoctor: true,
+                                              isDoctor: false,
                                               onTap: () {
                                                 Navigator.push(context,
                                                     MaterialPageRoute(
                                                         builder: (context) {
                                                   return AppointmentContent(
-                                                    doctorName: doctorName,
+                                                    doctorName:
+                                                        appointment.name,
                                                     time: formattedTime +
                                                         " - " +
                                                         formattedTime1,
@@ -508,8 +426,10 @@ class _AppointmentListState extends State<AppointmentList> {
                                                     phone: appointment.phone,
                                                     fee: appointment.payment,
                                                     id: appointment.id,
-                                                    isDoctor: true,
-                                                    isCancel: true,
+                                                    description: appointment
+                                                        .describeProblem,
+                                                    isDoctor: false,
+                                                    isCancel: false,
                                                   );
                                                 }));
                                               },
@@ -594,18 +514,19 @@ class _AppointmentListState extends State<AppointmentList> {
                                                       formattedDate1 &&
                                                   dt1.isAfter(dt2)) {
                                                 return AppointmentTile(
-                                                  doctorName: doctorName,
+                                                  doctorName: appointment.name,
                                                   time: formattedTime +
                                                       " - " +
                                                       formattedTime1,
                                                   hospital: hospitalName,
-                                                  isDoctor: true,
+                                                  isDoctor: false,
                                                   onTap: () {
                                                     Navigator.push(context,
                                                         MaterialPageRoute(
                                                             builder: (context) {
                                                       return AppointmentContent(
-                                                        doctorName: doctorName,
+                                                        doctorName:
+                                                            appointment.name,
                                                         time: formattedTime +
                                                             " - " +
                                                             formattedTime1,
@@ -619,8 +540,10 @@ class _AppointmentListState extends State<AppointmentList> {
                                                         fee:
                                                             appointment.payment,
                                                         id: appointment.id,
-                                                        isDoctor: true,
-                                                        isCancel: true,
+                                                        description: appointment
+                                                            .describeProblem,
+                                                        isDoctor: false,
+                                                        isCancel: false,
                                                       );
                                                     }));
                                                   },
@@ -711,18 +634,19 @@ class _AppointmentListState extends State<AppointmentList> {
                                                       formattedDate1 &&
                                                   dt2.isAfter(dt1)) {
                                                 return AppointmentTile(
-                                                  doctorName: doctorName,
+                                                  doctorName: appointment.name,
                                                   time: formattedTime +
                                                       " - " +
                                                       formattedTime1,
                                                   hospital: hospitalName,
-                                                  isDoctor: true,
+                                                  isDoctor: false,
                                                   onTap: () {
                                                     Navigator.push(context,
                                                         MaterialPageRoute(
                                                             builder: (context) {
                                                       return AppointmentContent(
-                                                        doctorName: doctorName,
+                                                        doctorName:
+                                                            appointment.name,
                                                         time: formattedTime +
                                                             " - " +
                                                             formattedTime1,
@@ -735,7 +659,9 @@ class _AppointmentListState extends State<AppointmentList> {
                                                             appointment.phone,
                                                         fee:
                                                             appointment.payment,
-                                                        isDoctor: true,
+                                                        description: appointment
+                                                            .describeProblem,
+                                                        isDoctor: false,
                                                         isCancel: false,
                                                       );
                                                     }));
@@ -755,24 +681,6 @@ class _AppointmentListState extends State<AppointmentList> {
                   }
                 }),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class AppointmentTabs extends StatelessWidget {
-  String text;
-
-  AppointmentTabs({required this.text});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.37,
-      child: Center(
-        child: Text(
-          text,
         ),
       ),
     );

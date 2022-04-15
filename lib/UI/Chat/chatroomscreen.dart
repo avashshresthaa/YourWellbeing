@@ -159,14 +159,15 @@ class ChatRoomsTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.read<DataProvider>().getOtherName(userName!);
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => ConversationScreen(chatRoomId)),
+              builder: (context) =>
+                  ConversationScreen(chatRoomId, userName ?? 'Chat')),
         );
       },
       child: Container(
+        margin: EdgeInsets.only(bottom: 12),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8.sp),
           color: Colors.white,

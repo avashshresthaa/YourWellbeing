@@ -40,6 +40,56 @@ class LoginButton extends StatelessWidget {
   }
 }
 
+Widget blueButton(
+  final text,
+  final onTap,
+) {
+  return GestureDetector(
+    onTap: onTap,
+    child: Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: kStyleBlue,
+        border: Border.all(color: Colors.grey),
+        borderRadius: const BorderRadius.all(
+            Radius.circular(24.0) //                 <--- border radius here
+            ),
+      ),
+      child: Center(
+        child: text,
+      ),
+    ),
+  );
+}
+
+Widget whiteButton(
+  String text,
+  final onTap,
+) {
+  return GestureDetector(
+    onTap: onTap,
+    child: Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(color: Colors.grey),
+        borderRadius: const BorderRadius.all(
+            Radius.circular(24.0) //                 <--- border radius here
+            ),
+      ),
+      child: Center(
+        child: Text(
+          text,
+          style: kStyleHomeTitle.copyWith(
+              decoration: TextDecoration.none, color: kStyleGrey333),
+        ),
+      ),
+    ),
+  );
+}
+
 /*class WhiteButton extends StatelessWidget {
   WhiteButton(this.text, this.onPress);
 

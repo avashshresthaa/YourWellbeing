@@ -181,38 +181,28 @@ class TextFormFieldEmpty extends StatelessWidget {
   final controller;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        //For adding shadow in the back of text field
-          boxShadow: [
-            BoxShadow(
-                blurRadius: 4,
-                spreadRadius: 1,
-                offset: Offset(0, 1),
-                color: Color(0xff000000).withOpacity(0.1)),
-          ]),
-      child: TextFormField(
-        controller: controller,
-        maxLines: maxLines ?? 1,
-        cursorColor: Colors.black,
-        decoration: InputDecoration(
-          // hintText: 'enter username',
-          filled: true,
-          fillColor: Colors.white, //To color the text field do these
-          border: UnderlineInputBorder(
-            borderSide: BorderSide.none,
-            borderRadius: textFieldDesignType == "top"
-                ? const BorderRadius.only(
-                topLeft: Radius.circular(6.0),
-                topRight: Radius.circular(6.0))
-                : textFieldDesignType == "bottom"
-                ? BorderRadius.only(
-                bottomLeft: Radius.circular(6.0),
-                bottomRight: const Radius.circular(6.0))
-                : textFieldDesignType == "both"
-                ? BorderRadius.all(Radius.circular(6.0))
-                : BorderRadius.all(const Radius.circular(0.0)),
+    return TextFormField(
+      controller: controller,
+      maxLines: maxLines ?? 1,
+      cursorColor: Colors.black,
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: Colors.white, //To color the text field do these
+        border: InputBorder.none,
+        focusedBorder: OutlineInputBorder(
+          borderSide: kBorder.copyWith(color: kStyleBlue),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: kBorder.copyWith(color: Colors.grey.shade300),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderSide: const BorderSide(
+            width: 1,
+            color: Colors.red,
           ),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: kBorder.copyWith(color: kStyleBlue),
         ),
       ),
     );
@@ -221,70 +211,53 @@ class TextFormFieldEmpty extends StatelessWidget {
 
 //Text form field is the extracted widget from book appointment
 class TextFormFieldForLoginRegister extends StatelessWidget {
-
-  const TextFormFieldForLoginRegister(
-      {this.label,
-        this.imageName,
-        this.textFieldDesignType,
-        this.textFieldType,
-        this.controller})
-      : super();
+  const TextFormFieldForLoginRegister({
+    this.label,
+    this.imageName,
+    this.textFieldDesignType,
+    this.textFieldType,
+    this.controller,
+  }) : super();
   final String? label;
-  final String? imageName;
+  final imageName;
   final String? textFieldDesignType;
   final String? textFieldType;
   final controller;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        //For adding shadow in the back of text field
-          boxShadow: [
-            BoxShadow(
-                blurRadius: 8,
-                spreadRadius: 1,
-                offset: Offset(0, 1),
-                color: Color(0xff000000).withOpacity(0.1)),
-          ]),
-      child: TextFormField(
-        controller: controller,
-        keyboardType: textFieldType == "phone"
-            ? TextInputType.number
-            : TextInputType.text,
-        cursorColor: Colors.black,
-        obscureText: textFieldType == "password" ? true : false,
-        decoration: InputDecoration(
-          label: Text(
-            label ?? 'Nothing to Show',
-            style: TextStyle(
-              fontFamily: 'NutinoSansReg',
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-              color: Color(0xff777777),
-            ),
+    return TextFormField(
+      controller: controller,
+      keyboardType:
+          textFieldType == "phone" ? TextInputType.number : TextInputType.text,
+      cursorColor: Colors.black,
+      obscureText: textFieldType == "password" ? true : false,
+      decoration: InputDecoration(
+        hintText: label,
+        prefixIcon: Padding(
+          padding: const EdgeInsets.only(left: 12, right: 8),
+          child: Icon(
+            imageName,
+            size: 20,
           ),
-          // hintText: 'enter username',
-          prefixIcon: Padding(
-            padding: const EdgeInsets.only(left: 26, right: 17),
-            child: Image.asset(imageName ?? 'failed', width: 20),
+        ),
+        filled: true,
+        fillColor: Colors.white, //To color the text field do these
+        border: InputBorder.none,
+        focusedBorder: OutlineInputBorder(
+          borderSide: kBorder.copyWith(color: kStyleBlue),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: kBorder.copyWith(color: Colors.grey.shade300),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderSide: const BorderSide(
+            width: 1,
+            color: Colors.red,
           ),
-          filled: true,
-          fillColor: Colors.white, //To color the text field do these
-          border: UnderlineInputBorder(
-            borderSide: BorderSide.none,
-            borderRadius: textFieldDesignType == "top"
-                ? const BorderRadius.only(
-                topLeft: Radius.circular(6.0),
-                topRight: Radius.circular(6.0))
-                : textFieldDesignType == "bottom"
-                ? BorderRadius.only(
-                bottomLeft: Radius.circular(6.0),
-                bottomRight: const Radius.circular(6.0))
-                : textFieldDesignType == "both"
-                ? BorderRadius.all(Radius.circular(6.0))
-                : BorderRadius.all(Radius.circular(0.0)),
-          ),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: kBorder.copyWith(color: kStyleBlue),
         ),
       ),
     );
@@ -294,10 +267,10 @@ class TextFormFieldForLoginRegister extends StatelessWidget {
 class DatePickerField extends StatelessWidget {
   DatePickerField(
       {required this.controller,
-        required this.date,
-        required this.onPress,
-        this.imageName,
-        this.textFieldDesignType});
+      required this.date,
+      required this.onPress,
+      this.imageName,
+      this.textFieldDesignType});
 
   final controller;
   final date;
@@ -311,48 +284,34 @@ class DatePickerField extends StatelessWidget {
       onTap: onPress,
       child: Container(
         decoration: BoxDecoration(
-          //For adding shadow in the back of text field
-            boxShadow: [
-              BoxShadow(
-                  blurRadius: 8,
-                  spreadRadius: 1,
-                  offset: Offset(0, 1),
-                  color: Color(0xff000000).withOpacity(0.1)),
-            ]),
+          color: Colors.white,
+          border: Border.all(color: Colors.grey),
+          borderRadius: const BorderRadius.all(
+              Radius.circular(4.0) //                 <--- border radius here
+              ),
+        ),
         child: TextFormField(
           controller: controller,
           enabled: false,
           decoration: InputDecoration(
-            label: Text(
-              date ?? 'Nothing to Show',
-              style: TextStyle(
-                fontFamily: 'NutinoSansReg',
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: Color(0xff777777),
+            hintText: date,
+            // hintText: 'enter username',
+            //To color the text field do these
+            prefixIcon: Padding(
+              padding: const EdgeInsets.only(left: 12, right: 8),
+              child: Icon(
+                imageName,
+                size: 20,
               ),
             ),
-            // hintText: 'enter username',
-            prefixIcon: Padding(
-              padding: const EdgeInsets.only(left: 26, right: 17),
-              child: Image.asset(imageName ?? 'failed', width: 20),
-            ),
             filled: true,
-            fillColor: Colors.white,
-            //To color the text field do these
-            border: UnderlineInputBorder(
-              borderSide: BorderSide.none,
-              borderRadius: textFieldDesignType == "top"
-                  ? const BorderRadius.only(
-                  topLeft: Radius.circular(6.0),
-                  topRight: Radius.circular(6.0))
-                  : textFieldDesignType == "bottom"
-                  ? BorderRadius.only(
-                  bottomLeft: Radius.circular(6.0),
-                  bottomRight: const Radius.circular(6.0))
-                  : textFieldDesignType == "both"
-                  ? BorderRadius.all(Radius.circular(6.0))
-                  : BorderRadius.all(Radius.circular(0.0)),
+            fillColor: Colors.white, //To color the text field do these
+            border: InputBorder.none,
+            focusedBorder: OutlineInputBorder(
+              borderSide: kBorder.copyWith(color: kStyleBlue),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: kBorder.copyWith(color: Colors.grey.shade300),
             ),
           ),
         ),

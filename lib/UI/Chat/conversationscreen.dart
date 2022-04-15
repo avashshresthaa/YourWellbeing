@@ -14,8 +14,9 @@ import 'package:timeago/timeago.dart' as timeago;
 
 class ConversationScreen extends StatefulWidget {
   final chatRoomId;
+  final String? userName;
 
-  ConversationScreen(this.chatRoomId);
+  ConversationScreen(this.chatRoomId, this.userName);
 
   @override
   _ConversationScreenState createState() => _ConversationScreenState();
@@ -81,8 +82,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var getName = Provider.of<DataProvider>(context, listen: false).otherName;
-    var titleName = getName.toString().toTitleCase();
+    var titleName = widget.userName.toString().toTitleCase();
 
     return Scaffold(
       appBar: ProfileAppBar(title: titleName),

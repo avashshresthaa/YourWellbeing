@@ -36,7 +36,8 @@ class _DoctorProfileState extends State<DoctorProfile> {
       Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ConversationScreen(chatRoomId),
+            builder: (context) => ConversationScreen(
+                chatRoomId, widget.details[widget.index].name),
           ));
     } else {
       print("You cannot send message yourself");
@@ -173,7 +174,10 @@ class _DoctorProfileState extends State<DoctorProfile> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => BookAppointment()),
+                              builder: (context) => BookAppointment(
+                                    doctorName:
+                                        widget.details[widget.index].name,
+                                  )),
                         );
                       },
                       kStyleBlue,

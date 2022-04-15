@@ -191,6 +191,7 @@ class _LoginPageState extends State<LoginPage> {
           UserSimplePreferences.setToken(token!);
           SharedPreferences pref = await SharedPreferences.getInstance();
           pref.setString('login', email);
+          UserSimplePreferences.setUserLogin('user');
           Navigator.pop(context);
           Navigator.pushReplacement(
             context,
@@ -399,6 +400,58 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  logMeINDoctor() async {
+    if (_docformKey.currentState!.validate()) {
+      final email = docemailController.text;
+      final password = docpasswordController.text;
+
+      showWaitDialog(context, language ? 'Please Wait...' : nepWait);
+      authMethods
+          .signInWithEmailAndPassword(
+        email,
+        password,
+      )
+          .then((value) async {
+        if (value != null) {
+          UserSimplePreferences.saveUserLoggedIn(true);
+          UserSimplePreferences.saveUserEmail(email);
+          await databaseMethods.getUserByEmail(email).then((val) {
+            snapshotUserInfo = val;
+            UserSimplePreferences.saveUserName(
+                snapshotUserInfo?.docs[0].get("name"));
+          });
+          Login login = await NetworkHelper().getLoginData(email, password);
+          var token = login.token;
+          context.read<DataProvider>().token(token);
+          UserSimplePreferences.setToken(token!);
+          SharedPreferences pref = await SharedPreferences.getInstance();
+          pref.setString('login', email);
+          UserSimplePreferences.setUserLogin('doctor');
+          Navigator.pop(context);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const BottomNavigationPage(),
+            ),
+          );
+        } else {
+          UserSimplePreferences.saveUserLoggedIn(false);
+          FocusScope.of(context).requestFocus(FocusNode());
+          Navigator.pop(context);
+          showSnackBar(
+            context,
+            "Attention",
+            Colors.red,
+            Icons.info,
+            "Invalid Username or Password",
+          );
+        }
+      });
+    } else {
+      return print("Unsuccessful");
+    }
+  }
+
   Widget docLoginForm() {
     return Form(
       key: _docformKey,
@@ -490,18 +543,7 @@ class _LoginPageState extends State<LoginPage> {
             result = await Connectivity().checkConnectivity();
             if (result == ConnectivityResult.mobile ||
                 result == ConnectivityResult.wifi) {
-              if (_docformKey.currentState!.validate()) {
-                final email = docemailController.text;
-                Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(
-                      builder: (context) => const BottomNavigationPage(),
-                    ),
-                    (route) => route.isFirst);
-                SharedPreferences pref = await SharedPreferences.getInstance();
-                pref.setString('login', email);
-              } else {
-                return print("Unsuccessful");
-              }
+              logMeINDoctor();
             } else {
               showSnackBar(
                 context,

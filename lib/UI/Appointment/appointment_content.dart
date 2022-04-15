@@ -4,12 +4,17 @@ import 'package:provider/provider.dart';
 import 'package:yourwellbeing/APIModels/deleteAppointment.dart';
 import 'package:yourwellbeing/Change%20Notifier/changenotifier.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
+import 'package:yourwellbeing/Constraints/nplanguage.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/buttons.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/description.dart';
+import 'package:yourwellbeing/Extracted%20Widgets/showdialog.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/snackbar.dart';
 import 'package:yourwellbeing/Network/NetworkHelper.dart';
 import 'package:yourwellbeing/UI/Appointment/appointment.dart';
+import 'package:yourwellbeing/UI/Doctor/doctorappointment.dart';
+import 'package:yourwellbeing/UI/Home/home.dart';
+import 'package:yourwellbeing/Utils/user_prefrences.dart';
 
 class AppointmentContent extends StatefulWidget {
   final doctorName;
@@ -22,7 +27,9 @@ class AppointmentContent extends StatefulWidget {
   final phone;
   final fee;
   final id;
+  final description;
   final bool isCancel;
+  final bool isDoctor;
 
   AppointmentContent({
     this.doctorName,
@@ -35,7 +42,9 @@ class AppointmentContent extends StatefulWidget {
     this.phone,
     this.fee,
     this.id,
+    this.description,
     required this.isCancel,
+    required this.isDoctor,
   });
 
   @override
@@ -43,9 +52,12 @@ class AppointmentContent extends StatefulWidget {
 }
 
 class _AppointmentContentState extends State<AppointmentContent> {
+  var language;
+
   @override
   void initState() {
     // TODO: implement initState
+    language = UserSimplePreferences.getLanguage() ?? true;
     super.initState();
   }
 
@@ -67,12 +79,13 @@ class _AppointmentContentState extends State<AppointmentContent> {
                 doctorName: widget.doctorName,
                 time: widget.time,
                 hospital: widget.hospital,
+                isDoctor: widget.isDoctor ? true : false,
               ),
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  border: Border.all(color: Colors.grey),
+                  border: Border.all(color: Colors.grey.shade400),
                   borderRadius: const BorderRadius.all(Radius.circular(
                           4.0) //                 <--- border radius here
                       ),
@@ -123,7 +136,7 @@ class _AppointmentContentState extends State<AppointmentContent> {
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  border: Border.all(color: Colors.grey),
+                  border: Border.all(color: Colors.grey.shade400),
                   borderRadius: const BorderRadius.all(Radius.circular(
                           4.0) //                 <--- border radius here
                       ),
@@ -138,13 +151,19 @@ class _AppointmentContentState extends State<AppointmentContent> {
                     const SizedBox(
                       height: 8,
                     ),
-                    Text(
-                      'Full Name:  ' + widget.name,
-                      style: kStyleHomeTitle,
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
+                    widget.isDoctor
+                        ? Column(
+                            children: [
+                              Text(
+                                'Full Name:  ' + widget.name,
+                                style: kStyleHomeTitle,
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                            ],
+                          )
+                        : Container(),
                     Text(
                       'Age:  ' + widget.age,
                       style: kStyleHomeTitle,
@@ -156,6 +175,19 @@ class _AppointmentContentState extends State<AppointmentContent> {
                       'Phone:  ' + widget.phone,
                       style: kStyleHomeTitle,
                     ),
+                    widget.isDoctor
+                        ? Container()
+                        : Column(
+                            children: [
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              Text(
+                                'Description:  ' + widget.description,
+                                style: kStyleHomeTitle,
+                              ),
+                            ],
+                          ),
                   ],
                 ),
               ),
@@ -166,7 +198,7 @@ class _AppointmentContentState extends State<AppointmentContent> {
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  border: Border.all(color: Colors.grey),
+                  border: Border.all(color: Colors.grey.shade400),
                   borderRadius: const BorderRadius.all(Radius.circular(
                           4.0) //                 <--- border radius here
                       ),
@@ -242,41 +274,70 @@ class _AppointmentContentState extends State<AppointmentContent> {
                                             decoration: TextDecoration.none),
                                       ),
                                       const SizedBox(height: 28),
-                                      whiteButton(
-                                        'Yes',
+                                      blueButton(
+                                        Text(
+                                          'Yes',
+                                          style: kStyleHomeTitle.copyWith(
+                                              decoration: TextDecoration.none,
+                                              color: Colors.white),
+                                        ),
                                         () async {
                                           late var token =
                                               Provider.of<DataProvider>(context,
                                                       listen: false)
                                                   .tokenValue;
+
+                                          Navigator.pop(context);
+                                          showWaitDialog(
+                                              context,
+                                              language
+                                                  ? 'Please Wait...'
+                                                  : nepWait);
+
                                           DeleteData? delete = await NetworkHelper()
                                               .deleteAppointmentData(
                                                   'http://10.0.2.2:80/fypapi/public/api/appointment/${widget.id}/delete',
                                                   token);
                                           print('dekete');
 
-                                          Navigator.pushAndRemoveUntil(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (BuildContext context) =>
-                                                  AppointmentList(),
-                                            ),
-                                            (route) => route.isFirst,
-                                          );
-                                          showSnackBar(
-                                            context,
-                                            "Attention",
-                                            Colors.green,
-                                            Icons.info,
-                                            delete?.message ?? 'Deleted',
+                                          Future.delayed(
+                                            const Duration(
+                                                seconds:
+                                                    2), //If there are server error or internet error till 15 sec it will ask to retry
+                                            () {
+                                              Navigator.pushAndRemoveUntil(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (BuildContext
+                                                          context) =>
+                                                      const AppointmentListDoc(),
+                                                ),
+                                                (route) => route.isFirst,
+                                              );
+                                              widget.fee == 'Cash'
+                                                  ? showSnackBar(
+                                                      context,
+                                                      "Attention",
+                                                      Colors.green,
+                                                      Icons.info,
+                                                      delete?.message ??
+                                                          'Deleted',
+                                                    )
+                                                  : showSnackBar(
+                                                      context,
+                                                      "Appointment Deleted",
+                                                      Colors.green,
+                                                      Icons.info,
+                                                      'Your money will be refunded soon.',
+                                                    );
+                                            },
                                           );
                                         },
-                                        false,
                                       ),
                                       const SizedBox(height: 14),
                                       whiteButton('No', () {
                                         Navigator.pop(context);
-                                      }, true),
+                                      }),
                                     ],
                                   ),
                                 ),
@@ -291,31 +352,6 @@ class _AppointmentContentState extends State<AppointmentContent> {
                 )
               : Container(),
         ],
-      ),
-    );
-  }
-
-  Widget whiteButton(String text, final onTap, final colortap) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: colortap == true ? Colors.white : kStyleBlue,
-          border: Border.all(color: Colors.grey),
-          borderRadius: const BorderRadius.all(
-              Radius.circular(24.0) //                 <--- border radius here
-              ),
-        ),
-        child: Center(
-          child: Text(
-            text,
-            style: kStyleHomeTitle.copyWith(
-                decoration: TextDecoration.none,
-                color: colortap == true ? kStyleGrey333 : Colors.white),
-          ),
-        ),
       ),
     );
   }

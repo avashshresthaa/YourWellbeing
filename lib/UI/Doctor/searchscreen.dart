@@ -36,7 +36,7 @@ class _SearchScreenState extends State<SearchScreen> {
     });
   }
 
-  //Create a chatroom, send user to the conservation screen
+/*  //Create a chatroom, send user to the conservation screen
   createChatRoomAndStartConversation({required String userName}) {
     if (userName != Constants.myName) {
       String chatRoomId = getChatRoomId(userName, Constants.myName);
@@ -50,14 +50,14 @@ class _SearchScreenState extends State<SearchScreen> {
       Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ConversationScreen(chatRoomId),
+            builder: (context) => ConversationScreen(chatRoomId, ),
           ));
     } else {
       print("You cannot send message yourself");
     }
-  }
+  }*/
 
-  Widget searchList() {
+/*  Widget searchList() {
     return searchSnapshot != null
         ? ListView.builder(
             shrinkWrap: true,
@@ -70,9 +70,9 @@ class _SearchScreenState extends State<SearchScreen> {
             itemCount: searchSnapshot?.docs.length,
           )
         : Container();
-  }
+  }*/
 
-  Widget SearchTile({required String userName, required String userEmail}) {
+/*  Widget SearchTile({required String userName, required String userEmail}) {
     return Container(
       margin: EdgeInsets.only(
         top: 16,
@@ -120,7 +120,7 @@ class _SearchScreenState extends State<SearchScreen> {
         ],
       ),
     );
-  }
+  }*/
 
 /*  Future<DoctorInfo>? _doctorInfo;*/
 

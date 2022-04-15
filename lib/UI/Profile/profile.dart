@@ -5,14 +5,17 @@ import 'package:sizer/sizer.dart';
 import 'package:yourwellbeing/APIModels/getLogout.dart';
 import 'package:yourwellbeing/Change%20Notifier/changenotifier.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
+import 'package:yourwellbeing/Constraints/nplanguage.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/buttons.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/containlist.dart';
+import 'package:yourwellbeing/Extracted%20Widgets/showdialog.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/snackbar.dart';
 import 'package:yourwellbeing/Network/NetworkHelper.dart';
 import 'package:yourwellbeing/Services/authentication.dart';
 import 'package:yourwellbeing/UI/Appointment/appointment.dart';
 import 'package:yourwellbeing/UI/Appointment/applist.dart';
+import 'package:yourwellbeing/UI/Doctor/doctorappointment.dart';
 import 'package:yourwellbeing/UI/Emergency%20Contacts/emergency.dart';
 import 'package:yourwellbeing/UI/Login/login.dart';
 import 'package:yourwellbeing/UI/Login/loginpermission.dart';
@@ -64,6 +67,16 @@ class ProfileContent extends StatefulWidget {
 class _ProfileContentState extends State<ProfileContent> {
   AuthMethods authMethods = AuthMethods();
   var titleName = username.toString().toTitleCase();
+  var userData;
+  var language;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    userData = UserSimplePreferences.getUserLogin() ?? 'guest';
+    language = UserSimplePreferences.getLanguage() ?? true;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -154,7 +167,9 @@ class _ProfileContentState extends State<ProfileContent> {
                       onTap: () {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
-                          return const AppointmentList();
+                          return userData == 'user'
+                              ? AppointmentList()
+                              : AppointmentListDoc();
                         }));
                       },
                       image: 'assets/menu.png',
@@ -193,6 +208,9 @@ class _ProfileContentState extends State<ProfileContent> {
                   ),
                   color: Color(0xffFF3D3D),
                   onPress: () async {
+                    showWaitDialog(
+                        context, language ? 'Please Wait...' : nepWait);
+
                     await authMethods.signOut();
                     late var token =
                         Provider.of<DataProvider>(context, listen: false)
@@ -204,17 +222,26 @@ class _ProfileContentState extends State<ProfileContent> {
                     pref.remove('login');
                     pref.remove("usernameKey");
                     pref.remove('userEmailKey');
-                    showSnackBar(
-                      context,
-                      "Attention",
-                      Colors.green,
-                      Icons.info,
-                      message!,
+                    Future.delayed(
+                      const Duration(
+                          seconds:
+                              2), //If there are server error or internet error till 15 sec it will ask to retry
+                      () {
+                        Navigator.pop(context);
+
+                        Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                                builder: (context) => const LoginPage()),
+                            (Route<dynamic> route) => false);
+                        showSnackBar(
+                          context,
+                          "Attention",
+                          Colors.green,
+                          Icons.info,
+                          message!,
+                        );
+                      },
                     );
-                    Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(
-                            builder: (context) => const LoginPage()),
-                        (Route<dynamic> route) => false);
                   },
                   arrow: 'assets/redarrow.png',
                 ),
