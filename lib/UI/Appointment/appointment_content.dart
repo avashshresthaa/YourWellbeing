@@ -102,7 +102,9 @@ class _AppointmentContentState extends State<AppointmentContent> {
                     ),
                     Text(
                       widget.hospital,
-                      style: kStyleHomeTitle,
+                      style: kStyleHomeTitle.copyWith(
+                        fontFamily: 'NutinoSansSemiBold',
+                      ),
                     ),
                     const SizedBox(
                       height: 8,
@@ -111,11 +113,15 @@ class _AppointmentContentState extends State<AppointmentContent> {
                       children: [
                         Text(
                           widget.day + ', ',
-                          style: kStyleHomeTitle,
+                          style: kStyleHomeTitle.copyWith(
+                            fontFamily: 'NutinoSansSemiBold',
+                          ),
                         ),
                         Text(
                           widget.date,
-                          style: kStyleHomeTitle,
+                          style: kStyleHomeTitle.copyWith(
+                            fontFamily: 'NutinoSansSemiBold',
+                          ),
                         ),
                       ],
                     ),
@@ -124,7 +130,9 @@ class _AppointmentContentState extends State<AppointmentContent> {
                     ),
                     Text(
                       widget.time,
-                      style: kStyleHomeTitle,
+                      style: kStyleHomeTitle.copyWith(
+                        fontFamily: 'NutinoSansSemiBold',
+                      ),
                     ),
                   ],
                 ),
@@ -156,7 +164,9 @@ class _AppointmentContentState extends State<AppointmentContent> {
                             children: [
                               Text(
                                 'Full Name:  ' + widget.name,
-                                style: kStyleHomeTitle,
+                                style: kStyleHomeTitle.copyWith(
+                                  fontFamily: 'NutinoSansSemiBold',
+                                ),
                               ),
                               const SizedBox(
                                 height: 8,
@@ -166,14 +176,18 @@ class _AppointmentContentState extends State<AppointmentContent> {
                         : Container(),
                     Text(
                       'Age:  ' + widget.age,
-                      style: kStyleHomeTitle,
+                      style: kStyleHomeTitle.copyWith(
+                        fontFamily: 'NutinoSansSemiBold',
+                      ),
                     ),
                     const SizedBox(
                       height: 8,
                     ),
                     Text(
                       'Phone:  ' + widget.phone,
-                      style: kStyleHomeTitle,
+                      style: kStyleHomeTitle.copyWith(
+                        fontFamily: 'NutinoSansSemiBold',
+                      ),
                     ),
                     widget.isDoctor
                         ? Container()
@@ -184,7 +198,9 @@ class _AppointmentContentState extends State<AppointmentContent> {
                               ),
                               Text(
                                 'Description:  ' + widget.description,
-                                style: kStyleHomeTitle,
+                                style: kStyleHomeTitle.copyWith(
+                                  fontFamily: 'NutinoSansSemiBold',
+                                ),
                               ),
                             ],
                           ),
@@ -215,7 +231,9 @@ class _AppointmentContentState extends State<AppointmentContent> {
                     ),
                     Text(
                       widget.fee,
-                      style: kStyleHomeTitle,
+                      style: kStyleHomeTitle.copyWith(
+                        fontFamily: 'NutinoSansSemiBold',
+                      ),
                     ),
                   ],
                 ),
@@ -310,7 +328,7 @@ class _AppointmentContentState extends State<AppointmentContent> {
                                                 MaterialPageRoute(
                                                   builder: (BuildContext
                                                           context) =>
-                                                      const AppointmentListDoc(),
+                                                      const AppointmentList(),
                                                 ),
                                                 (route) => route.isFirst,
                                               );

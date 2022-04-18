@@ -3,6 +3,7 @@
    <application
         android:label="Your Wellbeing"
         android:name="${applicationName}"
+       android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:icon="@mipmap/ic_launcher">
        <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">
            <intent-filter>

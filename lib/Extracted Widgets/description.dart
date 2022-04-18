@@ -143,3 +143,39 @@ class AppointmentTile extends StatelessWidget {
     );
   }
 }
+
+Widget noAppointment() {
+  return Column(
+    children: [
+      Center(
+        child: Container(
+          child: Column(
+            children: [
+              SizedBox(
+                height: 20,
+              ),
+              AspectRatio(
+                aspectRatio: 12 / 4,
+                child: Image.asset(
+                  'assets/noappointment.png',
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                "You don't have an appointment",
+                style: kStyleHomeTitle.copyWith(
+                  color: kStyleNavy,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      SizedBox(
+        height: 6,
+      ),
+    ],
+  );
+}

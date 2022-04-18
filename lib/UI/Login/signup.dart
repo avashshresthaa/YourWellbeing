@@ -82,6 +82,13 @@ class _SignupPageState extends State<SignupPage> {
                 builder: (context) => const LoginPage(),
               ),
             );
+            showSnackBar(
+              context,
+              "Attention",
+              Colors.green,
+              Icons.info,
+              "Your account has been created successfully.",
+            );
           } else {
             UserSimplePreferences.saveUserLoggedIn(false);
             FocusScope.of(context).requestFocus(FocusNode());

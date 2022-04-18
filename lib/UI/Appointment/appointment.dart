@@ -217,38 +217,6 @@ class _AppointmentListState extends State<AppointmentList> {
     print(dateToday + dateTomorrow);
   }
 
-  Widget noAppointment() {
-    return Column(
-      children: [
-        Center(
-          child: Container(
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 20,
-                ),
-                Image.asset(
-                  'assets/noappointment.png',
-                  width: 60,
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  "You don't have an appointment",
-                  style: kStyleHomeTitle,
-                ),
-              ],
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 6,
-        ),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -529,107 +497,102 @@ class _AppointmentListState extends State<AppointmentList> {
                                 const SizedBox(
                                   height: 8,
                                 ),
-                                snapshot.data!.appointments!.isEmpty
-                                    ? noAppointment()
-                                    : Expanded(
-                                        child: ListView.builder(
-                                            padding: EdgeInsets.zero,
-                                            shrinkWrap: true,
-                                            physics: const ScrollPhysics(),
-                                            scrollDirection: Axis.vertical,
-                                            itemCount: snapshot
-                                                .data!.appointments!.length,
-                                            itemBuilder: (BuildContext context,
-                                                int index) {
-                                              var appointment = snapshot
-                                                  .data!.appointments![index];
-                                              var doctorName =
-                                                  appointment.doctorName;
-                                              var hospitalName =
-                                                  appointment.hospitalName;
+                                Expanded(
+                                  child: snapshot.data!.appointments!.isEmpty
+                                      ? noAppointment()
+                                      : ListView.builder(
+                                          padding: EdgeInsets.zero,
+                                          shrinkWrap: true,
+                                          physics: const ScrollPhysics(),
+                                          scrollDirection: Axis.vertical,
+                                          itemCount: snapshot
+                                              .data!.appointments!.length,
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            var appointment = snapshot
+                                                .data!.appointments![index];
+                                            var doctorName =
+                                                appointment.doctorName;
+                                            var hospitalName =
+                                                appointment.hospitalName;
 
-                                              var dateTime = appointment
-                                                  .datetime
-                                                  .toString();
-                                              var datenow =
-                                                  DateTime.now().toString();
-                                              DateTime dt1 =
-                                                  DateTime.parse(dateTime);
-                                              DateTime dt2 =
-                                                  DateTime.parse(datenow);
+                                            var dateTime =
+                                                appointment.datetime.toString();
+                                            var datenow =
+                                                DateTime.now().toString();
+                                            DateTime dt1 =
+                                                DateTime.parse(dateTime);
+                                            DateTime dt2 =
+                                                DateTime.parse(datenow);
 
-                                              var datenow1 = DateTime.now();
-                                              var date1 = datenow1
-                                                  .add(const Duration(days: 1));
-                                              String formattedDate =
-                                                  DateFormat('yyyy-MM-dd')
-                                                      .format(date1);
-                                              String formattedDate1 =
-                                                  DateFormat('yyyy-MM-dd')
-                                                      .format(appointment
-                                                          .datetime!);
+                                            var datenow1 = DateTime.now();
+                                            var date1 = datenow1
+                                                .add(const Duration(days: 1));
+                                            String formattedDate =
+                                                DateFormat('yyyy-MM-dd')
+                                                    .format(date1);
+                                            String formattedDate1 =
+                                                DateFormat('yyyy-MM-dd').format(
+                                                    appointment.datetime!);
 
-                                              String formattedTime =
-                                                  DateFormat('HH:mm').format(
-                                                      appointment.datetime!);
+                                            String formattedTime =
+                                                DateFormat('HH:mm').format(
+                                                    appointment.datetime!);
 
-                                              var time1 = appointment.datetime
-                                                  ?.add(
-                                                      const Duration(hours: 1));
-                                              String formattedTime1 =
-                                                  DateFormat('HH:mm a')
-                                                      .format(time1!);
+                                            var time1 = appointment.datetime
+                                                ?.add(const Duration(hours: 1));
+                                            String formattedTime1 =
+                                                DateFormat('HH:mm a')
+                                                    .format(time1!);
 
-                                              var day = DateFormat('EEEE')
-                                                  .format(appointment.datetime!)
-                                                  .toString();
+                                            var day = DateFormat('EEEE')
+                                                .format(appointment.datetime!)
+                                                .toString();
 
-                                              var formatteddate =
-                                                  DateFormat.yMMMMd()
-                                                      .format(
-                                                          appointment.datetime!)
-                                                      .toString();
+                                            var formatteddate =
+                                                DateFormat.yMMMMd()
+                                                    .format(
+                                                        appointment.datetime!)
+                                                    .toString();
 
-                                              if (formattedDate !=
-                                                      formattedDate1 &&
-                                                  dt1.isAfter(dt2)) {
-                                                return AppointmentTile(
-                                                  doctorName: doctorName,
-                                                  time: formattedTime +
-                                                      " - " +
-                                                      formattedTime1,
-                                                  hospital: hospitalName,
-                                                  isDoctor: true,
-                                                  onTap: () {
-                                                    Navigator.push(context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) {
-                                                      return AppointmentContent(
-                                                        doctorName: doctorName,
-                                                        time: formattedTime +
-                                                            " - " +
-                                                            formattedTime1,
-                                                        date: formatteddate,
-                                                        day: day,
-                                                        hospital: hospitalName,
-                                                        age: appointment.age,
-                                                        name: appointment.name,
-                                                        phone:
-                                                            appointment.phone,
-                                                        fee:
-                                                            appointment.payment,
-                                                        id: appointment.id,
-                                                        isDoctor: true,
-                                                        isCancel: true,
-                                                      );
-                                                    }));
-                                                  },
-                                                );
-                                              } else {
-                                                return Container();
-                                              }
-                                            }),
-                                      ),
+                                            if (formattedDate !=
+                                                    formattedDate1 &&
+                                                dt1.isAfter(dt2)) {
+                                              return AppointmentTile(
+                                                doctorName: doctorName,
+                                                time: formattedTime +
+                                                    " - " +
+                                                    formattedTime1,
+                                                hospital: hospitalName,
+                                                isDoctor: true,
+                                                onTap: () {
+                                                  Navigator.push(context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) {
+                                                    return AppointmentContent(
+                                                      doctorName: doctorName,
+                                                      time: formattedTime +
+                                                          " - " +
+                                                          formattedTime1,
+                                                      date: formatteddate,
+                                                      day: day,
+                                                      hospital: hospitalName,
+                                                      age: appointment.age,
+                                                      name: appointment.name,
+                                                      phone: appointment.phone,
+                                                      fee: appointment.payment,
+                                                      id: appointment.id,
+                                                      isDoctor: true,
+                                                      isCancel: true,
+                                                    );
+                                                  }));
+                                                },
+                                              );
+                                            } else {
+                                              return Container();
+                                            }
+                                          }),
+                                ),
                               ],
                             ),
                             Column(

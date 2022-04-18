@@ -1,4 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:esewa_pnp/esewa.dart';
+import 'package:esewa_pnp/esewa_pnp.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +15,7 @@ import 'package:yourwellbeing/Extracted%20Widgets/customtextfield.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/showdialog.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/snackbar.dart';
 import 'package:yourwellbeing/Network/NetworkHelper.dart';
+import 'package:yourwellbeing/UI/Appointment/receipt.dart';
 import 'package:yourwellbeing/UI/BottomNavigation/bottom_navigation.dart';
 import 'package:yourwellbeing/Utils/user_prefrences.dart';
 
@@ -47,8 +50,8 @@ class _BookAppointmentState extends State<BookAppointment> {
     'assets/esewa.png',
   ];
   List nameList = [
-    'Cash',
-    'Esewa',
+    'Cash (Rs.500)',
+    'Esewa (Rs.500)',
   ];
 
   int? _value = 0;
@@ -65,6 +68,41 @@ class _BookAppointmentState extends State<BookAppointment> {
     // TODO: implement initState
     language = UserSimplePreferences.getLanguage() ?? true;
     super.initState();
+  }
+
+  String? amount;
+
+  initPayment(String product) async {
+    ESewaConfiguration _configuration = ESewaConfiguration(
+        clientID: "JB0BBQ4aD0UqIThFJwAKBgAXEUkEGQUBBAwdOgABHD4DChwUAB0R",
+        secretKey: "BhwIWQQADhIYSxILExMcAgFXFhcOBwAKBgAXEQ==",
+        environment: ESewaConfiguration.ENVIRONMENT_TEST);
+
+    ESewaPnp _esewaPnp = ESewaPnp(configuration: _configuration);
+
+    ESewaPayment _payment = ESewaPayment(
+        amount: 500,
+        productName: "AP12",
+        productID: "1",
+        callBackURL: "http:example.com");
+    try {
+      final _res = await _esewaPnp.initPayment(payment: _payment);
+      setState(() {
+        amount = _res.totalAmount.toString();
+      });
+      showSnackBar(
+        context,
+        "Attention",
+        Colors.green,
+        Icons.info,
+        'Payment Successful.',
+      );
+      print(_res);
+
+      // Handle success
+    } on ESewaPaymentException catch (e) {
+      // Handle error
+    }
   }
 
   @override
@@ -180,13 +218,51 @@ class _BookAppointmentState extends State<BookAppointment> {
                                             seconds:
                                                 2), //If there are server error or internet error till 15 sec it will ask to retry
                                         () {
-                                          Navigator.pushReplacement(
+                                          Navigator.of(context)
+                                              .pushAndRemoveUntil(
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        Receipt(
+                                                      name: name.text,
+                                                      age: age.text,
+                                                      gender: gender,
+                                                      doctorName:
+                                                          widget.doctorName,
+                                                      date:
+                                                          datechosem.toString(),
+                                                      time: selectTime.text,
+                                                      payment: _selectedPaymentT
+                                                                  .contains(
+                                                                      0) ==
+                                                              true
+                                                          ? 'Cash '
+                                                          : "Esewa",
+                                                      amount:
+                                                          amount ?? "Not Paid",
+                                                      hospital: hospital,
+                                                    ),
+                                                  ),
+                                                  (route) => route.isFirst);
+                                          /*                  Navigator.pushReplacement(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const BottomNavigationPage(),
+                                              builder: (context) => Receipt(
+                                                name: name.text,
+                                                age: age.text,
+                                                gender: gender,
+                                                doctorName: widget.doctorName,
+                                                date: datechosem.toString(),
+                                                time: selectTime.text,
+                                                payment: _selectedPaymentT
+                                                            .contains(0) ==
+                                                        true
+                                                    ? 'Cash '
+                                                    : "Esewa",
+                                                amount: amount ?? "Not Paid",
+                                                hospital: hospital,
+                                              ),
                                             ),
-                                          );
+                                          );*/
                                           showSnackBar(
                                             context,
                                             "Attention",
@@ -623,7 +699,7 @@ class _BookAppointmentState extends State<BookAppointment> {
                           );
 
                           if (_selectedPaymentT.contains(1)) {
-                            //_initPayment(_isSelectedPay);
+                            initPayment(_isSelectedPay);
                           }
                         },
                         isSelected: _isSelected,

@@ -428,12 +428,17 @@ class _LoginPageState extends State<LoginPage> {
           pref.setString('login', email);
           UserSimplePreferences.setUserLogin('doctor');
           Navigator.pop(context);
-          Navigator.pushReplacement(
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context) => BottomNavigationPage(),
+              ),
+              (route) => route.isFirst);
+          /*        Navigator.pushReplacement(
             context,
             MaterialPageRoute(
               builder: (context) => const BottomNavigationPage(),
             ),
-          );
+          );*/
         } else {
           UserSimplePreferences.saveUserLoggedIn(false);
           FocusScope.of(context).requestFocus(FocusNode());

@@ -225,7 +225,7 @@ class _ProfileContentState extends State<ProfileContent> {
                     Future.delayed(
                       const Duration(
                           seconds:
-                              2), //If there are server error or internet error till 15 sec it will ask to retry
+                              1), //If there are server error or internet error till 15 sec it will ask to retry
                       () {
                         Navigator.pop(context);
 

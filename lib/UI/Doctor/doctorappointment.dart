@@ -131,38 +131,6 @@ class _AppointmentListDocState extends State<AppointmentListDoc> {
     print(dateToday + dateTomorrow);
   }
 
-  Widget noAppointment() {
-    return Column(
-      children: [
-        Center(
-          child: Container(
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 20,
-                ),
-                Image.asset(
-                  'assets/noappointment.png',
-                  width: 60,
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  "You don't have an appointment",
-                  style: kStyleHomeTitle,
-                ),
-              ],
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 6,
-        ),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
