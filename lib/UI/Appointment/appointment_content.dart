@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'package:yourwellbeing/APIModels/deleteAppointment.dart';
 import 'package:yourwellbeing/Change%20Notifier/changenotifier.dart';
@@ -53,6 +54,9 @@ class AppointmentContent extends StatefulWidget {
 
 class _AppointmentContentState extends State<AppointmentContent> {
   var language;
+
+  FlutterLocalNotificationsPlugin notificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
   @override
   void initState() {
@@ -314,14 +318,15 @@ class _AppointmentContentState extends State<AppointmentContent> {
 
                                           DeleteData? delete = await NetworkHelper()
                                               .deleteAppointmentData(
-                                                  'http://10.0.2.2:80/fypapi/public/api/appointment/${widget.id}/delete',
+                                                  'http://192.168.137.1/fypapi/public/api/appointment/${widget.id}/delete',
                                                   token);
+                                          await notificationsPlugin.cancel(5);
                                           print('dekete');
 
                                           Future.delayed(
                                             const Duration(
                                                 seconds:
-                                                    2), //If there are server error or internet error till 15 sec it will ask to retry
+                                                    1), //If there are server error or internet error till 15 sec it will ask to retry
                                             () {
                                               Navigator.pushAndRemoveUntil(
                                                 context,

@@ -222,6 +222,7 @@ class _ProfileContentState extends State<ProfileContent> {
                     pref.remove('login');
                     pref.remove("usernameKey");
                     pref.remove('userEmailKey');
+                    pref.remove('userLogin');
                     Future.delayed(
                       const Duration(
                           seconds:

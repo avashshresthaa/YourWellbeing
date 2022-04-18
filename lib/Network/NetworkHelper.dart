@@ -30,7 +30,7 @@ class NetworkHelper {
 
   //Fetching Contact API
   var wifibaseUrl = 'http://192.168.40.182';
-  var baseUrl = 'http://10.0.2.2:80';
+  var baseUrl = 'http://192.168.137.1';
 
 /*  Future<Covid> getCovidData() async {
     var covidModel;

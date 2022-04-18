@@ -3,6 +3,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:sizer/sizer.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
+import 'package:yourwellbeing/UI/Appointment/pdfapi.dart';
 import 'package:yourwellbeing/UI/BottomNavigation/bottom_navigation.dart';
 import '../../Extracted Widgets/buttons.dart';
 
@@ -124,6 +125,34 @@ class Receipt extends StatelessWidget {
                           backgroundColor: Colors.white,
                         ),
                       ],
+                    ),
+                    Center(
+                      child: TextButton(
+                        onPressed: () async {
+                          final pdfFile = await PdfApi.generateCenteredText(
+                            hospital,
+                            name,
+                            age,
+                            gender,
+                            date.toString(),
+                            time.toString(),
+                            doctorName,
+                            payment,
+                            amount == 'Not Paid'
+                                ? '$name will pay through $payment.'
+                                : '$name has paid their appointment fee through $payment(Rs.$amount).',
+                          );
+
+                          PdfApi.openFile(pdfFile);
+                        },
+                        child: Text(
+                          'Download PDF',
+                          style: kStyleHomeTitle.copyWith(
+                            color: kStyleBlue,
+                            fontSize: 11.sp,
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),

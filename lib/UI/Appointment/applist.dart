@@ -46,8 +46,7 @@ class AppointmentListContent extends StatefulWidget {
 }
 
 class _AppointmentListContentState extends State<AppointmentListContent> {
-  FlutterLocalNotificationsPlugin notificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+
 
   @override
   Widget build(BuildContext context) {

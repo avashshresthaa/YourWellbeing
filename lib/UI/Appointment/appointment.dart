@@ -227,6 +227,7 @@ class _AppointmentListState extends State<AppointmentList> {
       body: DefaultTabController(
         length: 2,
         child: ListView(
+          physics: ScrollPhysics(),
           padding: const EdgeInsets.all(16.0),
           children: [
             FutureBuilder<AppointmentDetails?>(

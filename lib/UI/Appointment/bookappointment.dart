@@ -2,6 +2,8 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:esewa_pnp/esewa.dart';
 import 'package:esewa_pnp/esewa_pnp.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -18,6 +20,8 @@ import 'package:yourwellbeing/Network/NetworkHelper.dart';
 import 'package:yourwellbeing/UI/Appointment/receipt.dart';
 import 'package:yourwellbeing/UI/BottomNavigation/bottom_navigation.dart';
 import 'package:yourwellbeing/Utils/user_prefrences.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest.dart' as tz;
 
 class BookAppointment extends StatefulWidget {
   final doctorName;
@@ -67,6 +71,14 @@ class _BookAppointmentState extends State<BookAppointment> {
   void initState() {
     // TODO: implement initState
     language = UserSimplePreferences.getLanguage() ?? true;
+    var initializeAndroid = const AndroidInitializationSettings('app_icon');
+    var initialIOS = const IOSInitializationSettings();
+    var initialSettings =
+        InitializationSettings(android: initializeAndroid, iOS: initialIOS);
+    notificationsPlugin.initialize(
+      initialSettings,
+    );
+    _configureTimeZone();
     super.initState();
   }
 
@@ -103,6 +115,67 @@ class _BookAppointmentState extends State<BookAppointment> {
     } on ESewaPaymentException catch (e) {
       // Handle error
     }
+  }
+
+  var starttime;
+  var dyear;
+  var dmonth;
+  var dday;
+
+  Future<void> _configureTimeZone() async {
+    tz.initializeTimeZones();
+    final String timezone = await FlutterNativeTimezone.getLocalTimezone();
+    tz.setLocalLocation(tz.getLocation(timezone));
+  }
+
+  FlutterLocalNotificationsPlugin notificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  static tz.TZDateTime _scheduleDaily(
+      int year, int month, int day, int hour, int minutes) {
+    final now = tz.TZDateTime.now(tz.local);
+    final scheduleDate =
+        tz.TZDateTime(tz.local, year, month, day, hour, minutes - 10);
+
+    return scheduleDate;
+  }
+
+  Future _showNotification() async {
+    var androidDetails = const AndroidNotificationDetails(
+      "Channel ID",
+      "Name",
+      "Description",
+      importance: Importance.max,
+    );
+    var iOSDetails = const IOSNotificationDetails();
+    var generalNotificationDetails =
+        NotificationDetails(android: androidDetails, iOS: iOSDetails);
+
+    // var scheduledTime = tz.TZDateTime.now(tz.local).add(
+    //   Duration(seconds: 5),
+    // );
+    print("main : $starttime");
+/*    DateTime date = DateFormat.jm().parse(starttime.toString());
+    var myTime = DateFormat("HH:mm").format(starttime);
+    print(myTime);*/
+    var hour = int.parse(starttime.toString().split(":")[0]);
+    var minutes = int.parse(starttime.toString().split(":")[1]);
+    print(hour);
+    print(minutes);
+    print(dyear);
+    print(dmonth);
+    print(dday);
+
+    notificationsPlugin.zonedSchedule(
+        5,
+        'Attention',
+        "Don't forget your appointment",
+        _scheduleDaily(dyear, dmonth, dday, hour, minutes),
+        generalNotificationDetails,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+        androidAllowWhileIdle: true,
+        matchDateTimeComponents: DateTimeComponents.time);
   }
 
   @override
@@ -209,6 +282,7 @@ class _BookAppointmentState extends State<BookAppointment> {
                                           : "Esewa",
                                       token,
                                     );
+                                    _showNotification();
                                     //Sending data to server Create Appointmento
                                     print('api called');
                                     if (appointment!.message !=
@@ -562,6 +636,10 @@ class _BookAppointmentState extends State<BookAppointment> {
                     initialDatePickerMode: DatePickerMode.day,
                   );
                   setState(() {
+                    dday = _selectedDateTime?.day;
+                    dmonth = _selectedDateTime?.month;
+                    dyear = _selectedDateTime?.year;
+
                     selectDate.text = _selectedDateTime.toString().substring(
                         0, _selectedDateTime.toString().indexOf(' '));
                     String formattedDate1 =
@@ -589,9 +667,15 @@ class _BookAppointmentState extends State<BookAppointment> {
                       DateTime parsedTime = DateFormat.jm()
                           .parse(timeOfDay.format(context).toString());
                       print('dsd : $parsedTime');
+
                       String formattedTime =
                           DateFormat('HH:mm:ss').format(parsedTime);
+                      String formattedTime1 =
+                          DateFormat('HH:mm').format(parsedTime);
+                      starttime = formattedTime1;
+
                       selectTime.text = formattedTime;
+
                       print("select ${formattedTime}");
                       print(
                           'sect ${datechosem.toString() + " " + selectTime.text}');
