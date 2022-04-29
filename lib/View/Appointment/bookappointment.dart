@@ -8,7 +8,6 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:yourwellbeing/APIModels/createAppointment.dart';
-import 'package:yourwellbeing/Change%20Notifier/changenotifier.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Constraints/nplanguage.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
@@ -17,11 +16,12 @@ import 'package:yourwellbeing/Extracted%20Widgets/customtextfield.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/showdialog.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/snackbar.dart';
 import 'package:yourwellbeing/Network/NetworkHelper.dart';
-import 'package:yourwellbeing/UI/Appointment/receipt.dart';
-import 'package:yourwellbeing/UI/BottomNavigation/bottom_navigation.dart';
+import 'package:yourwellbeing/View/Appointment/receipt.dart';
+import 'package:yourwellbeing/View/BottomNavigation/bottom_navigation.dart';
 import 'package:yourwellbeing/Utils/user_prefrences.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
+import 'package:yourwellbeing/View%20Model/changenotifier.dart';
 
 class BookAppointment extends StatefulWidget {
   final doctorName;

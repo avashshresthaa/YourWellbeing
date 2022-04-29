@@ -6,7 +6,7 @@ import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/bottomsheet.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/snackbar.dart';
-import 'package:yourwellbeing/UI/Login/loginpermission.dart';
+import 'package:yourwellbeing/View/Login/loginpermission.dart';
 import 'package:yourwellbeing/Utils/user_prefrences.dart';
 
 class AppointmentList extends StatefulWidget {

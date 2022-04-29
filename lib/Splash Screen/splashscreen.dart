@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/src/provider.dart';
 import 'package:sizer/sizer.dart';
-import 'package:yourwellbeing/Change%20Notifier/changenotifier.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:yourwellbeing/UI/BottomNavigation/bottom_navigation.dart';
-import 'package:yourwellbeing/UI/Change%20Purpose/change_purpose.dart';
 import 'package:yourwellbeing/Utils/user_prefrences.dart';
+import 'package:yourwellbeing/View%20Model/changenotifier.dart';
+import 'package:yourwellbeing/View/BottomNavigation/bottom_navigation.dart';
+import 'package:yourwellbeing/View/Change%20Purpose/change_purpose.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);

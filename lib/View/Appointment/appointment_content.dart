@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'package:yourwellbeing/APIModels/deleteAppointment.dart';
-import 'package:yourwellbeing/Change%20Notifier/changenotifier.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Constraints/nplanguage.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
@@ -12,10 +11,11 @@ import 'package:yourwellbeing/Extracted%20Widgets/description.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/showdialog.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/snackbar.dart';
 import 'package:yourwellbeing/Network/NetworkHelper.dart';
-import 'package:yourwellbeing/UI/Appointment/appointment.dart';
-import 'package:yourwellbeing/UI/Doctor/doctorappointment.dart';
-import 'package:yourwellbeing/UI/Home/home.dart';
+import 'package:yourwellbeing/View/Appointment/appointment.dart';
+import 'package:yourwellbeing/View/Doctor/doctorappointment.dart';
+import 'package:yourwellbeing/View/Home/home.dart';
 import 'package:yourwellbeing/Utils/user_prefrences.dart';
+import 'package:yourwellbeing/View%20Model/changenotifier.dart';
 
 class AppointmentContent extends StatefulWidget {
   final doctorName;
@@ -318,7 +318,7 @@ class _AppointmentContentState extends State<AppointmentContent> {
 
                                           DeleteData? delete = await NetworkHelper()
                                               .deleteAppointmentData(
-                                                  'http://192.168.137.1/fypapi/public/api/appointment/${widget.id}/delete',
+                                                  'http://10.0.2.2:80/fypapi/public/api/appointment/${widget.id}/delete',
                                                   token);
                                           await notificationsPlugin.cancel(5);
                                           print('dekete');

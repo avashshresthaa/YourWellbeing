@@ -12,7 +12,7 @@ class ApiData {
   // For emulator url http://10.0.2.2:80
   // 192.168.137.1
   var wifibaseUrl = 'http://192.168.40.182';
-  var baseUrl = 'http://192.168.137.1';
+  var baseUrl = 'http://10.0.2.2:80';
   Future<Contacts> getApiContactDetails() async {
     var isCacheExist =
         await APICacheManager().isAPICacheKeyExist("contact_numbers");

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Network/NetworkHelper.dart';
-import 'package:yourwellbeing/UI/Login/login.dart';
-import 'package:yourwellbeing/UI/Login/signup.dart';
+import 'package:yourwellbeing/View/Login/login.dart';
+import 'package:yourwellbeing/View/Login/signup.dart';
 import '../../Extracted Widgets/buttons.dart';
 
 class SignUpContent extends StatefulWidget {

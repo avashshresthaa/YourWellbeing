@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sizer/sizer.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
-import 'package:yourwellbeing/UI/Appointment/applist.dart';
-import 'package:yourwellbeing/UI/Doctor/searchscreen.dart';
-import 'package:yourwellbeing/UI/Login/login.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:yourwellbeing/View/Login/login.dart';
 
 Future<void> showWaitDialog(BuildContext context, String text) => showDialog(
       context: context,

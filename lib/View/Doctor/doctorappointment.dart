@@ -5,14 +5,14 @@ import 'package:shimmer/shimmer.dart';
 import 'package:sizer/sizer.dart';
 import 'package:yourwellbeing/APIModels/getAppointments.dart';
 import 'package:yourwellbeing/APIModels/getDoctorAppointments.dart';
-import 'package:yourwellbeing/Change%20Notifier/changenotifier.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
 import 'package:intl/intl.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/description.dart';
 import 'package:yourwellbeing/Network/NetworkHelper.dart';
-import 'package:yourwellbeing/UI/Appointment/appointment.dart';
-import 'package:yourwellbeing/UI/Appointment/appointment_content.dart';
+import 'package:yourwellbeing/View/Appointment/appointment.dart';
+import 'package:yourwellbeing/View/Appointment/appointment_content.dart';
+import 'package:yourwellbeing/View%20Model/changenotifier.dart';
 
 class AppointmentHomeDoc extends StatelessWidget {
   const AppointmentHomeDoc({Key? key}) : super(key: key);
@@ -225,95 +225,90 @@ class _AppointmentListDocState extends State<AppointmentListDoc> {
                                 ),
                                 snapshot.data!.appointments!.isEmpty
                                     ? noAppointment()
-                                    : Expanded(
-                                        child: ListView.builder(
-                                          padding: EdgeInsets.zero,
-                                          physics: const ScrollPhysics(),
-                                          scrollDirection: Axis.vertical,
-                                          itemCount: snapshot
-                                              .data!.appointments!.length,
-                                          itemBuilder: (BuildContext context,
-                                              int index) {
-                                            var appointment = snapshot
-                                                .data!.appointments![index];
-                                            var doctorName =
-                                                appointment.doctorName;
-                                            var hospitalName =
-                                                appointment.hospitalName;
-                                            var age = appointment.age;
-                                            var dateTime =
-                                                appointment.datetime!;
-                                            var datenow1 = DateTime.now();
+                                    : ListView.builder(
+                                        padding: EdgeInsets.zero,
+                                        shrinkWrap: true,
+                                        physics: const ScrollPhysics(),
+                                        scrollDirection: Axis.vertical,
+                                        itemCount:
+                                            snapshot.data!.appointments!.length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          var appointment = snapshot
+                                              .data!.appointments![index];
+                                          var doctorName =
+                                              appointment.doctorName;
+                                          var hospitalName =
+                                              appointment.hospitalName;
+                                          var age = appointment.age;
+                                          var dateTime = appointment.datetime!;
+                                          var datenow1 = DateTime.now();
 
-                                            var formatteddate =
-                                                DateFormat.yMMMMd()
-                                                    .format(dateTime)
-                                                    .toString();
-                                            var day = DateFormat('EEEE')
-                                                .format(dateTime)
-                                                .toString();
-                                            print("day: $day");
-                                            String formattedDate =
-                                                DateFormat('yyyy-MM-dd')
-                                                    .format(datenow1);
-                                            print("foramtted: $formattedDate");
-                                            String formattedDate1 =
-                                                DateFormat('yyyy-MM-dd')
-                                                    .format(dateTime);
-                                            print("foramtted: $formattedDate1");
-                                            String formattedTime =
-                                                DateFormat('HH:mm')
-                                                    .format(dateTime);
+                                          var formatteddate =
+                                              DateFormat.yMMMMd()
+                                                  .format(dateTime)
+                                                  .toString();
+                                          var day = DateFormat('EEEE')
+                                              .format(dateTime)
+                                              .toString();
+                                          print("day: $day");
+                                          String formattedDate =
+                                              DateFormat('yyyy-MM-dd')
+                                                  .format(datenow1);
+                                          print("foramtted: $formattedDate");
+                                          String formattedDate1 =
+                                              DateFormat('yyyy-MM-dd')
+                                                  .format(dateTime);
+                                          print("foramtted: $formattedDate1");
+                                          String formattedTime =
+                                              DateFormat('HH:mm')
+                                                  .format(dateTime);
 
-                                            var time1 = dateTime
-                                                .add(const Duration(hours: 1));
-                                            String formattedTime1 =
-                                                DateFormat('HH:mm a')
-                                                    .format(time1);
-                                            if (formattedDate ==
-                                                formattedDate1) {
-                                              return GestureDetector(
-                                                child: AppointmentTile(
-                                                  doctorName: appointment.name,
-                                                  time: formattedTime +
-                                                      " - " +
-                                                      formattedTime1,
-                                                  hospital: hospitalName,
-                                                  isDoctor: false,
-                                                  onTap: () {
-                                                    Navigator.push(context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) {
-                                                      return AppointmentContent(
-                                                        doctorName:
-                                                            appointment.name,
-                                                        time: formattedTime +
-                                                            " - " +
-                                                            formattedTime1,
-                                                        date: formatteddate,
-                                                        day: day,
-                                                        hospital: hospitalName,
-                                                        age: age,
-                                                        name: appointment.name,
-                                                        phone:
-                                                            appointment.phone,
-                                                        fee:
-                                                            appointment.payment,
-                                                        id: appointment.id,
-                                                        description: appointment
-                                                            .describeProblem,
-                                                        isDoctor: false,
-                                                        isCancel: false,
-                                                      );
-                                                    }));
-                                                  },
-                                                ),
-                                              );
-                                            } else {
-                                              return Container();
-                                            }
-                                          },
-                                        ),
+                                          var time1 = dateTime
+                                              .add(const Duration(hours: 1));
+                                          String formattedTime1 =
+                                              DateFormat('HH:mm a')
+                                                  .format(time1);
+                                          if (formattedDate == formattedDate1) {
+                                            return GestureDetector(
+                                              child: AppointmentTile(
+                                                doctorName: appointment.name,
+                                                time: formattedTime +
+                                                    " - " +
+                                                    formattedTime1,
+                                                hospital: hospitalName,
+                                                isDoctor: false,
+                                                onTap: () {
+                                                  Navigator.push(context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) {
+                                                    return AppointmentContent(
+                                                      doctorName:
+                                                          appointment.name,
+                                                      time: formattedTime +
+                                                          " - " +
+                                                          formattedTime1,
+                                                      date: formatteddate,
+                                                      day: day,
+                                                      hospital: hospitalName,
+                                                      age: age,
+                                                      name: appointment.name,
+                                                      phone: appointment.phone,
+                                                      fee: appointment.payment,
+                                                      id: appointment.id,
+                                                      description: appointment
+                                                          .describeProblem,
+                                                      isDoctor: false,
+                                                      isCancel: false,
+                                                    );
+                                                  }));
+                                                },
+                                              ),
+                                            );
+                                          } else {
+                                            return Container();
+                                          }
+                                        },
                                       ),
 
                                 // Tomorrow's Appointment Details

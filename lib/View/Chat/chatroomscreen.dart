@@ -1,15 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
-import 'package:yourwellbeing/Change%20Notifier/changenotifier.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/snackbar.dart';
 import 'package:yourwellbeing/Services/authentication.dart';
 import 'package:yourwellbeing/Services/constants.dart';
 import 'package:yourwellbeing/Services/database.dart';
-import 'package:yourwellbeing/UI/Chat/conversationscreen.dart';
-import 'package:yourwellbeing/UI/Doctor/searchscreen.dart';
+import 'package:yourwellbeing/View/Chat/conversationscreen.dart';
+import 'package:yourwellbeing/View/Doctor/searchscreen.dart';
 import 'package:yourwellbeing/Utils/user_prefrences.dart';
 import '../Login/loginpermission.dart';
 import 'package:provider/provider.dart';

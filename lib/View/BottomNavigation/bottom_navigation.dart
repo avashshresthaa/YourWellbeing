@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/showdialog.dart';
-import 'package:yourwellbeing/UI/Home/home.dart';
+import 'package:yourwellbeing/View/Home/home.dart';
 import '../Appointment/appointment.dart';
 import '../Chat/chatroomscreen.dart';
 import '../Settings/settings.dart';

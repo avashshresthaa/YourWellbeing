@@ -11,8 +11,9 @@ import 'package:yourwellbeing/Extracted%20Widgets/snackbar.dart';
 import 'package:yourwellbeing/Network/NetworkHelper.dart';
 import 'package:yourwellbeing/Services/authentication.dart';
 import 'package:yourwellbeing/Services/database.dart';
-import 'package:yourwellbeing/UI/Login/login.dart';
 import 'package:yourwellbeing/Utils/user_prefrences.dart';
+
+import 'login.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);

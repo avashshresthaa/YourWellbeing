@@ -5,7 +5,6 @@ import 'package:provider/src/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:yourwellbeing/APIModels/getLogin.dart';
-import 'package:yourwellbeing/Change%20Notifier/changenotifier.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Constraints/nplanguage.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/buttons.dart';
@@ -15,10 +14,11 @@ import 'package:yourwellbeing/Extracted%20Widgets/snackbar.dart';
 import 'package:yourwellbeing/Network/NetworkHelper.dart';
 import 'package:yourwellbeing/Services/authentication.dart';
 import 'package:yourwellbeing/Services/database.dart';
-import 'package:yourwellbeing/UI/BottomNavigation/bottom_navigation.dart';
-import 'package:yourwellbeing/UI/Forget%20Password/forgetpassword.dart';
-import 'package:yourwellbeing/UI/Login/signup.dart';
+import 'package:yourwellbeing/View/BottomNavigation/bottom_navigation.dart';
+import 'package:yourwellbeing/View/Forget%20Password/forgetpassword.dart';
+import 'package:yourwellbeing/View/Login/signup.dart';
 import 'package:yourwellbeing/Utils/user_prefrences.dart';
+import 'package:yourwellbeing/View%20Model/changenotifier.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);

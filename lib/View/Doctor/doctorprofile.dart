@@ -6,9 +6,9 @@ import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/buttons.dart';
 import 'package:yourwellbeing/Services/constants.dart';
 import 'package:yourwellbeing/Services/database.dart';
-import 'package:yourwellbeing/UI/Appointment/bookappointment.dart';
-import 'package:yourwellbeing/UI/Chat/conversationscreen.dart';
-import 'package:yourwellbeing/UI/Doctor/searchscreen.dart';
+import 'package:yourwellbeing/View/Appointment/bookappointment.dart';
+import 'package:yourwellbeing/View/Chat/conversationscreen.dart';
+import 'package:yourwellbeing/View/Doctor/searchscreen.dart';
 
 class DoctorProfile extends StatefulWidget {
   DoctorProfile({this.index, this.details});

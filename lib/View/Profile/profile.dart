@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:yourwellbeing/APIModels/getLogout.dart';
-import 'package:yourwellbeing/Change%20Notifier/changenotifier.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Constraints/nplanguage.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
@@ -13,14 +12,15 @@ import 'package:yourwellbeing/Extracted%20Widgets/showdialog.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/snackbar.dart';
 import 'package:yourwellbeing/Network/NetworkHelper.dart';
 import 'package:yourwellbeing/Services/authentication.dart';
-import 'package:yourwellbeing/UI/Appointment/appointment.dart';
-import 'package:yourwellbeing/UI/Appointment/applist.dart';
-import 'package:yourwellbeing/UI/Doctor/doctorappointment.dart';
-import 'package:yourwellbeing/UI/Emergency%20Contacts/emergency.dart';
-import 'package:yourwellbeing/UI/Login/login.dart';
-import 'package:yourwellbeing/UI/Login/loginpermission.dart';
 import 'package:yourwellbeing/Utils/user_prefrences.dart';
 import 'package:yourwellbeing/Constraints/uppercase.dart';
+import 'package:yourwellbeing/View%20Model/changenotifier.dart';
+import 'package:yourwellbeing/View/Appointment/appointment.dart';
+import 'package:yourwellbeing/View/Doctor/doctorappointment.dart';
+import 'package:yourwellbeing/View/Doctor/searchscreen.dart';
+import 'package:yourwellbeing/View/Emergency%20Contacts/emergency.dart';
+import 'package:yourwellbeing/View/Login/login.dart';
+import 'package:yourwellbeing/View/Login/loginpermission.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -181,19 +181,25 @@ class _ProfileContentState extends State<ProfileContent> {
                       onTap: () {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
-                          return const EmergencyPage();
+                          return const SearchScreen();
                         }));
                       },
-                      image: 'assets/menu.png',
-                      label: 'Emergency Contacts',
+                      image: 'assets/search.png',
+                      label: 'Search Doctors',
                       containerDesignType: 'both',
                     ),
                     itemDivider(),
                     ContentItems(
-                        onTap: () {},
-                        image: 'assets/menu.png',
-                        label: 'Invite Friends',
-                        containerDesignType: 'bottom'),
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return const EmergencyPage();
+                        }));
+                      },
+                      image: 'assets/scontacts.png',
+                      label: 'Emergency Contacts',
+                      containerDesignType: 'bottom',
+                    ),
                   ],
                 ),
               ),

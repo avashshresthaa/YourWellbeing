@@ -3,8 +3,8 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:sizer/sizer.dart';
 import 'package:yourwellbeing/Constraints/constraints.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
-import 'package:yourwellbeing/UI/Appointment/pdfapi.dart';
-import 'package:yourwellbeing/UI/BottomNavigation/bottom_navigation.dart';
+import 'package:yourwellbeing/View/Appointment/pdfapi.dart';
+import 'package:yourwellbeing/View/BottomNavigation/bottom_navigation.dart';
 import '../../Extracted Widgets/buttons.dart';
 
 class Receipt extends StatelessWidget {

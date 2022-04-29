@@ -10,7 +10,7 @@ import 'package:yourwellbeing/Constraints/uppercase.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/appbars.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/homecontents.dart';
-import 'package:yourwellbeing/UI/Doctor/searchscreen.dart';
+import 'package:yourwellbeing/View/Doctor/searchscreen.dart';
 import 'package:yourwellbeing/Utils/user_prefrences.dart';
 import '../../Constraints/nplanguage.dart';
 import '../../Extracted Widgets/showdialog.dart';
@@ -157,7 +157,11 @@ class _MainContentState extends State<MainContent> {
               adContents(),
               const SizedBox(height: 24),
               Text(
-                'Learn About $titlePurpose',
+                language
+                    ? 'Learn About $titlePurpose'
+                    : titlePurpose == 'Covid'
+                        ? "कोभिड बारे जान्नुहोस्"
+                        : "इन्फ्लुएन्जा बारे जान्नुहोस्",
                 style: kStyleHomeTitle.copyWith(fontSize: 12.sp),
               ),
               const SizedBox(height: 16),
@@ -383,7 +387,7 @@ class _MainContentState extends State<MainContent> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'View Doctors',
+                          language ? 'View Doctors' : 'डाक्टरलाई हेर्नुहोस्',
                           style: kStyleHomeTitle.copyWith(
                               color: Colors.green,
                               fontWeight: FontWeight.w600,
@@ -393,7 +397,9 @@ class _MainContentState extends State<MainContent> {
                           height: 3,
                         ),
                         Text(
-                          'Chat/Book appointment with the doctors.',
+                          language
+                              ? 'Chat/Book appointment with the doctors.'
+                              : 'डाक्टरहरूसँग कुराकानी / बुक अपोइन्टमेन्ट।',
                           style: kStyleHomeTitle.copyWith(
                               fontWeight: FontWeight.w400, fontSize: 10.sp),
                         ),

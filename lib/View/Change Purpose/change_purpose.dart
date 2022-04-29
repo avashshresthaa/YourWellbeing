@@ -10,7 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/showdialog.dart';
 import 'package:yourwellbeing/Extracted%20Widgets/snackbar.dart';
 import 'package:yourwellbeing/Network/api_links.dart';
-import 'package:yourwellbeing/UI/BottomNavigation/bottom_navigation.dart';
+import 'package:yourwellbeing/View/BottomNavigation/bottom_navigation.dart';
 import 'package:yourwellbeing/Utils/user_prefrences.dart';
 import '../../Extracted Widgets/buttons.dart';
 
@@ -213,7 +213,7 @@ class _ChangePurposeState extends State<ChangePurpose> {
             height: 4,
           ),
           Text(
-            'Please select your preferable language.',
+            'Please select your preferable purpose.',
             style: kStyleTextField.copyWith(
               fontSize: 12.sp,
               fontWeight: FontWeight.w600,
